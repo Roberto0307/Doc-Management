@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Facades\Filament;
 
 class StatusResource extends Resource
 {
@@ -30,9 +31,10 @@ class StatusResource extends Resource
 
                 Forms\Components\TextInput::make('title')
                     ->label('Internal title')
-                    ->disabled()
-                    ->dehydrated(false) // evita que se envie de nuevo al guardar
-                    ->helperText('This is the status identifier, it cannot be edited.')
+                    ->required()
+                    ->disabled(fn () => !Filament::auth()->user()?->hasRole('super_admin'))
+                    ->dehydrated(fn () => Filament::auth()->user()?->hasRole('super_admin'))
+                    ->helperText('This is the status identifier. Only super admins can edit it.')
                     ->columnSpanFull(),
 
                 Forms\Components\TextInput::make('display_name')

@@ -12,6 +12,7 @@ class Status extends Model
 
     //
     protected $fillable = [
+        'title',
         'display_name'
     ];
 

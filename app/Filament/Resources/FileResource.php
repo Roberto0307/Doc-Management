@@ -16,6 +16,8 @@ use Filament\Forms\Components\Section;
 use App\Filament\Resources\RecordResource;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Textarea;
+use App\Models\Status;
+
 
 class FileResource extends Resource
 {
@@ -101,7 +103,7 @@ class FileResource extends Resource
             ])
             ->actions([
                 Action::make('restore')
-                    ->label('Restore')
+                    ->label(fn ($record) => Status::displayNameFromTitle('Restore') ?? 'Restore')
                     ->icon('heroicon-o-arrow-path')
                     ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
                     ->form([
@@ -125,7 +127,7 @@ class FileResource extends Resource
                     ),
 
                 Action::make('approved')
-                    ->label('Approved')
+                    ->label(fn ($record) => Status::displayNameFromTitle('Approved') ?? 'Approved')
                     ->icon('heroicon-o-check')
                     ->requiresConfirmation()
                     ->color('success')
@@ -142,7 +144,7 @@ class FileResource extends Resource
                     ),
 
                 Action::make('rejected')
-                    ->label('Rejected')
+                    ->label(fn ($record) => Status::displayNameFromTitle('Rejected') ?? 'Rejected')
                     ->icon('heroicon-o-x-circle')
                     ->form([
                         Textarea::make('responses')

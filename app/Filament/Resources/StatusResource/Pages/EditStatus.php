@@ -13,7 +13,13 @@ class EditStatus extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            // 📌 Si se ocupa crear un auth super admin para esto.
             //Actions\DeleteAction::make(),
         ];
     }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
 }
