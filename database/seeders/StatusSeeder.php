@@ -28,5 +28,10 @@ class StatusSeeder extends Seeder
             'title' => 'Rejected',
             'display_name' => 'Rejected'
         ]);
+
+        Status::factory()->create([
+            'title' => 'Restore',
+            'display_name' => 'Restore'
+        ]);
     }
 }
