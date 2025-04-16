@@ -20,7 +20,6 @@ use Filament\Forms\Set;
 use Filament\Tables\Actions\Action;
 use App\Filament\Resources\FileResource;
 use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Support\Facades\Storage;
 
 
 class RecordResource extends Resource
@@ -124,34 +123,36 @@ class RecordResource extends Resource
                     ->preload()
             ])
             ->actions([
-                //Tables\Actions\EditAction::make(),
-
-                Action::make('Files')
-                    ->label('Versiones')
-                    ->icon('heroicon-o-document')
-                    ->color('info')
-                    ->url(fn (Record $record): string => FileResource::getUrl('index', ['record_id' => $record->id ])),
 
                 Action::make('LastfileApproved')
                     ->label('Download')
                     ->icon('heroicon-o-document')
                     ->color('danger')
-                    ->url(fn ($record) => $record->latestApprovedFile?->file_path
-                        ? Storage::url($record->latestApprovedFile->file_path)
-                        : '#'
+                    ->url(fn ($record) =>
+                        $record->approvedVersionUrl()
                     )
-                    ->openUrlInNewTab() // opcional: abrir en nueva pestaña
-                    ->visible(fn ($record) => filled($record->latestApprovedFile?->file_path))
+                    ->openUrlInNewTab(false)
+                    ->extraAttributes(fn ($record) => [
+                        'download' => $record->title,
+                    ])
+                    ->visible(fn ($record) =>
+                        $record->hasApprovedVersion()
+                    ),
 
+                Action::make('Files')
+                    ->label('Versiones')
+                    ->icon('heroicon-o-document')
+                    ->color('info')
+                    ->url(fn (Record $record): string =>
+                        FileResource::getUrl('index', ['record_id' => $record->id ])
+                    )
+                    ->visible(fn ($record) =>
+                        $record->canBeAccessedBy( auth()->user() )
+                    ),
 
-                // Action::make('addFile')
-                //     ->label('Upload file')
-                //     ->icon('heroicon-o-document')
-                //     ->url(fn (Record $record): string => FileResource::getUrl('create', ['record_id' => $record->id ])),
-
-               //Tables\Actions\ViewAction::make(),
 
             ])
+            ->actionsPosition(Tables\Enums\ActionsPosition::BeforeColumns)
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -171,8 +172,6 @@ class RecordResource extends Resource
         return [
             'index' => Pages\ListRecords::route('/'),
             'create' => Pages\CreateRecord::route('/create'),
-            //'view' => Pages\ViewRecord::route('/{record}'),
-            // 'edit' => Pages\EditRecord::route('/{record}/edit'),
         ];
     }
 }

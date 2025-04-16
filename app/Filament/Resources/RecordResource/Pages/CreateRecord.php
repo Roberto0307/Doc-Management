@@ -21,9 +21,10 @@ class CreateRecord extends BaseCreateRecord
         $isAuthorized = $user->validSubProcess($data['sub_process_id'] ?? null);
 
         if (!($isSuperAdmin || $isAuthorized)) {
+
             Notification::make()
-                ->title('Acceso denegado')
-                ->body('No tienes permiso para crear este archivo.')
+                ->title('Access denied')
+                ->body('You do not have permission to create this file.')
                 ->danger()
                 ->persistent()
                 ->send();
@@ -32,7 +33,7 @@ class CreateRecord extends BaseCreateRecord
         }
 
         $data['code'] = RecordService::generateCode($data['type_id'], $data['sub_process_id']);
-        $data['user_id'] = auth()->id();
+        $data['user_id'] = $user->id;
 
         return $data;
     }

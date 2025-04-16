@@ -26,7 +26,7 @@ class CreateFile extends CreateRecord
         $status = $file->status->display_name;
         $comments = $file->comments;
 
-        $user = User::find(1);
+        $user = User::role('super_admin')->first();
         $user->notify(new FileStatusUpdated($file, $status, $comments));
     }
 
@@ -35,9 +35,6 @@ class CreateFile extends CreateRecord
         $recordId = $this->record->record_id;
 
         return $this->getResource()::getUrl('index', ['record_id' => $recordId]);
-
-        // Volver vista viewRecord
-        // return RecordResource::getUrl('view', ['record' => $recordId]);
 
     }
 

@@ -41,8 +41,14 @@ class UserResource extends Resource
                             ->maxLength(255),
                         Forms\Components\TextInput::make('password')
                             ->password()
-                            ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->nullable()
+                            ->dehydrated(fn ($state) => filled($state)) // solo lo manda si tiene valor
+                            ->required(fn (string $context) => $context === 'create')
+                            ->helperText(fn (string $context) => $context === 'edit'
+                                ? "Leave it blank if you don't want to change your password."
+                                : null
+                            ),
                         Forms\Components\Select::make('roles')
                             ->relationship('roles','name')
                             ->multiple()
@@ -69,7 +75,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('roles.name')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

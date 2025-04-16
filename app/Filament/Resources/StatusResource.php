@@ -27,10 +27,20 @@ class StatusResource extends Resource
     {
         return $form
             ->schema([
+
+                Forms\Components\TextInput::make('title')
+                    ->label('Internal title')
+                    ->disabled()
+                    ->dehydrated(false) // evita que se envie de nuevo al guardar
+                    ->helperText('This is the status identifier, it cannot be edited.')
+                    ->columnSpanFull(),
+
                 Forms\Components\TextInput::make('display_name')
-                    ->label('Name')
+                    ->label('Display name')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->placeholder(fn ($record) => $record?->title ?? 'State title')
+                    ->columnSpanFull(),
             ]);
     }
 

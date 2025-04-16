@@ -24,8 +24,7 @@ class ApprovedFile extends Page
 
         redirect()->to(
             FileResource::getUrl('index') . '?' . http_build_query([
-                'record_id' => $file->record_id,
-                'approved' => $file->id,
+                'record_id' => $file->record_id
             ])
         );
 

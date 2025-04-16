@@ -9,19 +9,19 @@ use App\Models\Type;
 class RecordService
 {
     // Generar codigo
-    public static function generateCode($typeD, $subprocesD)
+    public static function generateCode($typeId, $subProcessId)
     {
         // Buscar Tipo y Sub Proceso
-        $type = Type::findOrFail($typeD);
-        $subProcess = SubProcess::findOrFail($subprocesD);
+        $type = Type::findOrFail($typeId);
+        $subProcess = SubProcess::findOrFail($subProcessId);
 
         // Obtener siglas
         $acronymType = $type->acronym;
         $acronymSubProcess = $subProcess->acronym;
 
         // Contar cuántos registros existen con la misma combinación
-        $count = Record::where('type_id', $typeD)
-            ->where('sub_process_id', $subprocesD)
+        $count = Record::where('type_id', $typeId)
+            ->where('sub_process_id', $subProcessId)
             ->count();
 
         // Incrementar el consecutivo

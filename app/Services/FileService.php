@@ -33,6 +33,7 @@ class FileService
     {
         $file = File::findOrFail($id);
         $status = self::getStatusByTitle('Rejected');
+
         $responseMessage = 'Rejected from version ' . $file->version;
         $responses = Str::limit(strip_tags(request()->query('responses', $responseMessage)), 255);
 
@@ -65,6 +66,7 @@ class FileService
         $status = self::getStatusByTitle('Approved');
 
         self::notifyStatusChange($file, $status->display_name, $data['responses']);
+
     }
 
     public static function restore(int $id): void
@@ -94,32 +96,35 @@ class FileService
     public static function validatedData($data)
     {
         $user = auth()->user();
+        $isSuperAdmin = $user->hasRole('super_admin');
 
         $statusApproved = self::getStatusByTitle('Approved');
         $statusPending  = self::getStatusByTitle('Pending');
 
-        $lastVersion = File::where('record_id', $data['record_id'])->orderByDesc('version')->first();
+
+        $lastVersion = File::where('record_id', $data['record_id'])
+                           ->orderByDesc('version')
+                           ->first();
 
         if ($lastVersion) {
-            if ($user->hasRole('super_admin')) {
-
-                $newVersion = (string) floor((float)$lastVersion->version + 1);
-
+            if ($isSuperAdmin) {
+                // Extrae la parte entera de la versión y suma 1
+                $major = (int) $lastVersion->version;
+                $newVersion = ($major + 1) . '.0';
             } else {
 
+                // Incrementa decimal en 0.1
                 $newVersion = bcadd($lastVersion->version, '0.1', 1);
-
             }
+
         } else {
 
-            $newVersion = $user->hasRole('super_admin') ? '1.0' : '0.1';
+            $newVersion = $isSuperAdmin ? '1.0' : '0.1';
         }
 
-        $status_id = $user->hasRole('super_admin') ? $statusApproved->id : $statusPending->id;
-
-        $data['status_id'] = $status_id;
-        $data['version'] =  $newVersion;
-        $data['user_id'] = auth()->id();
+        $data['status_id'] = $isSuperAdmin ? $statusApproved->id : $statusPending->id;
+        $data['version'] = $newVersion;
+        $data['user_id'] = $user->id;
 
         return $data;
     }
@@ -135,17 +140,11 @@ class FileService
         ->unique('id');
 
         Notification::send($notifiables, new FileStatusUpdated($file, $statusTitle, $message));
-    }
 
+        session()->flash('file_status', [
+            'status' => $statusTitle,
+        ]);
 
-    public static function generateButton($state, $record)
-    {
-        $title = $record->title ?? 'Descargar';
-        $url = Storage::url($state);
-
-        $filename = $title . '.' . pathinfo($state, PATHINFO_EXTENSION);
-
-        return "<a href='{$url}' download='{$filename}' class='inline-flex items-center px-3 py-1.5 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 transition'>Descargar</a>";
     }
 
 }

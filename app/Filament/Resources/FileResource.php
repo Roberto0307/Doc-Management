@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section;
 use App\Filament\Resources\RecordResource;
-use App\Services\FileService;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Textarea;
 
@@ -35,16 +34,12 @@ class FileResource extends Resource
                 Section::make('File Data')
                     ->columns(3)
                     ->schema([
-
-                        Forms\Components\TextInput::make('title')
-                            ->required()
-                            ->maxLength(255)
-                            ->columnSpanFull(),
                         Forms\Components\Hidden::make('record_id')
                             ->required()
                             ->default(request()->query('record_id')),
                         Forms\Components\FileUpload::make('file_path')
                             ->label('File')
+                            ->storeFileNamesIn('title')
                             ->disk('public')
                             ->directory('records/files')
                             ->required()
@@ -64,9 +59,7 @@ class FileResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('file_path')
                     ->label('File')
-                    ->formatStateUsing(function ($state, $record) {
-                        return FileService::generateButton($state, $record);
-                    })
+                    ->formatStateUsing(fn($state, $record) => $record->getDownloadButtonHtml())
                     ->html(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
@@ -107,7 +100,6 @@ class FileResource extends Resource
                 //
             ])
             ->actions([
-                //Tables\Actions\EditAction::make(),
                 Action::make('restore')
                     ->label('Restore')
                     ->icon('heroicon-o-arrow-path')
@@ -146,9 +138,7 @@ class FileResource extends Resource
                     ->visible(fn ($record) =>
                         auth()->user()->hasRole('super_admin') &&
                         $record->status_id === 1 &&
-                        $record->id === \App\Models\File::where('record_id', $record->record_id)
-                            ->orderByDesc('version')
-                            ->first()?->id
+                        $record->isLatestVersion()
                     ),
 
                 Action::make('rejected')
@@ -171,9 +161,7 @@ class FileResource extends Resource
                     ->visible(fn ($record) =>
                         auth()->user()->hasRole('super_admin') &&
                         $record->status_id === 1 &&
-                        $record->id === \App\Models\File::where('record_id', $record->record_id)
-                            ->orderByDesc('version')
-                            ->first()?->id
+                        $record->isLatestVersion()
                     ),
 
             ])
@@ -199,7 +187,6 @@ class FileResource extends Resource
             'restore' => Pages\RestoreFile::route('/restore/{record}'),
             'approved' => Pages\ApprovedFile::route('/approved/{record}'),
             'rejected' => Pages\RejectedFile::route('/rejected/{record}'),
-            //'edit' => Pages\EditFile::route('/{record}/edit'),
         ];
     }
 

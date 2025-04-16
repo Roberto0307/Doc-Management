@@ -50,19 +50,41 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
         ];
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relaciones
+    |--------------------------------------------------------------------------
+    */
+
     public function subProcesses()
     {
         return $this->belongsToMany(SubProcess::class, 'user_has_sub_process');
     }
-    public function validSubProcess($sub_process_id)
+
+    public function records()
     {
-        //$user = auth()->user();
-        return $this->subProcesses()->where('sub_process_id', $sub_process_id)->exists();
+        return $this->hasMany(Record::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Métodos útiles
+    |--------------------------------------------------------------------------
+    */
+
+    public function validSubProcess($subProcessId): bool
+    {
+        return $this->subProcesses()->where('sub_process_id', $subProcessId)->exists();
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
         return auth()->check();
     }
-
 }
