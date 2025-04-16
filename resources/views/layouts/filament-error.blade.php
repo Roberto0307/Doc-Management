@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ config('app.name') }} – @yield('title', 'Error')</title>
     <link rel="stylesheet" type="text/css" href="{{ asset('css/filament/filament/app.css')}}"/>
+    <style>
+        :root{
+            --primary-600: 217, 119, 6;
+            --primary-500: 245, 158, 11;
+            --primary-700: 180, 83, 9;
+            --gray-50: 250, 250, 250;
+            --gray-400: 161, 161, 170;
+            --gray-700: 63, 63, 70;
+            --gray-950: 9, 9, 11;
+            --c-500: var(--primary-500);
+        }
+    </style>
 </head>
 <body class="h-full">
     @yield('content')
 
-    <script src="{{ asset('filament/filament/js/app.js')}}"></script>
+    <script src="{{ asset('js/filament/filament/app.js')}}"></script>
 </body>
 </html>

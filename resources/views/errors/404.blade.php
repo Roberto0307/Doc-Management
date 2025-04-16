@@ -12,13 +12,14 @@
                       d="M9.75 9.75h.008v.008H9.75V9.75zm4.5 0h.008v.008h-.008V9.75zm-6.364 6.364a6 6 0 118.485 0m-8.485 0a6 6 0 008.485 0M21 12A9 9 0 113 12a9 9 0 0118 0z"/>
             </svg>
 
-            <h1 class="text-4xl font-bold text-gray-900">404</h1>
+            <h1 class="text-3xl font-bold text-gray-950">404</h1>
+
             <p class="text-lg text-gray-700">
                 {{ __('Lo sentimos, la página que estás buscando no fue encontrada.') }}
             </p>
 
             <a href="{{ route('filament.dashboard.pages.dashboard') }}"
-               class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition">
+               class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-custom-500 text-white text-sm font-medium rounded-lg transition">
                 {{ __('Ir al panel') }}
             </a>
 
