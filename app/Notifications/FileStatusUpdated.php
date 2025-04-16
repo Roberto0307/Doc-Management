@@ -8,6 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\File;
 use App\Models\User;
+use App\Models\Status;
 use Filament\Notifications\Notification as FilamentNotification;
 
 class FileStatusUpdated extends Notification
@@ -64,11 +65,16 @@ class FileStatusUpdated extends Notification
     public function toDatabase(User $notifiable)
     {
 
+        $statusTitle = Status::titleFromDisplayName( $this->status );
+
+        $color = Status::colorFromTitle($statusTitle);
+
         return FilamentNotification::make()
                 ->title( $this->file->title )
                 ->body( 'Document status: ' . strtoupper($this->status) )
                 ->icon('heroicon-o-document-text')
-                ->color('success')
+                ->color($color)
+                ->status($color)
                 ->getDatabaseMessage();
     }
 

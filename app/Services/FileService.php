@@ -88,7 +88,7 @@ class FileService
             File::create($validated);
         });
 
-        $status = Status::where('id', $validated['status_id'])->first()->display_name;
+        $status = Status::DisplayNameFromId($validated['status_id']);
 
         self::notifyStatusChange($file, $status, $data['responses']);
     }
@@ -129,7 +129,7 @@ class FileService
         return $data;
     }
 
-    protected static function notifyStatusChange(File $file, string $statusTitle, string $message): void
+    protected static function notifyStatusChange(File $file, string $statusDisplayName, string $message): void
     {
 
         $notifiables = collect([
@@ -139,10 +139,13 @@ class FileService
         ->filter()
         ->unique('id');
 
-        Notification::send($notifiables, new FileStatusUpdated($file, $statusTitle, $message));
+        Notification::send($notifiables, new FileStatusUpdated($file, $statusDisplayName, $message));
+
+        $statusTitle = Status::titleFromDisplayName( $statusDisplayName );
 
         session()->flash('file_status', [
-            'status' => $statusTitle,
+            'status' => $statusDisplayName,
+            'title' => $statusTitle,
         ]);
 
     }

@@ -17,18 +17,37 @@ class Status extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | Constantes de estado (opcional)
-    |--------------------------------------------------------------------------
-    */
-    public const PENDING = 1;
-    public const APPROVED = 2;
-    public const REJECTED = 3;
-
-    /*
-    |--------------------------------------------------------------------------
     | Métodos útiles
     |--------------------------------------------------------------------------
     */
+
+    public static function DisplayNameFromId(string $id): ?string
+    {
+        return self::query()
+            ->where('id', $id)
+            ->value('display_name');
+    }
+
+    public static function titleFromDisplayName(string $statusDisplayName): ?string
+    {
+        return self::query()
+            ->where('display_name', $statusDisplayName)
+            ->value('title');
+    }
+
+    public static function colorFromTitle(string $title): ?string
+    {
+
+        $color = match ($title) {
+            'Approved' => 'success',
+            'Rejected' => 'danger',
+            default => 'success',
+        };
+
+        return $color;
+    }
+
+    // En espera de uso...
 
     public static function idFromTitle(string $title): ?int
     {

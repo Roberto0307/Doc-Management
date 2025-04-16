@@ -5,6 +5,7 @@ namespace App\Filament\Resources\FileResource\Pages;
 use App\Filament\Resources\FileResource;
 use App\Filament\Resources\RecordResource;
 use App\Models\Record;
+use App\Models\Status;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
@@ -34,10 +35,12 @@ class ListFiles extends ListRecords
         if (session()->has('file_status')) {
 
             $data = session('file_status');
+            $color = Status::colorFromTitle($data['title']);
 
             Notification::make()
                 ->title("Version successfully " .  $data['status'])
-                ->success()
+                ->color($color)
+                ->status($color)
                 ->send();
         }
 
