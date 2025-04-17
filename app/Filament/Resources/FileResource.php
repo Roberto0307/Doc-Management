@@ -138,7 +138,10 @@ class FileResource extends Resource
                         ]));
                     })
                     ->visible(fn ($record) =>
-                        auth()->user()->hasRole('super_admin') &&
+                        (
+                            auth()->user()->hasRole('super_admin') ||
+                            auth()->user()->validSubProcess($record->record->sub_process_id ?? null)
+                        ) &&
                         $record->status_id === 1 &&
                         $record->isLatestVersion()
                     ),
@@ -161,7 +164,10 @@ class FileResource extends Resource
                         ]));
                     })
                     ->visible(fn ($record) =>
-                        auth()->user()->hasRole('super_admin') &&
+                        (
+                            auth()->user()->hasRole('super_admin') ||
+                            auth()->user()->validSubProcess($record->record->sub_process_id ?? null)
+                        ) &&
                         $record->status_id === 1 &&
                         $record->isLatestVersion()
                     ),
