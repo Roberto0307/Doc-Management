@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\FileResource\Pages;
 use App\Models\File;
 use App\Models\Status;
+use App\Services\AuthService;
 use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -15,8 +16,6 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Table;
-use App\Services\AuthService;
-
 
 class FileResource extends Resource
 {
