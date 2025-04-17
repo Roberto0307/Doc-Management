@@ -96,6 +96,8 @@ class FileService
     public static function validatedData($data)
     {
         $user = auth()->user();
+
+        // 📌 Aca se debe agregar la validación de validSubProcess
         $isSuperAdmin = $user->hasRole('super_admin');
 
         $statusApproved = self::getStatusByTitle('Approved');
