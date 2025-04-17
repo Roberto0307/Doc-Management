@@ -40,12 +40,20 @@ class Status extends Model
     {
 
         $color = match ($title) {
+            'Pending' => 'info',
             'Approved' => 'success',
             'Rejected' => 'danger',
             default => 'success',
         };
 
         return $color;
+    }
+
+    public static function displayNameFromTitle(string $title): ?string
+    {
+        return self::query()
+            ->where('title', $title)
+            ->value('display_name');
     }
 
     // En espera de uso...
@@ -57,10 +65,6 @@ class Status extends Model
             ->value('id');
     }
 
-    public static function displayNameFromTitle(string $title): ?string
-    {
-        return self::query()
-            ->where('title', $title)
-            ->value('display_name');
-    }
+
+
 }

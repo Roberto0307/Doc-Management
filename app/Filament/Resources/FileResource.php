@@ -135,9 +135,7 @@ class FileResource extends Resource
                         ]));
                     })
                     ->visible(function ($record) {
-                        $authService = app(AuthService::class);
-
-                        return $authService->canApprove(
+                        return app(AuthService::class)->canApprove(
                             auth()->user(),
                             $record->record->sub_process_id ?? null
                         ) && $record->status_id === 1 && $record->isLatestVersion();
@@ -161,9 +159,7 @@ class FileResource extends Resource
                         ]));
                     })
                     ->visible(function ($record) {
-                        $authService = app(AuthService::class);
-
-                        return $authService->canApprove(
+                        return app(AuthService::class)->canApprove(
                             auth()->user(),
                             $record->record->sub_process_id ?? null
                         ) && $record->status_id === 1 && $record->isLatestVersion();
