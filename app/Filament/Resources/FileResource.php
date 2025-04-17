@@ -15,6 +15,8 @@ use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Table;
+use App\Services\AuthService;
+
 
 class FileResource extends Resource
 {
@@ -117,7 +119,7 @@ class FileResource extends Resource
                             'comment' => $data['comment'],
                         ]));
                     })
-                    ->visible(fn ($record) => $record->id !== \App\Models\File::where('record_id', $record->record_id)
+                    ->visible(fn ($record) => $record->id !== File::where('record_id', $record->record_id)
                         ->orderByDesc('version')
                         ->first()?->id
                     ),
@@ -133,13 +135,14 @@ class FileResource extends Resource
                             'record_id' => $record->record_id,
                         ]));
                     })
-                    ->visible(fn ($record) => (
-                        auth()->user()->hasRole('super_admin') ||
-                        auth()->user()->validSubProcess($record->record->sub_process_id ?? null)
-                    ) &&
-                        $record->status_id === 1 &&
-                        $record->isLatestVersion()
-                    ),
+                    ->visible(function ($record) {
+                        $authService = app(AuthService::class);
+
+                        return $authService->canApprove(
+                            auth()->user(),
+                            $record->record->sub_process_id ?? null
+                        ) && $record->status_id === 1 && $record->isLatestVersion();
+                    }),
 
                 Action::make('rejected')
                     ->label(fn ($record) => Status::displayNameFromTitle('Rejected') ?? 'Rejected')
@@ -158,13 +161,15 @@ class FileResource extends Resource
                             'responses' => $data['responses'],
                         ]));
                     })
-                    ->visible(fn ($record) => (
-                        auth()->user()->hasRole('super_admin') ||
-                        auth()->user()->validSubProcess($record->record->sub_process_id ?? null)
-                    ) &&
-                        $record->status_id === 1 &&
-                        $record->isLatestVersion()
-                    ),
+                    ->visible(function ($record) {
+                        $authService = app(AuthService::class);
+
+                        return $authService->canApprove(
+                            auth()->user(),
+                            $record->record->sub_process_id ?? null
+                        ) && $record->status_id === 1 && $record->isLatestVersion();
+                    }),
+
                 DeleteAction::make()
                     ->visible(function ($record) {
                         $user = Filament::auth()->user();

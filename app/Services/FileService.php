@@ -97,8 +97,12 @@ class FileService
 
         $record = Record::with('subProcess')->find($data['record_id']);
 
+        // 📌 LLamar esto a través de nuevo servicio.
         $hasApprovalAccess = $user->hasRole('super_admin') ||
-                             $user->validSubProcess($record->sub_process_id ?? null);
+                            (
+                                $user->hasRole('pro') &&
+                                $user->validSubProcess($record->sub_process_id ?? null)
+                            );
 
         $statusApproved = self::getStatusByTitle('Approved');
         $statusPending = self::getStatusByTitle('Pending');
