@@ -9,7 +9,7 @@ Route::get('/', function () {
     return redirect('/dashboard');
 });
 
-// Reset...
+
 Route::get('clear', function () {
 
     Artisan::call('config:cache');
@@ -41,3 +41,32 @@ Route::get('/salir', function () {
 
 //     return 'Correo enviado';
 // });
+
+
+// Route::get('storage', function () {
+
+//     //dd(  base_path()  );
+
+//     $target = base_path('storage/app/public');
+//     $shortcut = '/home/customer/www/doc.phoenixdev.mx/public_html/storage';
+
+//     if (!file_exists($target)) {
+//         return "❌ El directorio de destino no existe: $target";
+//     }
+
+//     // Verifica si ya existe y si es un symlink válido
+//     if (is_link($shortcut)) {
+//         return '⚠️ El symlink ya existe.';
+//     }
+
+//     // Si existe pero NO es symlink (es carpeta u otra cosa)
+//     if (file_exists($shortcut)) {
+//         return '🚫 Ya existe algo en la ruta pero no es un symlink.';
+//     }
+
+//     // Crear symlink
+//     symlink($target, $shortcut);
+//     return '✅ Symlink creado exitosamente.';
+// });
+
+
