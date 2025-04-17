@@ -140,7 +140,7 @@ class RecordResource extends Resource
                     ),
 
                 Action::make('Files')
-                    ->label('Versiones')
+                    ->label('Versions')
                     ->icon('heroicon-o-document')
                     ->color('info')
                     ->url(fn (Record $record): string =>
