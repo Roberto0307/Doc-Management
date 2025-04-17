@@ -20,7 +20,8 @@ use Filament\Forms\Set;
 use Filament\Tables\Actions\Action;
 use App\Filament\Resources\FileResource;
 use Filament\Tables\Filters\SelectFilter;
-
+use Filament\Facades\Filament;
+use Filament\Tables\Actions\DeleteAction;
 
 class RecordResource extends Resource
 {
@@ -149,6 +150,11 @@ class RecordResource extends Resource
                     ->visible(fn ($record) =>
                         $record->canBeAccessedBy( auth()->user() )
                     ),
+                DeleteAction::make()
+                    ->visible(function ($record) {
+                        $user = Filament::auth()->user();
+                        return $user && $user->hasRole('super_admin');
+                    }),
 
 
             ])

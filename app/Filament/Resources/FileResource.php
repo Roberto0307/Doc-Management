@@ -17,7 +17,8 @@ use App\Filament\Resources\RecordResource;
 use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Textarea;
 use App\Models\Status;
-
+use Filament\Facades\Filament;
+use Filament\Tables\Actions\DeleteAction;
 
 class FileResource extends Resource
 {
@@ -46,7 +47,7 @@ class FileResource extends Resource
                             ->directory('records/files')
                             ->required()
                             ->columnSpanFull(),
-                        Forms\Components\TextArea::make('comments')
+                        TextArea::make('comments')
                             ->required()
                             ->maxLength(255)
                             ->columnSpanFull(),
@@ -171,6 +172,11 @@ class FileResource extends Resource
                         $record->status_id === 1 &&
                         $record->isLatestVersion()
                     ),
+                DeleteAction::make()
+                    ->visible(function ($record) {
+                        $user = Filament::auth()->user();
+                        return $user && $user->hasRole('super_admin');
+                    }),
 
             ])
             ->bulkActions([
