@@ -19,7 +19,7 @@ class TypeFactory extends Factory
         return [
             //
             'title' => fake()->word(),
-            'acronym' => fake()->randomElement(['D','F','P']),
+            'acronym' => fake()->randomElement(['D', 'F', 'P']),
         ];
     }
 }

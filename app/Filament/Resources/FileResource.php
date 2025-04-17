@@ -3,22 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\FileResource\Pages;
-use App\Filament\Resources\FileResource\RelationManagers;
 use App\Models\File;
+use App\Models\Status;
+use Filament\Facades\Filament;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\Section;
-use App\Filament\Resources\RecordResource;
 use Filament\Tables\Actions\Action;
-use Filament\Forms\Components\Textarea;
-use App\Models\Status;
-use Filament\Facades\Filament;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Table;
 
 class FileResource extends Resource
 {
@@ -52,7 +48,7 @@ class FileResource extends Resource
                             ->maxLength(255)
                             ->columnSpanFull(),
 
-                    ])
+                    ]),
             ]);
     }
 
@@ -62,7 +58,7 @@ class FileResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('file_path')
                     ->label('File')
-                    ->formatStateUsing(fn($state, $record) => $record->getDownloadButtonHtml())
+                    ->formatStateUsing(fn ($state, $record) => $record->getDownloadButtonHtml())
                     ->html(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
@@ -121,10 +117,9 @@ class FileResource extends Resource
                             'comment' => $data['comment'],
                         ]));
                     })
-                    ->visible(fn ($record) =>
-                        $record->id !== \App\Models\File::where('record_id', $record->record_id)
-                            ->orderByDesc('version')
-                            ->first()?->id
+                    ->visible(fn ($record) => $record->id !== \App\Models\File::where('record_id', $record->record_id)
+                        ->orderByDesc('version')
+                        ->first()?->id
                     ),
 
                 Action::make('approved')
@@ -138,11 +133,10 @@ class FileResource extends Resource
                             'record_id' => $record->record_id,
                         ]));
                     })
-                    ->visible(fn ($record) =>
-                        (
-                            auth()->user()->hasRole('super_admin') ||
-                            auth()->user()->validSubProcess($record->record->sub_process_id ?? null)
-                        ) &&
+                    ->visible(fn ($record) => (
+                        auth()->user()->hasRole('super_admin') ||
+                        auth()->user()->validSubProcess($record->record->sub_process_id ?? null)
+                    ) &&
                         $record->status_id === 1 &&
                         $record->isLatestVersion()
                     ),
@@ -164,17 +158,17 @@ class FileResource extends Resource
                             'responses' => $data['responses'],
                         ]));
                     })
-                    ->visible(fn ($record) =>
-                        (
-                            auth()->user()->hasRole('super_admin') ||
-                            auth()->user()->validSubProcess($record->record->sub_process_id ?? null)
-                        ) &&
+                    ->visible(fn ($record) => (
+                        auth()->user()->hasRole('super_admin') ||
+                        auth()->user()->validSubProcess($record->record->sub_process_id ?? null)
+                    ) &&
                         $record->status_id === 1 &&
                         $record->isLatestVersion()
                     ),
                 DeleteAction::make()
                     ->visible(function ($record) {
                         $user = Filament::auth()->user();
+
                         return $user && $user->hasRole('super_admin');
                     }),
 
@@ -208,5 +202,4 @@ class FileResource extends Resource
     {
         return false;
     }
-
 }

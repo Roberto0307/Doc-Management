@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('records', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->unique() ;
+            $table->string('title')->unique();
             $table->unsignedInteger('process_id');
             $table->unsignedInteger('sub_process_id');
             $table->unsignedInteger('type_id');
-            $table->string('code')->unique() ;
+            $table->string('code')->unique();
             $table->unsignedBigInteger('user_id'); // Asegura que la columna exista
             $table->foreign('user_id')->references('id')->on('users'); // Clave foránea
             $table->timestamps();

@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Services;
+
 use App\Models\File;
 use App\Models\Record;
 use App\Models\Status;
@@ -7,18 +9,14 @@ use App\Notifications\FileStatusUpdated;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
  * Servicio de los Archivos
  */
-
 class FileService
 {
-
     protected static ?\Illuminate\Support\Collection $cachedStatuses = null;
-
 
     public static function getStatusByTitle(string $title): ?Status
     {
@@ -29,13 +27,12 @@ class FileService
         return self::$cachedStatuses->get($title);
     }
 
-
     public static function rejected(int $id): void
     {
         $file = File::findOrFail($id);
         $status = self::getStatusByTitle('Rejected');
 
-        $responseMessage = 'Rejected from version ' . $file->version;
+        $responseMessage = 'Rejected from version '.$file->version;
         $responses = Str::limit(strip_tags(request()->query('responses', $responseMessage)), 255);
 
         $file->update([
@@ -52,13 +49,13 @@ class FileService
 
         $data = [
             'record_id' => $file->record_id,
-            'responses' => 'Approved from version ' . $file->version,
+            'responses' => 'Approved from version '.$file->version,
         ];
 
         $validated = self::validatedData($data);
 
         // Solo queremos actualizar estos campos
-        $validated = Arr::only($validated, ['status_id', 'version','responses']);
+        $validated = Arr::only($validated, ['status_id', 'version', 'responses']);
 
         DB::transaction(function () use ($file, $validated) {
             $file->update($validated);
@@ -80,7 +77,7 @@ class FileService
             'sub_process_id' => $file->sub_process_id,
             'file_path' => $file->file_path,
             'comments' => Str::limit(strip_tags(request()->query('comment', $file->comments)), 255),
-            'responses' => 'Restored from version ' . $file->version,
+            'responses' => 'Restored from version '.$file->version,
         ];
 
         $validated = self::validatedData($data);
@@ -103,20 +100,18 @@ class FileService
         $hasApprovalAccess = $user->hasRole('super_admin') ||
                              $user->validSubProcess($record->sub_process_id ?? null);
 
-
         $statusApproved = self::getStatusByTitle('Approved');
-        $statusPending  = self::getStatusByTitle('Pending');
-
+        $statusPending = self::getStatusByTitle('Pending');
 
         $lastVersion = File::where('record_id', $data['record_id'])
-                           ->orderByDesc('version')
-                           ->first();
+            ->orderByDesc('version')
+            ->first();
 
         if ($lastVersion) {
             if ($hasApprovalAccess) {
                 // Extrae la parte entera de la versión y suma 1
                 $major = (int) $lastVersion->version;
-                $newVersion = ($major + 1) . '.0';
+                $newVersion = ($major + 1).'.0';
 
             } else {
 
@@ -143,12 +138,12 @@ class FileService
             auth()->user(),
             $file->user,
         ])
-        ->filter()
-        ->unique('id');
+            ->filter()
+            ->unique('id');
 
         Notification::send($notifiables, new FileStatusUpdated($file, $statusDisplayName, $message));
 
-        $statusTitle = Status::titleFromDisplayName( $statusDisplayName );
+        $statusTitle = Status::titleFromDisplayName($statusDisplayName);
 
         session()->flash('file_status', [
             'status' => $statusDisplayName,
@@ -156,11 +151,4 @@ class FileService
         ]);
 
     }
-
 }
-
-
-
-
-
-

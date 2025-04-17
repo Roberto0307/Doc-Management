@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Status;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class StatusSeeder extends Seeder
@@ -16,22 +15,22 @@ class StatusSeeder extends Seeder
         //
         Status::factory()->create([
             'title' => 'Pending',
-            'display_name' => 'Pending'
+            'display_name' => 'Pending',
         ]);
 
         Status::factory()->create([
             'title' => 'Approved',
-            'display_name' => 'Approved'
+            'display_name' => 'Approved',
         ]);
 
         Status::factory()->create([
             'title' => 'Rejected',
-            'display_name' => 'Rejected'
+            'display_name' => 'Rejected',
         ]);
 
         Status::factory()->create([
             'title' => 'Restore',
-            'display_name' => 'Restore'
+            'display_name' => 'Restore',
         ]);
     }
 }

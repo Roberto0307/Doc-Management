@@ -3,25 +3,21 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RecordResource\Pages;
-use App\Filament\Resources\RecordResource\RelationManagers;
 use App\Models\Record;
 use App\Models\SubProcess;
+use Filament\Facades\Filament;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section;
-use Illuminate\Support\Collection;
+use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Actions\Action;
-use App\Filament\Resources\FileResource;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Facades\Filament;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 
 class RecordResource extends Resource
 {
@@ -54,7 +50,7 @@ class RecordResource extends Resource
                             ->columnSpanFull(),
                         Forms\Components\Select::make('process_id')
                             ->relationship('process', 'title')
-                            ->afterStateUpdated(fn(Set $set) => $set('sub_process_id', null))
+                            ->afterStateUpdated(fn (Set $set) => $set('sub_process_id', null))
                             ->searchable()
                             ->preload()
                             ->live()
@@ -62,7 +58,7 @@ class RecordResource extends Resource
                         Forms\Components\Select::make('sub_process_id')
                             ->label('Sub Process')
                             ->options(
-                                fn(Get $get): Collection => SubProcess::query()
+                                fn (Get $get): Collection => SubProcess::query()
                                     ->where('process_id', $get('process_id'))
                                     ->pluck('title', 'id')
                             )
@@ -71,8 +67,7 @@ class RecordResource extends Resource
                             ->live()
                             ->required(),
 
-
-                    ])
+                    ]),
             ]);
     }
 
@@ -121,7 +116,7 @@ class RecordResource extends Resource
                     ->label('Sub Process')
                     ->multiple()
                     ->searchable()
-                    ->preload()
+                    ->preload(),
             ])
             ->actions([
 
@@ -129,33 +124,29 @@ class RecordResource extends Resource
                     ->label('Download')
                     ->icon('heroicon-o-document')
                     ->color('danger')
-                    ->url(fn ($record) =>
-                        $record->approvedVersionUrl()
+                    ->url(fn ($record) => $record->approvedVersionUrl()
                     )
                     ->openUrlInNewTab(false)
                     ->extraAttributes(fn ($record) => [
                         'download' => $record->title,
                     ])
-                    ->visible(fn ($record) =>
-                        $record->hasApprovedVersion()
+                    ->visible(fn ($record) => $record->hasApprovedVersion()
                     ),
 
                 Action::make('Files')
                     ->label('Versions')
                     ->icon('heroicon-o-document')
                     ->color('info')
-                    ->url(fn (Record $record): string =>
-                        FileResource::getUrl('index', ['record_id' => $record->id ])
+                    ->url(fn (Record $record): string => FileResource::getUrl('index', ['record_id' => $record->id])
                     )
-                    ->visible(fn ($record) =>
-                        $record->canBeAccessedBy( auth()->user() )
+                    ->visible(fn ($record) => $record->canBeAccessedBy(auth()->user())
                     ),
                 DeleteAction::make()
                     ->visible(function ($record) {
                         $user = Filament::auth()->user();
+
                         return $user && $user->hasRole('super_admin');
                     }),
-
 
             ])
             ->actionsPosition(Tables\Enums\ActionsPosition::BeforeColumns)

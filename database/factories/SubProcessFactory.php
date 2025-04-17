@@ -19,8 +19,8 @@ class SubProcessFactory extends Factory
         return [
             //
             'title' => fake()->sentence(3),
-            'process_id' => fake()->randomElement([1,2,3]),
-            'acronym' => fake()->randomElement(['SGI','RH','PRD'])
+            'process_id' => fake()->randomElement([1, 2, 3]),
+            'acronym' => fake()->randomElement(['SGI', 'RH', 'PRD']),
         ];
     }
 }

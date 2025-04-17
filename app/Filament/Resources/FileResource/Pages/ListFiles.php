@@ -23,14 +23,14 @@ class ListFiles extends ListRecords
 
         $this->recordId = request()->query('record_id');
 
-        //Validación de Usuario y sus subprocesos
+        // Validación de Usuario y sus subprocesos
         $user = auth()->user();
         $sub_process = Record::findOrFail($this->recordId)->sub_process_id;
 
         $isSuperAdmin = $user->hasRole('super_admin');
         $isAuthorized = $user->validSubProcess($sub_process ?? null);
 
-        abort_if(!($isSuperAdmin || $isAuthorized), 403);
+        abort_if(! ($isSuperAdmin || $isAuthorized), 403);
 
         if (session()->has('file_status')) {
 
@@ -38,7 +38,7 @@ class ListFiles extends ListRecords
             $color = Status::colorFromTitle($data['title']);
 
             Notification::make()
-                ->title("Version successfully " .  $data['status'])
+                ->title('Version successfully '.$data['status'])
                 ->color($color)
                 ->status($color)
                 ->send();
@@ -59,7 +59,7 @@ class ListFiles extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        if (!$this->recordId) {
+        if (! $this->recordId) {
             return [];
         }
 
@@ -68,11 +68,10 @@ class ListFiles extends ListRecords
                 ->label('Upload file')
                 ->button()
                 ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
-                ->url(fn (): string =>
-                    FileResource::getUrl('create', [
+                ->url(fn (): string => FileResource::getUrl('create', [
                     'record_id' => $this->recordId,
-                    ]
-            )),
+                ]
+                )),
             Action::make('back')
                 ->label('Return')
                 ->url(fn (): string => RecordResource::getUrl('index'))

@@ -3,13 +3,11 @@
 namespace App\Filament\Resources\FileResource\Pages;
 
 use App\Filament\Resources\FileResource;
-use Filament\Actions;
-use Filament\Resources\Pages\CreateRecord;
+use App\Models\Record;
 use App\Models\User;
 use App\Notifications\FileStatusUpdated;
-use App\Filament\Resources\RecordResource;
-use App\Models\Record;
 use App\Services\FileService;
+use Filament\Resources\Pages\CreateRecord;
 
 class CreateFile extends CreateRecord
 {
@@ -47,12 +45,12 @@ class CreateFile extends CreateRecord
     {
         $recordId = request()->query('record_id');
 
-        if (!$recordId) {
+        if (! $recordId) {
             return null;
         }
 
         $record = Record::findOrFail($recordId);
-        return  $record?->title;
-    }
 
+        return $record?->title;
+    }
 }

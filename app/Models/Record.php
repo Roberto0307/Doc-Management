@@ -87,7 +87,7 @@ class Record extends Model
 
     public function hasApprovedVersion(): bool
     {
-        return !empty($this->latestApprovedFile?->file_path);
+        return ! empty($this->latestApprovedFile?->file_path);
     }
 
     public function canBeAccessedBy(User $user): bool

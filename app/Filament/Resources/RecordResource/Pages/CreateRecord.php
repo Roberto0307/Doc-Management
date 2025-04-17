@@ -3,11 +3,9 @@
 namespace App\Filament\Resources\RecordResource\Pages;
 
 use App\Filament\Resources\RecordResource;
-use Filament\Actions;
-use Filament\Resources\Pages\CreateRecord as BaseCreateRecord;
 use App\Services\RecordService;
 use Filament\Notifications\Notification;
-
+use Filament\Resources\Pages\CreateRecord as BaseCreateRecord;
 
 class CreateRecord extends BaseCreateRecord
 {
@@ -20,7 +18,7 @@ class CreateRecord extends BaseCreateRecord
         $isSuperAdmin = $user->hasRole('super_admin');
         $isAuthorized = $user->validSubProcess($data['sub_process_id'] ?? null);
 
-        if (!($isSuperAdmin || $isAuthorized)) {
+        if (! ($isSuperAdmin || $isAuthorized)) {
 
             Notification::make()
                 ->title('Access denied')
@@ -48,5 +46,3 @@ class CreateRecord extends BaseCreateRecord
         return false;
     }
 }
-
-

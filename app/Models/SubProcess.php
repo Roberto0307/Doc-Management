@@ -25,5 +25,4 @@ class SubProcess extends Model
     {
         return $this->belongsToMany(User::class, 'user_has_sub_process');
     }
-
 }

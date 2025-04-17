@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -16,8 +15,8 @@ class RolesSeeder extends Seeder
     {
         // Crear roles
 
-        //Role::truncate();
-        //User::truncate();
+        // Role::truncate();
+        // User::truncate();
 
         $adminRole = Role::create(['name' => 'super_admin']);
         $proRole = Role::create(['name' => 'pro']);
@@ -55,7 +54,6 @@ class RolesSeeder extends Seeder
         $basic->save();
 
         $basic->assignRole($basicRole);
-
 
     }
 }

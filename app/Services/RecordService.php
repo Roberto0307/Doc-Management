@@ -32,5 +32,4 @@ class RecordService
 
         return $code;
     }
-
 }

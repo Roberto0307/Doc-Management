@@ -1,14 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return redirect('/dashboard');
 });
-
 
 Route::get('clear', function () {
 
@@ -21,7 +19,6 @@ Route::get('clear', function () {
     return redirect('/#clear');
 });
 
-
 Route::get('/salir', function () {
     Auth::logout();
 
@@ -32,7 +29,6 @@ Route::get('/salir', function () {
     return redirect('/'); // o a donde quieras redirigir
 })->name('salir');
 
-
 // Route::get('/test-mail', function () {
 //     Mail::raw('Este es un correo de prueba.', function ($message) {
 //         $message->to('montesinos.quintana@gmail.com')
@@ -41,7 +37,6 @@ Route::get('/salir', function () {
 
 //     return 'Correo enviado';
 // });
-
 
 // Route::get('storage', function () {
 
@@ -68,5 +63,3 @@ Route::get('/salir', function () {
 //     symlink($target, $shortcut);
 //     return '✅ Symlink creado exitosamente.';
 // });
-
-
