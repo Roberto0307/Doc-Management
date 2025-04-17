@@ -5,6 +5,9 @@ namespace App\Filament\Resources\StatusResource\Pages;
 use App\Filament\Resources\StatusResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Actions\DeleteAction;
+use Filament\Facades\Filament;
+
 
 class EditStatus extends EditRecord
 {
@@ -13,8 +16,11 @@ class EditStatus extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            // 📌 Si se ocupa crear un auth super admin para esto.
-            //Actions\DeleteAction::make(),
+            DeleteAction::make()
+                ->visible(function () {
+                    $user = Filament::auth()->user();
+                    return $user && $user->hasRole('super_admin');
+                }),
         ];
     }
     protected function getRedirectUrl(): string

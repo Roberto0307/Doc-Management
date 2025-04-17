@@ -1,12 +1,13 @@
 <?php
 namespace App\Services;
 use App\Models\File;
+use App\Models\Record;
 use App\Models\Status;
 use App\Notifications\FileStatusUpdated;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -97,8 +98,11 @@ class FileService
     {
         $user = auth()->user();
 
-        // 📌 Aca se debe agregar la validación de validSubProcess
-        $isSuperAdmin = $user->hasRole('super_admin');
+        $record = Record::with('subProcess')->find($data['record_id']);
+
+        $hasApprovalAccess = $user->hasRole('super_admin') ||
+                             $user->validSubProcess($record->sub_process_id ?? null);
+
 
         $statusApproved = self::getStatusByTitle('Approved');
         $statusPending  = self::getStatusByTitle('Pending');
@@ -109,10 +113,11 @@ class FileService
                            ->first();
 
         if ($lastVersion) {
-            if ($isSuperAdmin) {
+            if ($hasApprovalAccess) {
                 // Extrae la parte entera de la versión y suma 1
                 $major = (int) $lastVersion->version;
                 $newVersion = ($major + 1) . '.0';
+
             } else {
 
                 // Incrementa decimal en 0.1
@@ -121,10 +126,10 @@ class FileService
 
         } else {
 
-            $newVersion = $isSuperAdmin ? '1.0' : '0.1';
+            $newVersion = $hasApprovalAccess ? '1.0' : '0.1';
         }
 
-        $data['status_id'] = $isSuperAdmin ? $statusApproved->id : $statusPending->id;
+        $data['status_id'] = $hasApprovalAccess ? $statusApproved->id : $statusPending->id;
         $data['version'] = $newVersion;
         $data['user_id'] = $user->id;
 
