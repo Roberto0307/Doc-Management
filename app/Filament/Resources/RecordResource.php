@@ -14,6 +14,7 @@ use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -119,37 +120,40 @@ class RecordResource extends Resource
                     ->preload(),
             ])
             ->actions([
+                ActionGroup::make([
 
-                Action::make('LastfileApproved')
-                    ->label('Download')
-                    ->icon('heroicon-o-document')
-                    ->color('danger')
-                    ->url(fn ($record) => $record->approvedVersionUrl()
-                    )
-                    ->openUrlInNewTab(false)
-                    ->extraAttributes(fn ($record) => [
-                        'download' => $record->title,
-                    ])
-                    ->visible(fn ($record) => $record->hasApprovedVersion()
-                    ),
+                    Action::make('LastfileApproved')
+                        ->label('Download')
+                        ->icon('heroicon-o-document')
+                        ->color('danger')
+                        ->url(fn ($record) => $record->approvedVersionUrl()
+                        )
+                        ->openUrlInNewTab(false)
+                        ->extraAttributes(fn ($record) => [
+                            'download' => $record->title,
+                        ])
+                        ->visible(fn ($record) => $record->hasApprovedVersion()
+                        ),
 
-                Action::make('Files')
-                    ->label('Versions')
-                    ->icon('heroicon-o-document')
-                    ->color('info')
-                    ->url(fn (Record $record): string => FileResource::getUrl('index', ['record_id' => $record->id])
-                    )
-                    ->visible(fn ($record) => $record->canBeAccessedBy(auth()->user())
-                    ),
-                DeleteAction::make()
-                    ->visible(function ($record) {
-                        $user = Filament::auth()->user();
+                    Action::make('Files')
+                        ->label('Versions')
+                        ->icon('heroicon-o-document')
+                        ->color('info')
+                        ->url(fn (Record $record): string => FileResource::getUrl('index', ['record_id' => $record->id])
+                        )
+                        ->visible(fn ($record) => $record->canBeAccessedBy(auth()->user())
+                        ),
 
-                        return $user && $user->hasRole('super_admin');
-                    }),
+                    DeleteAction::make()
+                        ->visible(function ($record) {
+                            $user = Filament::auth()->user();
 
+                            return $user && $user->hasRole('super_admin');
+                        }),
+
+                ])->color('info')->link()->label(false)->tooltip('Actions'),
             ])
-            ->actionsPosition(Tables\Enums\ActionsPosition::BeforeColumns)
+            ->actionsPosition(Tables\Enums\ActionsPosition::BeforeCells)
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

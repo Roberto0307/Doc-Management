@@ -22,7 +22,7 @@ class FileService
         $this->authService = $authService;
     }
 
-    public  function rejected(int $id): void
+    public function rejected(int $id): void
     {
         $file = File::findOrFail($id);
         $status = Status::byTitle('Rejected');
@@ -38,7 +38,7 @@ class FileService
         self::notifyStatusChange($file, $status->display_name, $responses);
     }
 
-    public  function approved(int $id): void
+    public function approved(int $id): void
     {
         $file = File::findOrFail($id);
 

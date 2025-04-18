@@ -21,5 +21,4 @@ class EditType extends EditRecord
     {
         return $this->getResource()::getUrl('index');
     }
-
 }
