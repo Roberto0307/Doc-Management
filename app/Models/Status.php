@@ -22,6 +22,17 @@ class Status extends Model
     |--------------------------------------------------------------------------
     */
 
+    public static function byTitle(string $title): ?self
+    {
+        static $cache;
+
+        if (! $cache) {
+            $cache = self::all()->keyBy('title');
+        }
+
+        return $cache->get($title);
+    }
+
     public static function DisplayNameFromId(string $id): ?string
     {
         return self::query()

@@ -9,7 +9,7 @@ use App\Models\Type;
 class RecordService
 {
     // Generar codigo
-    public static function generateCode($typeId, $subProcessId)
+    public function generateCode($typeId, $subProcessId)
     {
         // Buscar Tipo y Sub Proceso
         $type = Type::findOrFail($typeId);

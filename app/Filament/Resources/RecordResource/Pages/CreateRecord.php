@@ -30,7 +30,7 @@ class CreateRecord extends BaseCreateRecord
             $this->halt(); // Detiene el proceso de creación
         }
 
-        $data['code'] = RecordService::generateCode($data['type_id'], $data['sub_process_id']);
+        $data['code'] = app(RecordService::class)->generateCode($data['type_id'], $data['sub_process_id']);
         $data['user_id'] = $user->id;
 
         return $data;

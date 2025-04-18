@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\File;
-use App\Models\Record;
 use App\Models\Status;
 use App\Notifications\FileStatusUpdated;
 use Illuminate\Support\Arr;
@@ -16,21 +15,17 @@ use Illuminate\Support\Str;
  */
 class FileService
 {
-    protected static ?\Illuminate\Support\Collection $cachedStatuses = null;
+    protected AuthService $authService;
 
-    public static function getStatusByTitle(string $title): ?Status
+    public function __construct(AuthService $authService)
     {
-        if (is_null(self::$cachedStatuses)) {
-            self::$cachedStatuses = Status::all()->keyBy('title');
-        }
-
-        return self::$cachedStatuses->get($title);
+        $this->authService = $authService;
     }
 
-    public static function rejected(int $id): void
+    public  function rejected(int $id): void
     {
         $file = File::findOrFail($id);
-        $status = self::getStatusByTitle('Rejected');
+        $status = Status::byTitle('Rejected');
 
         $responseMessage = 'Rejected from version '.$file->version;
         $responses = Str::limit(strip_tags(request()->query('responses', $responseMessage)), 255);
@@ -43,7 +38,7 @@ class FileService
         self::notifyStatusChange($file, $status->display_name, $responses);
     }
 
-    public static function approved(int $id): void
+    public  function approved(int $id): void
     {
         $file = File::findOrFail($id);
 
@@ -52,7 +47,7 @@ class FileService
             'responses' => 'Approved from version '.$file->version,
         ];
 
-        $validated = self::validatedData($data);
+        $validated = $this->authService->validatedData($data);
 
         // Solo queremos actualizar estos campos
         $validated = Arr::only($validated, ['status_id', 'version', 'responses']);
@@ -61,13 +56,13 @@ class FileService
             $file->update($validated);
         });
 
-        $status = self::getStatusByTitle('Approved');
+        $status = Status::byTitle('Approved');
 
         self::notifyStatusChange($file, $status->display_name, $data['responses']);
 
     }
 
-    public static function restore(int $id): void
+    public function restore(int $id): void
     {
         $file = File::findOrFail($id);
 
@@ -80,54 +75,15 @@ class FileService
             'responses' => 'Restored from version '.$file->version,
         ];
 
-        $validated = self::validatedData($data);
+        $validated = $this->authService->validatedData($data);
 
         DB::transaction(function () use ($validated) {
             File::create($validated);
         });
 
-        $status = Status::DisplayNameFromId($validated['status_id']);
+        $statusDisplayName = Status::DisplayNameFromId($validated['status_id']);
 
-        self::notifyStatusChange($file, $status, $data['responses']);
-    }
-
-    public static function validatedData($data)
-    {
-        $user = auth()->user();
-
-        $record = Record::with('subProcess')->find($data['record_id']);
-
-        $hasApprovalAccess = app(AuthService::class)->canApprove($user, $record->sub_process_id ?? null);
-
-        $statusApproved = self::getStatusByTitle('Approved');
-        $statusPending = self::getStatusByTitle('Pending');
-
-        $lastVersion = File::where('record_id', $data['record_id'])
-            ->orderByDesc('version')
-            ->first();
-
-        if ($lastVersion) {
-            if ($hasApprovalAccess) {
-                // Extrae la parte entera de la versión y suma 1
-                $major = (int) $lastVersion->version;
-                $newVersion = ($major + 1).'.0';
-
-            } else {
-
-                // Incrementa decimal en 0.1
-                $newVersion = bcadd($lastVersion->version, '0.1', 1);
-            }
-
-        } else {
-
-            $newVersion = $hasApprovalAccess ? '1.0' : '0.1';
-        }
-
-        $data['status_id'] = $hasApprovalAccess ? $statusApproved->id : $statusPending->id;
-        $data['version'] = $newVersion;
-        $data['user_id'] = $user->id;
-
-        return $data;
+        self::notifyStatusChange($file, $statusDisplayName, $data['responses']);
     }
 
     protected static function notifyStatusChange(File $file, string $statusDisplayName, string $message): void
@@ -145,7 +101,7 @@ class FileService
         $statusTitle = Status::titleFromDisplayName($statusDisplayName);
 
         session()->flash('file_status', [
-            'status' => $statusDisplayName,
+            'display_name' => $statusDisplayName,
             'title' => $statusTitle,
         ]);
 

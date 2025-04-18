@@ -6,7 +6,7 @@ use App\Filament\Resources\FileResource;
 use App\Models\Record;
 use App\Models\User;
 use App\Notifications\FileStatusUpdated;
-use App\Services\FileService;
+use App\Services\AuthService;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateFile extends CreateRecord
@@ -15,17 +15,17 @@ class CreateFile extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        return FileService::validatedData($data);
+        return app(AuthService::class)->validatedData($data);
     }
 
     protected function afterCreate(): void
     {
         $file = $this->record;
-        $status = $file->status->display_name;
+        $statusDisplayName = $file->status->display_name;
         $comments = $file->comments;
 
         $user = User::role('super_admin')->first();
-        $user->notify(new FileStatusUpdated($file, $status, $comments));
+        $user->notify(new FileStatusUpdated($file, $statusDisplayName, $comments));
     }
 
     protected function getRedirectUrl(): string

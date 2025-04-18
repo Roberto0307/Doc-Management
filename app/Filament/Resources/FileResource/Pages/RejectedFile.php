@@ -17,7 +17,7 @@ class RejectedFile extends Page
     {
         $recordId = request()->route('record');
 
-        FileService::rejected($recordId);
+        app(FileService::class)->rejected($recordId);
 
         $file = File::findOrFail($recordId);
 

@@ -17,7 +17,7 @@ class ApprovedFile extends Page
     {
         $recordId = request()->route('record');
 
-        FileService::approved($recordId);
+        app(FileService::class)->approved($recordId);
 
         $file = File::findOrFail($recordId);
 

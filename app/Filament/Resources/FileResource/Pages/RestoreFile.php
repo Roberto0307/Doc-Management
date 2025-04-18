@@ -17,7 +17,7 @@ class RestoreFile extends Page
     {
         $recordId = request()->route('record');
 
-        FileService::restore($recordId);
+        app(FileService::class)->restore($recordId);
 
         $file = File::findOrFail($recordId);
 
