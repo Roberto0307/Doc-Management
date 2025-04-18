@@ -18,11 +18,11 @@ class AuthService
                ($user->hasRole('pro') && $user->validSubProcess($subProcessId));
     }
 
-    public function validatedData($data): array
+    public function validatedData(array $data): array
     {
         $user = auth()->user();
 
-        $record = Record::with('subProcess')->find($data['record_id']);
+        $record = Record::with('subProcess')->findOrFail($data['record_id']);
 
         $hasApprovalAccess = $this->canApprove(
             $user,

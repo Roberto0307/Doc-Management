@@ -35,7 +35,7 @@ class FileService
             'responses' => $responses,
         ]);
 
-        self::notifyStatusChange($file, $status->display_name, $responses);
+        $this->notifyStatusChange($file, $status->display_name, $responses);
     }
 
     public function approved(int $id): void
@@ -58,7 +58,7 @@ class FileService
 
         $status = Status::byTitle('Approved');
 
-        self::notifyStatusChange($file, $status->display_name, $data['responses']);
+        $this->notifyStatusChange($file, $status->display_name, $data['responses']);
 
     }
 
@@ -83,10 +83,10 @@ class FileService
 
         $statusDisplayName = Status::DisplayNameFromId($validated['status_id']);
 
-        self::notifyStatusChange($file, $statusDisplayName, $data['responses']);
+        $this->notifyStatusChange($file, $statusDisplayName, $data['responses']);
     }
 
-    protected static function notifyStatusChange(File $file, string $statusDisplayName, string $message): void
+    protected function notifyStatusChange(File $file, string $statusDisplayName, string $message): void
     {
 
         $notifiables = collect([
