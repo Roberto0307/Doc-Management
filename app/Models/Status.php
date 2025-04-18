@@ -64,7 +64,4 @@ class Status extends Model
             ->where('title', $title)
             ->value('id');
     }
-
-
-
 }

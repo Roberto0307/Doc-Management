@@ -10,7 +10,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
-use App\Services\AuthService;
 
 /**
  * Servicio de los Archivos
