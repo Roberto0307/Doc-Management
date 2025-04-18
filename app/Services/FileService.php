@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
+use App\Services\AuthService;
 
 /**
  * Servicio de los Archivos
@@ -97,12 +98,7 @@ class FileService
 
         $record = Record::with('subProcess')->find($data['record_id']);
 
-        // 📌 LLamar esto a través de nuevo servicio.
-        $hasApprovalAccess = $user->hasRole('super_admin') ||
-                            (
-                                $user->hasRole('pro') &&
-                                $user->validSubProcess($record->sub_process_id ?? null)
-                            );
+        $hasApprovalAccess = app(AuthService::class)->canApprove($user, $record->sub_process_id ?? null);
 
         $statusApproved = self::getStatusByTitle('Approved');
         $statusPending = self::getStatusByTitle('Pending');
