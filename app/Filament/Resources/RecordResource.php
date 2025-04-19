@@ -86,6 +86,19 @@ class RecordResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subprocess.title')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('latestFile.status.title')
+                    ->label('State')
+                    ->searchable()
+                    ->badge()
+                    ->colors([
+                        'success' => 'Approve',
+                        'danger' => 'Rejected',
+                        'info' => 'Pending',
+                    ])
+                    ->formatStateUsing(fn ($state, $record) => $record->latestFile->status->display_name),
+                Tables\Columns\TextColumn::make('latestFile.version')
+                    ->label('Version')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
