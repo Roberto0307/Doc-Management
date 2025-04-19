@@ -67,9 +67,10 @@ class FileResource extends Resource
                     ->searchable()
                     ->badge()
                     ->colors([
+                        'gray' => 'Draft',
+                        'info' => 'Pending',
                         'success' => 'Approve',
                         'danger' => 'Rejected',
-                        'info' => 'Pending',
                     ])
                     ->formatStateUsing(fn ($state, $record) => $record->status->display_name),
                 Tables\Columns\TextColumn::make('version')
@@ -100,6 +101,31 @@ class FileResource extends Resource
                 //
             ])
             ->actions([
+
+                Action::make('pending')
+                    ->label(fn ($record) => Status::displayNameFromTitle('Pending') ?? 'Pending')
+                    ->icon('heroicon-o-pause-circle')
+                    ->form([
+                        Textarea::make('responses')
+                            ->label('Confirm Pending')
+                            ->required()
+                            ->placeholder('¿Are you sure you want to leave Pending?'),
+                    ])
+                    ->color('info')
+                    ->action(function ($record, array $data) {
+                        redirect(FileResource::getUrl('pending', [
+                            'record' => $record->id,
+                            'record_id' => $record->record_id,
+                            'responses' => $data['responses'],
+                        ]));
+                    })
+                    ->visible(function ($record) {
+                        return app(AuthService::class)->canPending(
+                            auth()->user(),
+                            $record
+                        );
+                    }),
+
                 Action::make('restore')
                     ->label(fn ($record) => Status::displayNameFromTitle('Restore') ?? 'Restore')
                     ->icon('heroicon-o-arrow-path')
@@ -192,6 +218,7 @@ class FileResource extends Resource
         return [
             'index' => Pages\ListFiles::route('/'),
             'create' => Pages\CreateFile::route('/create'),
+            'pending' => Pages\PendingFile::route('/pending/{record}'),
             'restore' => Pages\RestoreFile::route('/restore/{record}'),
             'approved' => Pages\ApprovedFile::route('/approved/{record}'),
             'rejected' => Pages\RejectedFile::route('/rejected/{record}'),

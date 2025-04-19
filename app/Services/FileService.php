@@ -22,6 +22,22 @@ class FileService
         $this->authService = $authService;
     }
 
+    public function pending(int $id): void
+    {
+        $file = File::findOrFail($id);
+        $status = Status::byTitle('Pending');
+
+        $responseMessage = 'Pending from version '.$file->version;
+        $responses = Str::limit(strip_tags(request()->query('responses', $responseMessage)), 255);
+
+        $file->update([
+            'status_id' => $status->id,
+            'responses' => $responses,
+        ]);
+
+        $this->notifyStatusChange($file, $status->display_name, $responses);
+    }
+
     public function rejected(int $id): void
     {
         $file = File::findOrFail($id);

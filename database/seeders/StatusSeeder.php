@@ -14,6 +14,11 @@ class StatusSeeder extends Seeder
     {
         //
         Status::factory()->create([
+            'title' => 'Draft',
+            'display_name' => 'Draft',
+        ]);
+
+        Status::factory()->create([
             'title' => 'Pending',
             'display_name' => 'Pending',
         ]);

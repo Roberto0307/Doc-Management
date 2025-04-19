@@ -91,9 +91,10 @@ class RecordResource extends Resource
                     ->searchable()
                     ->badge()
                     ->colors([
+                        'gray' => 'Draft',
+                        'info' => 'Pending',
                         'success' => 'Approve',
                         'danger' => 'Rejected',
-                        'info' => 'Pending',
                     ])
                     ->formatStateUsing(fn ($state, $record) => $record->latestFile->status->display_name),
                 Tables\Columns\TextColumn::make('latestFile.version')

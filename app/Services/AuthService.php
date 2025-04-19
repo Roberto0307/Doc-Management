@@ -18,6 +18,12 @@ class AuthService
                ($user->hasRole('pro') && $user->validSubProcess($subProcessId));
     }
 
+    public function canPending(User $user, File $file): bool
+    {
+        return $user->hasRole('super_admin') ||
+               $file->user_id === $user->id;
+    }
+
     public function validatedData(array $data): array
     {
         $user = auth()->user();
@@ -30,7 +36,7 @@ class AuthService
         );
 
         $statusApproved = Status::byTitle('Approved');
-        $statusPending = Status::byTitle('Pending');
+        $statusDraft = Status::byTitle('Draft');
 
         $lastVersion = File::where('record_id', $data['record_id'])
             ->orderByDesc('version')
@@ -53,7 +59,7 @@ class AuthService
             $newVersion = $hasApprovalAccess ? '1.0' : '0.1';
         }
 
-        $data['status_id'] = $hasApprovalAccess ? $statusApproved->id : $statusPending->id;
+        $data['status_id'] = $hasApprovalAccess ? $statusApproved->id : $statusDraft->id;
         $data['version'] = $newVersion;
         $data['user_id'] = $user->id;
 

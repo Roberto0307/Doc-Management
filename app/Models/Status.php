@@ -51,9 +51,10 @@ class Status extends Model
     {
 
         $color = match ($title) {
-            'Pending' => 'info',
+            'gray' => 'Draft',
             'Approved' => 'success',
             'Rejected' => 'danger',
+            'Pending' => 'info',
             default => 'success',
         };
 
