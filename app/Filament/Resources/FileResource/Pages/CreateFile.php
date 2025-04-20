@@ -13,6 +13,19 @@ class CreateFile extends CreateRecord
 {
     protected static string $resource = FileResource::class;
 
+    public ?int $record_id = null;
+
+    public function mount(): void
+    {
+        parent::mount();
+
+        $this->record_id = request()->query('record_id');
+
+        $this->form->fill([
+            'record_id' => $this->record_id,
+        ]);
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         return app(AuthService::class)->validatedData($data);

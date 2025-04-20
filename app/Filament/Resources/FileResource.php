@@ -36,7 +36,7 @@ class FileResource extends Resource
                     ->schema([
                         Forms\Components\Hidden::make('record_id')
                             ->required()
-                            ->default(request()->query('record_id')),
+                            ->dehydrated(),
                         Forms\Components\FileUpload::make('file_path')
                             ->label('File')
                             ->storeFileNamesIn('title')
