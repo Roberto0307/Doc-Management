@@ -49,8 +49,8 @@ class FileResource extends Resource
                                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
                                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',       // .xlsx
                             ])
-                            ->rules(['mimes:pdf,doc,docx,xlsx'])
                             ->maxSize(10240) // en KB, 10MB ejemplo
+                            ->helperText('Allowed types: PDF, DOC, DOCX, XLS, XLSX (max. 10MB)')
                             ->columnSpanFull(),
                         TextArea::make('comments')
                             ->required()
