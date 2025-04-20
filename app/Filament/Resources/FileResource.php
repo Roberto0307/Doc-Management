@@ -43,6 +43,14 @@ class FileResource extends Resource
                             ->disk('public')
                             ->directory('records/files')
                             ->required()
+                            ->acceptedFileTypes([
+                                'application/pdf',
+                                'application/msword',
+                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',       // .xlsx
+                            ])
+                            ->rules(['mimes:pdf,doc,docx,xlsx'])
+                            ->maxSize(10240) // en KB, 10MB ejemplo
                             ->columnSpanFull(),
                         TextArea::make('comments')
                             ->required()
@@ -69,7 +77,6 @@ class FileResource extends Resource
                     ->color(fn ($state, $record) => Status::colorFromId($record->status_id)
                     ),
                 Tables\Columns\TextColumn::make('version')
-                    ->numeric()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('comments')
                     ->searchable(),
@@ -78,11 +85,10 @@ class FileResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Created by')
-                    ->numeric()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('record.title')
-                    ->numeric(),
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -188,6 +194,7 @@ class FileResource extends Resource
 
                 DeleteAction::make()
                     ->visible(function ($record) {
+
                         $user = Filament::auth()->user();
 
                         return $user && $user->hasRole('super_admin');
