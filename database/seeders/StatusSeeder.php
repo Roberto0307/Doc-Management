@@ -7,35 +7,21 @@ use Illuminate\Database\Seeder;
 
 class StatusSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        //
-        Status::factory()->create([
-            'title' => 'Draft',
-            'display_name' => 'Draft',
-        ]);
+        $statuses = [
+            ['id' => 1, 'title' => 'Draft', 'display_name' => 'Borrador'],
+            ['id' => 2, 'title' => 'Pending', 'display_name' => 'Pendiente'],
+            ['id' => 3, 'title' => 'Approved', 'display_name' => 'Aprobado'],
+            ['id' => 4, 'title' => 'Rejected', 'display_name' => 'Rechazado'],
+            ['id' => 5, 'title' => 'Restore', 'display_name' => 'Restaurado'],
+        ];
 
-        Status::factory()->create([
-            'title' => 'Pending',
-            'display_name' => 'Pending',
-        ]);
-
-        Status::factory()->create([
-            'title' => 'Approved',
-            'display_name' => 'Approved',
-        ]);
-
-        Status::factory()->create([
-            'title' => 'Rejected',
-            'display_name' => 'Rejected',
-        ]);
-
-        Status::factory()->create([
-            'title' => 'Restore',
-            'display_name' => 'Restore',
-        ]);
+        foreach ($statuses as $status) {
+            Status::updateOrCreate(
+                ['id' => $status['id']],
+                $status
+            );
+        }
     }
 }

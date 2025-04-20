@@ -4,7 +4,6 @@ namespace App\Filament\Resources\StatusResource\Pages;
 
 use App\Filament\Resources\StatusResource;
 use Filament\Actions\DeleteAction;
-use Filament\Facades\Filament;
 use Filament\Resources\Pages\EditRecord;
 
 class EditStatus extends EditRecord
@@ -16,9 +15,7 @@ class EditStatus extends EditRecord
         return [
             DeleteAction::make()
                 ->visible(function () {
-                    $user = Filament::auth()->user();
-
-                    return $user && $user->hasRole('super_admin');
+                    return auth()->user()->hasRole('super_admin') && ! in_array($this->record->id, [1, 2, 3, 4, 5]);
                 }),
         ];
     }

@@ -65,9 +65,9 @@ class FileStatusUpdated extends Notification
     public function toDatabase(User $notifiable)
     {
 
-        $statusTitle = Status::titleFromDisplayName($this->status);
+        $statusId = Status::idFromDisplayName($this->status);
 
-        $color = Status::colorFromTitle($statusTitle);
+        $color = Status::colorFromId($statusId);
 
         return FilamentNotification::make()
             ->title($this->file->title)

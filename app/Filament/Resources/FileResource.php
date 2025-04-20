@@ -63,16 +63,11 @@ class FileResource extends Resource
                     ->html(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status.title')
+                Tables\Columns\TextColumn::make('status.display_name')
                     ->searchable()
                     ->badge()
-                    ->colors([
-                        'gray' => 'Draft',
-                        'info' => 'Pending',
-                        'success' => 'Approve',
-                        'danger' => 'Rejected',
-                    ])
-                    ->formatStateUsing(fn ($state, $record) => $record->status->display_name),
+                    ->color(fn ($state, $record) => Status::colorFromId($record->status_id)
+                    ),
                 Tables\Columns\TextColumn::make('version')
                     ->numeric()
                     ->searchable(),
@@ -164,7 +159,7 @@ class FileResource extends Resource
                         return app(AuthService::class)->canApprove(
                             auth()->user(),
                             $record->record->sub_process_id ?? null
-                        ) && $record->status_id === 1 && $record->isLatestVersion();
+                        ) && $record->status_id === 2 && $record->isLatestVersion();
                     }),
 
                 Action::make('rejected')
@@ -188,7 +183,7 @@ class FileResource extends Resource
                         return app(AuthService::class)->canApprove(
                             auth()->user(),
                             $record->record->sub_process_id ?? null
-                        ) && $record->status_id === 1 && $record->isLatestVersion();
+                        ) && $record->status_id === 2 && $record->isLatestVersion();
                     }),
 
                 DeleteAction::make()

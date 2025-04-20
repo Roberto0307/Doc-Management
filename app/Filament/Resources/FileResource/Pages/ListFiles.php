@@ -32,7 +32,7 @@ class ListFiles extends ListRecords
 
             $data = session('file_status');
             $statusDisplayName = $data['display_name'];
-            $color = Status::colorFromTitle($data['title']);
+            $color = Status::colorFromId($data['status_id']);
 
             Notification::make()
                 ->title('Version successfully '.$statusDisplayName)

@@ -97,7 +97,7 @@ class FileService
             File::create($validated);
         });
 
-        $statusDisplayName = Status::DisplayNameFromId($validated['status_id']);
+        $statusDisplayName = Status::displayNameFromId($validated['status_id']);
 
         $this->notifyStatusChange($file, $statusDisplayName, $data['responses']);
     }
@@ -114,11 +114,11 @@ class FileService
 
         Notification::send($notifiables, new FileStatusUpdated($file, $statusDisplayName, $message));
 
-        $statusTitle = Status::titleFromDisplayName($statusDisplayName);
+        $statusId = Status::idFromDisplayName($statusDisplayName);
 
         session()->flash('file_status', [
+            'status_id' => $statusId,
             'display_name' => $statusDisplayName,
-            'title' => $statusTitle,
         ]);
 
     }

@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RecordResource\Pages;
 use App\Models\Record;
+use App\Models\Status;
 use App\Models\SubProcess;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
@@ -86,17 +86,12 @@ class RecordResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subprocess.title')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('latestFile.status.title')
+                Tables\Columns\TextColumn::make('latestFile.status.display_name')
                     ->label('State')
                     ->searchable()
                     ->badge()
-                    ->colors([
-                        'gray' => 'Draft',
-                        'info' => 'Pending',
-                        'success' => 'Approve',
-                        'danger' => 'Rejected',
-                    ])
-                    ->formatStateUsing(fn ($state, $record) => $record->latestFile->status->display_name),
+                    ->color(fn ($state, $record) => Status::colorFromId($record->latestFile->status_id)
+                    ),
                 Tables\Columns\TextColumn::make('latestFile.version')
                     ->label('Version')
                     ->searchable(),
@@ -159,11 +154,7 @@ class RecordResource extends Resource
                         ),
 
                     DeleteAction::make()
-                        ->visible(function ($record) {
-                            $user = Filament::auth()->user();
-
-                            return $user && $user->hasRole('super_admin');
-                        }),
+                        ->visible(fn ($record): bool => auth()->user()?->can('delete', $record)),
 
                 ])->color('info')->link()->label(false)->tooltip('Actions'),
             ])
