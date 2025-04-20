@@ -63,7 +63,7 @@ class Record extends Model
     public function latestApprovedFile()
     {
         return $this->hasOne(File::class)
-            ->where('status_id', 2)
+            ->where('status_id', 3)
             ->latest('version');
     }
 

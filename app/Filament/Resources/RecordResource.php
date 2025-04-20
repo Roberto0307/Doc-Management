@@ -134,7 +134,7 @@ class RecordResource extends Resource
                     Action::make('LastfileApproved')
                         ->label('Download')
                         ->icon('heroicon-o-document')
-                        ->color('danger')
+                        ->color('success')
                         ->url(fn ($record) => $record->approvedVersionUrl()
                         )
                         ->openUrlInNewTab(false)
