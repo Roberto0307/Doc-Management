@@ -38,8 +38,8 @@ class ListFiles extends ListRecords
             Notification::make()
                 ->title('Version successfully '.$status->label)
                 ->icon($status->iconName())
-                ->color($status->badgeColor())
-                ->status($status->badgeColor())
+                ->color($status->colorName())
+                ->status($status->colorName())
                 ->send();
         }
 
@@ -81,6 +81,10 @@ class ListFiles extends ListRecords
 
     public function getSubheading(): ?string
     {
+        if (! $this->recordId) {
+            return null;
+        }
+
         $record = Record::find($this->recordId);
 
         return $record?->title;

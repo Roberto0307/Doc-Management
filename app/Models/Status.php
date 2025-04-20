@@ -43,12 +43,26 @@ class Status extends Model
             ->value('label');
     }
 
+    public static function iconFromTitle(string $title): ?string
+    {
+        return self::query()
+            ->where('title', $title)
+            ->value('icon');
+    }
+
+    public static function colorFromTitle(string $title): ?string
+    {
+        return self::query()
+            ->where('title', $title)
+            ->value('color');
+    }
+
     public function isProtected(): bool
     {
         return $this->protected;
     }
 
-    public function badgeColor(): string
+    public function colorName(): string
     {
         return $this->color ?? 'gray';
     }

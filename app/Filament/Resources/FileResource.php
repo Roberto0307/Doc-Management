@@ -74,7 +74,7 @@ class FileResource extends Resource
                 Tables\Columns\TextColumn::make('status.label')
                     ->searchable()
                     ->badge()
-                    ->color(fn ($record) => $record->status->badgeColor()),
+                    ->color(fn ($record) => $record->status->colorName()),
                 Tables\Columns\TextColumn::make('version')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('comments')
@@ -104,14 +104,14 @@ class FileResource extends Resource
 
                 Action::make('pending')
                     ->label(fn ($record) => Status::labelFromTitle('pending') ?? 'Pending')
-                    ->icon('heroicon-o-pause-circle')
+                    ->icon(fn ($record) => Status::iconFromTitle('pending') ?? 'information-circle')
+                    ->color(fn ($record) => Status::colorFromTitle('pending') ?? 'gray')
                     ->form([
                         Textarea::make('responses')
                             ->label('Confirm Pending')
                             ->required()
                             ->placeholder('¿Are you sure you want to leave Pending?'),
                     ])
-                    ->color('info')
                     ->action(function ($record, array $data) {
                         redirect(FileResource::getUrl('pending', [
                             'record' => $record->id,
@@ -126,7 +126,8 @@ class FileResource extends Resource
 
                 Action::make('restore')
                     ->label(fn ($record) => Status::labelFromTitle('restore') ?? 'Restore')
-                    ->icon('heroicon-o-arrow-path')
+                    ->icon(fn ($record) => Status::iconFromTitle('restore') ?? 'information-circle')
+                    ->color(fn ($record) => Status::colorFromTitle('restore') ?? 'gray')
                     ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
                     ->form([
                         Textarea::make('comment')
@@ -134,7 +135,6 @@ class FileResource extends Resource
                             ->required()
                             ->placeholder('¿Reason for restore?'),
                     ])
-                    ->color('warning')
                     ->action(function ($record, array $data) {
                         redirect(FileResource::getUrl('restore', [
                             'record' => $record->id,
@@ -149,9 +149,9 @@ class FileResource extends Resource
 
                 Action::make('approved')
                     ->label(fn ($record) => Status::labelFromTitle('approved') ?? 'Approved')
-                    ->icon('heroicon-o-check')
+                    ->icon(fn ($record) => Status::iconFromTitle('approved') ?? 'information-circle')
+                    ->color(fn ($record) => Status::colorFromTitle('approved') ?? 'gray')
                     ->requiresConfirmation()
-                    ->color('success')
                     ->action(function ($record) {
                         redirect(FileResource::getUrl('approved', [
                             'record' => $record->id,
@@ -167,14 +167,14 @@ class FileResource extends Resource
 
                 Action::make('rejected')
                     ->label(fn ($record) => Status::labelFromTitle('rejected') ?? 'Rejected')
-                    ->icon('heroicon-o-x-circle')
+                    ->icon(fn ($record) => Status::iconFromTitle('rejected') ?? 'information-circle')
+                    ->color(fn ($record) => Status::colorFromTitle('rejected') ?? 'gray')
                     ->form([
                         Textarea::make('responses')
                             ->label('Confirm Rejection')
                             ->required()
                             ->placeholder('¿Reason for rejected?'),
                     ])
-                    ->color('danger')
                     ->action(function ($record, array $data) {
                         redirect(FileResource::getUrl('rejected', [
                             'record' => $record->id,

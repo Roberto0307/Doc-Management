@@ -56,13 +56,11 @@ class CreateFile extends CreateRecord
 
     public function getSubheading(): ?string
     {
-        $recordId = request()->query('record_id');
-
-        if (! $recordId) {
+        if (! $this->record_id) {
             return null;
         }
 
-        $record = Record::findOrFail($recordId);
+        $record = Record::find($this->record_id);
 
         return $record?->title;
     }

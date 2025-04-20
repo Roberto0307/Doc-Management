@@ -68,8 +68,8 @@ class FileStatusUpdated extends Notification
             ->title($this->file->title)
             ->body('Document status: '.strtoupper($this->status->label))
             ->icon($this->status->iconName())
-            ->color($this->status->badgeColor())
-            ->status($this->status->badgeColor())
+            ->color($this->status->colorName())
+            ->status($this->status->colorName())
             ->getDatabaseMessage();
     }
 }

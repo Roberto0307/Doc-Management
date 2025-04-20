@@ -20,7 +20,7 @@ class StatusSeeder extends Seeder
             [
                 'title' => 'pending',
                 'label' => 'Pendiente',
-                'color' => 'warning',
+                'color' => 'info',
                 'icon' => 'heroicon-o-clock',
                 'protected' => true,
             ],
@@ -41,7 +41,7 @@ class StatusSeeder extends Seeder
             [
                 'title' => 'restore',
                 'label' => 'Restaurado',
-                'color' => 'secondary',
+                'color' => 'warning',
                 'icon' => 'heroicon-o-arrow-path',
                 'protected' => true,
             ],

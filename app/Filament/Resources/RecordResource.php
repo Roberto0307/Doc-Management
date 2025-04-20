@@ -89,7 +89,7 @@ class RecordResource extends Resource
                     ->label('State')
                     ->searchable()
                     ->badge()
-                    ->color(fn ($record) => $record->latestFile?->status->badgeColor()),
+                    ->color(fn ($record) => $record->latestFile?->status->colorName()),
                 Tables\Columns\TextColumn::make('latestFile.version')
                     ->label('Version')
                     ->searchable(),
