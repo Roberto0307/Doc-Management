@@ -24,6 +24,21 @@ class AuthService
                $file->user_id === $user->id;
     }
 
+    public function canAccessSubProcessId(int|string|null $subProcessId): bool
+    {
+        $user = auth()->user();
+
+        if ($user->hasRole('super_admin')) {
+            return true;
+        }
+
+        if (is_null($subProcessId)) {
+            return false;
+        }
+
+        return $user->validSubProcess($subProcessId);
+    }
+
     public function validatedData(array $data): array
     {
         $user = auth()->user();

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\RecordResource\Pages;
 use App\Filament\Resources\RecordResource;
 use App\Services\RecordService;
 use Filament\Notifications\Notification;
+use App\Services\AuthService;
 use Filament\Resources\Pages\CreateRecord as BaseCreateRecord;
 
 class CreateRecord extends BaseCreateRecord
@@ -13,21 +14,15 @@ class CreateRecord extends BaseCreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $user = auth()->user();
 
-        $isSuperAdmin = $user->hasRole('super_admin');
-        $isAuthorized = $user->validSubProcess($data['sub_process_id'] ?? null);
-
-        if (! ($isSuperAdmin || $isAuthorized)) {
-
+        if (! app(AuthService::class)->canAccessSubProcessId($data['sub_process_id'] ?? null)) {
             Notification::make()
                 ->title('Access denied')
                 ->body('You do not have permission to create this file.')
                 ->danger()
                 ->persistent()
                 ->send();
-
-            $this->halt(); // Detiene el proceso de creación
+            $this->halt();
         }
 
         $data['code'] = app(RecordService::class)->generateCode($data['type_id'], $data['sub_process_id']);

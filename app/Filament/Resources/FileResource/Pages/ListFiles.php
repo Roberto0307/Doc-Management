@@ -9,12 +9,14 @@ use App\Models\Status;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use App\Services\AuthService;
+
 
 class ListFiles extends ListRecords
 {
     protected static string $resource = FileResource::class;
 
-    public ?int $recordId = null;
+    protected ?int $recordId = null;
 
     public function mount(): void
     {
@@ -23,14 +25,9 @@ class ListFiles extends ListRecords
 
         $this->recordId = request()->query('record_id');
 
-        // Validación de Usuario y sus subprocesos
-        $user = auth()->user();
-        $sub_process = Record::findOrFail($this->recordId)->sub_process_id;
+        $sub_processId = Record::findOrFail($this->recordId)->sub_process_id;
 
-        $isSuperAdmin = $user->hasRole('super_admin');
-        $isAuthorized = $user->validSubProcess($sub_process ?? null);
-
-        abort_if(! ($isSuperAdmin || $isAuthorized), 403);
+        abort_if(! app(AuthService::class)->canAccessSubProcessId($sub_processId), 403);
 
         if (session()->has('file_status')) {
 
@@ -80,4 +77,11 @@ class ListFiles extends ListRecords
                 ->color('info'),
         ];
     }
+
+    public function getSubheading(): ?string
+    {
+        $record = Record::find($this->recordId);
+        return $record?->title;
+    }
+
 }
