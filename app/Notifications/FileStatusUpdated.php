@@ -64,17 +64,15 @@ class FileStatusUpdated extends Notification
      */
     public function toDatabase(User $notifiable)
     {
-
-        $statusId = Status::idFromDisplayName($this->status);
-
-        $color = Status::colorFromId($statusId);
+        // Buscar el estado por título interno (ej. 'approved', 'pending', etc.)
+        $status = Status::byTitle($this->status);
 
         return FilamentNotification::make()
             ->title($this->file->title)
-            ->body('Document status: '.strtoupper($this->status))
-            ->icon('heroicon-o-document-text')
-            ->color($color)
-            ->status($color)
+            ->body('Document status: '.strtoupper($status->label))
+            ->icon($status->iconName())
+            ->color($status->badgeColor())
+            ->status($status->badgeColor())
             ->getDatabaseMessage();
     }
 }

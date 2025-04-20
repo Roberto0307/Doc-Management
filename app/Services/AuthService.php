@@ -50,8 +50,8 @@ class AuthService
             $record->sub_process_id ?? null
         );
 
-        $statusApproved = Status::byTitle('Approved');
-        $statusDraft = Status::byTitle('Draft');
+        $statusApproved = Status::byTitle('approved');
+        $statusDraft = Status::byTitle('draft');
 
         $lastVersion = File::where('record_id', $data['record_id'])
             ->orderByDesc('version')

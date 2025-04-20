@@ -15,7 +15,8 @@ class EditStatus extends EditRecord
         return [
             DeleteAction::make()
                 ->visible(function () {
-                    return auth()->user()->hasRole('super_admin') && ! in_array($this->record->id, [1, 2, 3, 4, 5]);
+                    return auth()->user()->hasRole('super_admin') ||
+                    ! $this->record->isProtected();
                 }),
         ];
     }

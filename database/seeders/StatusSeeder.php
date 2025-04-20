@@ -10,16 +10,46 @@ class StatusSeeder extends Seeder
     public function run(): void
     {
         $statuses = [
-            ['id' => 1, 'title' => 'Draft', 'display_name' => 'Borrador'],
-            ['id' => 2, 'title' => 'Pending', 'display_name' => 'Pendiente'],
-            ['id' => 3, 'title' => 'Approved', 'display_name' => 'Aprobado'],
-            ['id' => 4, 'title' => 'Rejected', 'display_name' => 'Rechazado'],
-            ['id' => 5, 'title' => 'Restore', 'display_name' => 'Restaurado'],
+            [
+                'title' => 'draft',
+                'label' => 'Borrador',
+                'color' => 'gray',
+                'icon' => 'pencil-square',
+                'protected' => true,
+            ],
+            [
+                'title' => 'pending',
+                'label' => 'Pendiente',
+                'color' => 'warning',
+                'icon' => 'clock',
+                'protected' => true,
+            ],
+            [
+                'title' => 'approved',
+                'label' => 'Aprobado',
+                'color' => 'success',
+                'icon' => 'check-circle',
+                'protected' => true,
+            ],
+            [
+                'title' => 'rejected',
+                'label' => 'Rechazado',
+                'color' => 'danger',
+                'icon' => 'x-circle',
+                'protected' => true,
+            ],
+            [
+                'title' => 'restore',
+                'label' => 'Restaurado',
+                'color' => 'secondary',
+                'icon' => 'arrow-path',
+                'protected' => true,
+            ],
         ];
 
         foreach ($statuses as $status) {
             Status::updateOrCreate(
-                ['id' => $status['id']],
+                ['title' => $status['title']],
                 $status
             );
         }

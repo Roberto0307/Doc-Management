@@ -34,11 +34,11 @@ class CreateFile extends CreateRecord
     protected function afterCreate(): void
     {
         $file = $this->record;
-        $statusDisplayName = $file->status->display_name;
+        $statusLabel = $file->status->label;
         $comments = $file->comments;
 
         $user = User::role('super_admin')->first();
-        $user->notify(new FileStatusUpdated($file, $statusDisplayName, $comments));
+        $user->notify(new FileStatusUpdated($file, $statusLabel, $comments));
     }
 
     protected function getRedirectUrl(): string

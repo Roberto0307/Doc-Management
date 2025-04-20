@@ -71,11 +71,10 @@ class FileResource extends Resource
                     ->html(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status.display_name')
+                Tables\Columns\TextColumn::make('status.label')
                     ->searchable()
                     ->badge()
-                    ->color(fn ($state, $record) => Status::colorFromId($record->status_id)
-                    ),
+                    ->color(fn ($record) => $record->status->badgeColor()),
                 Tables\Columns\TextColumn::make('version')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('comments')
@@ -104,7 +103,7 @@ class FileResource extends Resource
             ->actions([
 
                 Action::make('pending')
-                    ->label(fn ($record) => Status::displayNameFromTitle('Pending') ?? 'Pending')
+                    ->label(fn ($record) => Status::labelFromTitle('pending') ?? 'Pending')
                     ->icon('heroicon-o-pause-circle')
                     ->form([
                         Textarea::make('responses')
@@ -126,7 +125,7 @@ class FileResource extends Resource
                     }),
 
                 Action::make('restore')
-                    ->label(fn ($record) => Status::displayNameFromTitle('Restore') ?? 'Restore')
+                    ->label(fn ($record) => Status::labelFromTitle('restore') ?? 'Restore')
                     ->icon('heroicon-o-arrow-path')
                     ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
                     ->form([
@@ -149,7 +148,7 @@ class FileResource extends Resource
                     ),
 
                 Action::make('approved')
-                    ->label(fn ($record) => Status::displayNameFromTitle('Approved') ?? 'Approved')
+                    ->label(fn ($record) => Status::labelFromTitle('approved') ?? 'Approved')
                     ->icon('heroicon-o-check')
                     ->requiresConfirmation()
                     ->color('success')
@@ -167,7 +166,7 @@ class FileResource extends Resource
                     }),
 
                 Action::make('rejected')
-                    ->label(fn ($record) => Status::displayNameFromTitle('Rejected') ?? 'Rejected')
+                    ->label(fn ($record) => Status::labelFromTitle('rejected') ?? 'Rejected')
                     ->icon('heroicon-o-x-circle')
                     ->form([
                         Textarea::make('responses')

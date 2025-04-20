@@ -13,7 +13,10 @@ class Status extends Model
     //
     protected $fillable = [
         'title',
-        'display_name',
+        'label',
+        'color',
+        'icon',
+
     ];
 
     /*
@@ -33,35 +36,32 @@ class Status extends Model
         return $cache->get($title);
     }
 
-    public static function displayNameFromTitle(string $title): ?string
+    public static function labelFromTitle(string $title): ?string
     {
         return self::query()
             ->where('title', $title)
-            ->value('display_name');
+            ->value('label');
     }
 
-    public static function idFromDisplayName(string $DisplayName): ?int
-    {
-        return self::query()
-            ->where('display_name', $DisplayName)
-            ->value('id');
-    }
-
-    public static function displayNameFromId(string $id): ?string
+    public static function labelFromId(string $id): ?string
     {
         return self::query()
             ->where('id', $id)
-            ->value('display_name');
+            ->value('label');
     }
 
-    public static function colorFromId(?int $id): string
+    public function isProtected(): bool
     {
-        return match ($id) {
-            1 => 'gray',     // Draft
-            2 => 'info',     // Pending
-            3 => 'success',  // Approved
-            4 => 'danger',   // Rejected
-            default => 'secondary',
-        };
+        return $this->protected;
+    }
+
+    public function badgeColor(): string
+    {
+        return $this->color ?? 'gray';
+    }
+
+    public function iconName(): string
+    {
+        return $this->icon ?? 'information-circle';
     }
 }

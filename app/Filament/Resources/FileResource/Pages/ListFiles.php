@@ -31,13 +31,15 @@ class ListFiles extends ListRecords
         if (session()->has('file_status')) {
 
             $data = session('file_status');
-            $statusDisplayName = $data['display_name'];
-            $color = Status::colorFromId($data['status_id']);
+
+            // Obtener status usando el 'title'
+            $status = Status::byTitle($data['title']);
 
             Notification::make()
-                ->title('Version successfully '.$statusDisplayName)
-                ->color($color)
-                ->status($color)
+                ->title('Version successfully '.$status->label)
+                ->icon($status->iconName())
+                ->color($status->badgeColor())
+                ->status($status->badgeColor())
                 ->send();
         }
 

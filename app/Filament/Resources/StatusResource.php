@@ -34,12 +34,19 @@ class StatusResource extends Resource
                     ->helperText('This is the status identifier. Only super admins can edit it.')
                     ->columnSpanFull(),
 
-                Forms\Components\TextInput::make('display_name')
+                Forms\Components\TextInput::make('label')
                     ->label('Display name')
                     ->required()
                     ->maxLength(255)
                     ->placeholder(fn ($record) => $record?->title ?? 'State title')
                     ->columnSpanFull(),
+
+                Forms\Components\TextInput::make('color')
+                    ->label('Color'),
+
+                Forms\Components\TextInput::make('icon')
+                    ->label('Icon'),
+
             ]);
     }
 
@@ -47,7 +54,7 @@ class StatusResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('display_name')
+                Tables\Columns\TextColumn::make('label')
                     ->label('Name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -67,7 +74,10 @@ class StatusResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->action(function ($records) {
+                            $records->reject(fn ($record) => $record->protected)->each->delete();
+                        }),
                 ]),
             ]);
     }

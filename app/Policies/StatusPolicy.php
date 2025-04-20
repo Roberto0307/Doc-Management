@@ -47,10 +47,7 @@ class StatusPolicy
      */
     public function delete(User $user, Status $status): bool
     {
-
-        return $user->can('delete_status')
-            && $user->hasRole('super_admin')
-            && ! in_array($status->id, [1, 2, 3, 4, 5]);
+        return $user->can('delete_status');
     }
 
     /**

@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RecordResource\Pages;
 use App\Models\Record;
-use App\Models\Status;
 use App\Models\SubProcess;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -86,12 +85,11 @@ class RecordResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subprocess.title')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('latestFile.status.display_name')
+                Tables\Columns\TextColumn::make('latestFile.status.label')
                     ->label('State')
                     ->searchable()
                     ->badge()
-                    ->color(fn ($state, $record) => Status::colorFromId($record->latestFile->status_id)
-                    ),
+                    ->color(fn ($record) => $record->latestFile?->status->badgeColor()),
                 Tables\Columns\TextColumn::make('latestFile.version')
                     ->label('Version')
                     ->searchable(),
