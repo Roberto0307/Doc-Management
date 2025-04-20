@@ -121,10 +121,8 @@ class FileResource extends Resource
                         ]));
                     })
                     ->visible(function ($record) {
-                        return app(AuthService::class)->canPending(
-                            auth()->user(),
-                            $record
-                        );
+                        return app(AuthService::class)->canPending(auth()->user(), $record)
+                            && $record->status_id === 1;
                     }),
 
                 Action::make('restore')
