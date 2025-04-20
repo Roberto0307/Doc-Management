@@ -23,7 +23,7 @@ class FileStatusUpdated extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(File $file, $status, $responses = null)
+    public function __construct(File $file, Status $status, $responses = null)
     {
         //
         $this->file = $file;
@@ -49,7 +49,7 @@ class FileStatusUpdated extends Notification
         $mailMessage = (new MailMessage)
             ->subject('Document status')
             ->greeting('Hi '.$notifiable->name.',')
-            ->line('The status of the document "'.$this->file->title.'" has changed to: '.strtoupper($this->status));
+            ->line('The status of the document "'.$this->file->title.'" has changed to: '.strtoupper($this->status->label));
 
         // Solo agregar la línea si $this->responses no es null ni vacío
         if (! empty($this->responses)) {
@@ -64,15 +64,12 @@ class FileStatusUpdated extends Notification
      */
     public function toDatabase(User $notifiable)
     {
-        // Buscar el estado por título interno (ej. 'approved', 'pending', etc.)
-        $status = Status::byTitle($this->status);
-
         return FilamentNotification::make()
             ->title($this->file->title)
-            ->body('Document status: '.strtoupper($status->label))
-            ->icon($status->iconName())
-            ->color($status->badgeColor())
-            ->status($status->badgeColor())
+            ->body('Document status: '.strtoupper($this->status->label))
+            ->icon($this->status->iconName())
+            ->color($this->status->badgeColor())
+            ->status($this->status->badgeColor())
             ->getDatabaseMessage();
     }
 }

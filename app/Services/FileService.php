@@ -35,7 +35,7 @@ class FileService
             'responses' => $responses,
         ]);
 
-        $this->notifyStatusChange($file, $status->label, $responses);
+        $this->notifyStatusChange($file, $status, $responses);
     }
 
     public function rejected(int $id): void
@@ -51,7 +51,7 @@ class FileService
             'responses' => $responses,
         ]);
 
-        $this->notifyStatusChange($file, $status->label, $responses);
+        $this->notifyStatusChange($file, $status, $responses);
     }
 
     public function approved(int $id): void
@@ -74,7 +74,7 @@ class FileService
 
         $status = Status::byTitle('approved');
 
-        $this->notifyStatusChange($file, $status->label, $data['responses']);
+        $this->notifyStatusChange($file, $status, $data['responses']);
 
     }
 
@@ -97,12 +97,12 @@ class FileService
             File::create($validated);
         });
 
-        $statusLabel = Status::labelFromId($validated['status_id']);
+        $status = Status::findOrFail($validated['status_id']);
 
-        $this->notifyStatusChange($file, $statusLabel, $data['responses']);
+        $this->notifyStatusChange($file, $status, $data['responses']);
     }
 
-    protected function notifyStatusChange(File $file, string $statusLabel, string $message): void
+    protected function notifyStatusChange(File $file, Status $status, string $message): void
     {
 
         $notifiables = collect([
@@ -112,10 +112,10 @@ class FileService
             ->filter()
             ->unique('id');
 
-        Notification::send($notifiables, new FileStatusUpdated($file, $statusLabel, $message));
+        Notification::send($notifiables, new FileStatusUpdated($file, $status, $message));
 
         session()->flash('file_status', [
-            'status_label' => $statusLabel,
+            'status_title' => $status->title,
         ]);
 
     }

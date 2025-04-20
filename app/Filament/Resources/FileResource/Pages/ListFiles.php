@@ -33,7 +33,7 @@ class ListFiles extends ListRecords
             $data = session('file_status');
 
             // Obtener status usando el 'title'
-            $status = Status::byTitle($data['title']);
+            $status = Status::byTitle($data['status_title']);
 
             Notification::make()
                 ->title('Version successfully '.$status->label)

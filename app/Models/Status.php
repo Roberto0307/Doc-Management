@@ -43,13 +43,6 @@ class Status extends Model
             ->value('label');
     }
 
-    public static function labelFromId(string $id): ?string
-    {
-        return self::query()
-            ->where('id', $id)
-            ->value('label');
-    }
-
     public function isProtected(): bool
     {
         return $this->protected;
