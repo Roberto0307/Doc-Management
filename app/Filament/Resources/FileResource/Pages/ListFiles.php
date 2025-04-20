@@ -6,11 +6,10 @@ use App\Filament\Resources\FileResource;
 use App\Filament\Resources\RecordResource;
 use App\Models\Record;
 use App\Models\Status;
+use App\Services\AuthService;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
-use App\Services\AuthService;
-
 
 class ListFiles extends ListRecords
 {
@@ -81,7 +80,7 @@ class ListFiles extends ListRecords
     public function getSubheading(): ?string
     {
         $record = Record::find($this->recordId);
+
         return $record?->title;
     }
-
 }

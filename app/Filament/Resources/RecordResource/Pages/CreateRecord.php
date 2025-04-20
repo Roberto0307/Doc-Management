@@ -3,9 +3,9 @@
 namespace App\Filament\Resources\RecordResource\Pages;
 
 use App\Filament\Resources\RecordResource;
+use App\Services\AuthService;
 use App\Services\RecordService;
 use Filament\Notifications\Notification;
-use App\Services\AuthService;
 use Filament\Resources\Pages\CreateRecord as BaseCreateRecord;
 
 class CreateRecord extends BaseCreateRecord
