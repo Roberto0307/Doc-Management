@@ -142,10 +142,9 @@ class FileResource extends Resource
                             'comment' => $data['comment'],
                         ]));
                     })
-                    ->visible(fn ($record) =>
-                        $record->id !== File::where('record_id', $record->record_id)
-                            ->orderByDesc('version')
-                            ->first()?->id
+                    ->visible(fn ($record) => $record->id !== File::where('record_id', $record->record_id)
+                        ->orderByDesc('version')
+                        ->first()?->id
                         && $record->status_id === 1
                     ),
 
