@@ -64,4 +64,12 @@ class CreateFile extends CreateRecord
 
         return $record?->title;
     }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            FileResource::getUrl('index', ['record_id' => $this->record_id]) => 'Files',
+            false => 'Create',
+        ];
+    }
 }

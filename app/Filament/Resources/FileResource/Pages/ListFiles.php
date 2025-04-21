@@ -15,7 +15,7 @@ class ListFiles extends ListRecords
 {
     protected static string $resource = FileResource::class;
 
-    protected ?int $recordId = null;
+    public ?int $recordId = null;
 
     public function mount(): void
     {
@@ -88,5 +88,13 @@ class ListFiles extends ListRecords
         $record = Record::find($this->recordId);
 
         return $record?->title;
+    }
+
+    public function getBreadcrumbs(): array
+    {
+        return [
+            FileResource::getUrl('index', ['record_id' => $this->recordId]) => 'Files',
+            false => 'List',
+        ];
     }
 }

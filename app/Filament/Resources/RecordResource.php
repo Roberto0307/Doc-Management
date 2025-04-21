@@ -94,6 +94,7 @@ class RecordResource extends Resource
                     ->label('Version')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
+                    ->label('Created by')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
