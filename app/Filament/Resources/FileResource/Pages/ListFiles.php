@@ -75,7 +75,7 @@ class ListFiles extends ListRecords
                 ->label('Return')
                 ->url(fn (): string => RecordResource::getUrl('index'))
                 ->button()
-                ->color('info'),
+                ->color('gray'),
         ];
     }
 
