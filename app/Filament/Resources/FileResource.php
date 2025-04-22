@@ -14,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Table;
 
@@ -65,10 +66,10 @@ class FileResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('file_path')
+                /* Tables\Columns\TextColumn::make('file_path')
                     ->label('File')
                     ->formatStateUsing(fn ($state, $record) => $record->getDownloadButtonHtml())
-                    ->html(),
+                    ->html(), */
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status.label')
@@ -101,102 +102,119 @@ class FileResource extends Resource
                 //
             ])
             ->actions([
+                ActionGroup::make([
 
-                Action::make('pending')
-                    ->label(fn ($record) => Status::labelFromTitle('pending') ?? 'Pending')
-                    ->icon(fn ($record) => Status::iconFromTitle('pending') ?? 'information-circle')
-                    ->color(fn ($record) => Status::colorFromTitle('pending') ?? 'gray')
-                    ->form([
-                        Textarea::make('responses')
-                            ->label('Confirm Pending')
-                            ->required()
-                            ->placeholder('¿Are you sure you want to leave Pending?'),
-                    ])
-                    ->action(function ($record, array $data) {
-                        redirect(FileResource::getUrl('pending', [
-                            'record' => $record->id,
-                            'record_id' => $record->record_id,
-                            'responses' => $data['responses'],
-                        ]));
-                    })
-                    ->visible(function ($record) {
-                        return app(AuthService::class)->canPending(auth()->user(), $record)
-                            && $record->status_id === 1;
-                    }),
+                    Action::make('pending')
+                        ->label(fn ($record) => Status::labelFromTitle('pending') ?? 'Pending')
+                        ->icon(fn ($record) => Status::iconFromTitle('pending') ?? 'information-circle')
+                        ->color(fn ($record) => Status::colorFromTitle('pending') ?? 'gray')
+                        ->form([
+                            Textarea::make('responses')
+                                ->label('Confirm Pending')
+                                ->required()
+                                ->placeholder('¿Are you sure you want to leave Pending?'),
+                        ])
+                        ->action(function ($record, array $data) {
+                            redirect(FileResource::getUrl('pending', [
+                                'record' => $record->id,
+                                'record_id' => $record->record_id,
+                                'responses' => $data['responses'],
+                            ]));
+                        })
+                        ->visible(function ($record) {
+                            return app(AuthService::class)->canPending(auth()->user(), $record)
+                                && $record->status_id === 1;
+                        }),
 
-                Action::make('restore')
-                    ->label(fn ($record) => Status::labelFromTitle('restore') ?? 'Restore')
-                    ->icon(fn ($record) => Status::iconFromTitle('restore') ?? 'information-circle')
-                    ->color(fn ($record) => Status::colorFromTitle('restore') ?? 'gray')
-                    ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
-                    ->form([
-                        Textarea::make('comment')
-                            ->label('Confirm the restoration')
-                            ->required()
-                            ->placeholder('¿Reason for restore?'),
-                    ])
-                    ->action(function ($record, array $data) {
-                        redirect(FileResource::getUrl('restore', [
-                            'record' => $record->id,
-                            'record_id' => $record->record_id,
-                            'comment' => $data['comment'],
-                        ]));
-                    })
-                    ->visible(fn ($record) => $record->id !== File::where('record_id', $record->record_id)
-                        ->orderByDesc('version')
-                        ->first()?->id
-                        && $record->status_id === 1
-                    ),
+                    Action::make('restore')
+                        ->label(fn ($record) => Status::labelFromTitle('restore') ?? 'Restore')
+                        ->icon(fn ($record) => Status::iconFromTitle('restore') ?? 'information-circle')
+                        ->color(fn ($record) => Status::colorFromTitle('restore') ?? 'gray')
+                        ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
+                        ->form([
+                            Textarea::make('comment')
+                                ->label('Confirm the restoration')
+                                ->required()
+                                ->placeholder('¿Reason for restore?'),
+                        ])
+                        ->action(function ($record, array $data) {
+                            redirect(FileResource::getUrl('restore', [
+                                'record' => $record->id,
+                                'record_id' => $record->record_id,
+                                'comment' => $data['comment'],
+                            ]));
+                        })
+                        ->visible(
+                            fn ($record) => $record->id !== File::where('record_id', $record->record_id)
+                                ->orderByDesc('version')
+                                ->first()?->id
+                                && $record->status_id === 1
+                        ),
 
-                Action::make('approved')
-                    ->label(fn ($record) => Status::labelFromTitle('approved') ?? 'Approved')
-                    ->icon(fn ($record) => Status::iconFromTitle('approved') ?? 'information-circle')
-                    ->color(fn ($record) => Status::colorFromTitle('approved') ?? 'gray')
-                    ->requiresConfirmation()
-                    ->action(function ($record) {
-                        redirect(FileResource::getUrl('approved', [
-                            'record' => $record->id,
-                            'record_id' => $record->record_id,
-                        ]));
-                    })
-                    ->visible(function ($record) {
-                        return app(AuthService::class)->canApprove(
-                            auth()->user(),
-                            $record->record->sub_process_id ?? null
-                        ) && $record->status_id === 2 && $record->isLatestVersion();
-                    }),
+                    Action::make('approved')
+                        ->label(fn ($record) => Status::labelFromTitle('approved') ?? 'Approved')
+                        ->icon(fn ($record) => Status::iconFromTitle('approved') ?? 'information-circle')
+                        ->color(fn ($record) => Status::colorFromTitle('approved') ?? 'gray')
+                        ->requiresConfirmation()
+                        ->action(function ($record) {
+                            redirect(FileResource::getUrl('approved', [
+                                'record' => $record->id,
+                                'record_id' => $record->record_id,
+                            ]));
+                        })
+                        ->visible(function ($record) {
+                            return app(AuthService::class)->canApprove(
+                                auth()->user(),
+                                $record->record->sub_process_id ?? null
+                            ) && $record->status_id === 2 && $record->isLatestVersion();
+                        }),
 
-                Action::make('rejected')
-                    ->label(fn ($record) => Status::labelFromTitle('rejected') ?? 'Rejected')
-                    ->icon(fn ($record) => Status::iconFromTitle('rejected') ?? 'information-circle')
-                    ->color(fn ($record) => Status::colorFromTitle('rejected') ?? 'gray')
-                    ->form([
-                        Textarea::make('responses')
-                            ->label('Confirm Rejection')
-                            ->required()
-                            ->placeholder('¿Reason for rejected?'),
-                    ])
-                    ->action(function ($record, array $data) {
-                        redirect(FileResource::getUrl('rejected', [
-                            'record' => $record->id,
-                            'record_id' => $record->record_id,
-                            'responses' => $data['responses'],
-                        ]));
-                    })
-                    ->visible(function ($record) {
-                        return app(AuthService::class)->canApprove(
-                            auth()->user(),
-                            $record->record->sub_process_id ?? null
-                        ) && $record->status_id === 2 && $record->isLatestVersion();
-                    }),
+                    Action::make('rejected')
+                        ->label(fn ($record) => Status::labelFromTitle('rejected') ?? 'Rejected')
+                        ->icon(fn ($record) => Status::iconFromTitle('rejected') ?? 'information-circle')
+                        ->color(fn ($record) => Status::colorFromTitle('rejected') ?? 'gray')
+                        ->form([
+                            Textarea::make('responses')
+                                ->label('Confirm Rejection')
+                                ->required()
+                                ->placeholder('¿Reason for rejected?'),
+                        ])
+                        ->action(function ($record, array $data) {
+                            redirect(FileResource::getUrl('rejected', [
+                                'record' => $record->id,
+                                'record_id' => $record->record_id,
+                                'responses' => $data['responses'],
+                            ]));
+                        })
+                        ->visible(function ($record) {
+                            return app(AuthService::class)->canApprove(
+                                auth()->user(),
+                                $record->record->sub_process_id ?? null
+                            ) && $record->status_id === 2 && $record->isLatestVersion();
+                        }),
+                    Action::make('file')
+                        ->label('Download')
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('gray')
+                        ->url(
+                            fn ($record) => $record->getDownloadUrl()
+                        )
+                        ->openUrlInNewTab(false)
+                        ->extraAttributes(fn ($record) => [
+                            'download' => $record->title,
+                        ])
+                        ->visible(
+                            fn ($record) => $record->record->canBeAccessedBy(auth()->user())
+                        ),
 
-                DeleteAction::make()
-                    ->visible(function ($record) {
+                    DeleteAction::make()
+                        ->visible(function ($record) {
 
-                        $user = Filament::auth()->user();
+                            $user = Filament::auth()->user();
 
-                        return $user && $user->hasRole('super_admin');
-                    }),
+                            return $user && $user->hasRole('super_admin');
+                        }),
+                ])->color('info')->link()->label(false)->tooltip('Actions'),
 
             ])
             ->bulkActions([

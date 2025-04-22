@@ -106,7 +106,7 @@ class RecordResource extends Resource
                     ->date('l, d \d\e F \d\e Y')
                     ->toggleable(isToggledHiddenByDefault: true),
 
-            ])
+            ])->defaultSort('id', 'desc')
             ->filters([
                 SelectFilter::make('type_id')
                     ->relationship('type', 'title')
@@ -130,26 +130,30 @@ class RecordResource extends Resource
             ->actions([
                 ActionGroup::make([
 
+                    Action::make('Files')
+                        ->label('Versions')
+                        ->icon('heroicon-o-document')
+                        ->color('info')
+                        ->url(
+                            fn (Record $record): string => FileResource::getUrl('index', ['record_id' => $record->id])
+                        )
+                        ->visible(
+                            fn ($record) => $record->canBeAccessedBy(auth()->user())
+                        ),
+
                     Action::make('LastfileApproved')
                         ->label('Download')
-                        ->icon('heroicon-o-document')
-                        ->color('success')
-                        ->url(fn ($record) => $record->approvedVersionUrl()
+                        ->icon('heroicon-o-document-arrow-down')
+                        ->color('gray')
+                        ->url(
+                            fn ($record) => $record->approvedVersionUrl()
                         )
                         ->openUrlInNewTab(false)
                         ->extraAttributes(fn ($record) => [
                             'download' => $record->title,
                         ])
-                        ->visible(fn ($record) => $record->hasApprovedVersion()
-                        ),
-
-                    Action::make('Files')
-                        ->label('Versions')
-                        ->icon('heroicon-o-document')
-                        ->color('info')
-                        ->url(fn (Record $record): string => FileResource::getUrl('index', ['record_id' => $record->id])
-                        )
-                        ->visible(fn ($record) => $record->canBeAccessedBy(auth()->user())
+                        ->visible(
+                            fn ($record) => $record->hasApprovedVersion()
                         ),
 
                     DeleteAction::make()
@@ -157,7 +161,7 @@ class RecordResource extends Resource
 
                 ])->color('info')->link()->label(false)->tooltip('Actions'),
             ])
-            ->actionsPosition(Tables\Enums\ActionsPosition::BeforeCells)
+            /* ->actionsPosition(Tables\Enums\ActionsPosition::BeforeCells) */
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

@@ -61,17 +61,17 @@ class AuthService
             if ($hasApprovalAccess) {
                 // Extrae la parte entera de la versión y suma 1
                 $major = (int) $lastVersion->version;
-                $newVersion = ($major + 1).'.0';
+                $newVersion = ($major + 1).'.00';
 
             } else {
 
-                // Incrementa decimal en 0.1
-                $newVersion = bcadd($lastVersion->version, '0.1', 1);
+                // Incrementa decimal en 0.01
+                $newVersion = bcadd($lastVersion->version, '0.01', 2);
             }
 
         } else {
 
-            $newVersion = $hasApprovalAccess ? '1.0' : '0.1';
+            $newVersion = $hasApprovalAccess ? '1.00' : '0.01';
         }
 
         $data['status_id'] = $hasApprovalAccess ? $statusApproved->id : $statusDraft->id;

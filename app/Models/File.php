@@ -67,7 +67,7 @@ class File extends Model
         return Storage::url($this->file_path);
     }
 
-    public function getDownloadButtonHtml(): string
+    /* public function getDownloadButtonHtml(): string
     {
         $url = $this->getDownloadUrl();
         $filename = $this->title;
@@ -85,5 +85,5 @@ class File extends Model
         <span class="fi-btn-label">Download</span>
     </a>
     HTML;
-    }
+    } */
 }
