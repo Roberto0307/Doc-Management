@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\SubProcess;
 use App\Models\User;
+use App\Models\SubProcess;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class SubProcessPolicy

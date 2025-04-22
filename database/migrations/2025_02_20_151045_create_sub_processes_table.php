@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('acronym');
             $table->foreignId('process_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable();
             $table->timestamps();
         });
     }
