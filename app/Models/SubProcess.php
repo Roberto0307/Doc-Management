@@ -14,6 +14,7 @@ class SubProcess extends Model
         'title',
         'process_id',
         'acronym',
+        'user_id',
     ];
 
     public function process()
