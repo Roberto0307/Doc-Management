@@ -92,7 +92,9 @@ class FileService
 
     protected function notifyStatusChange(File $file, Status $status, string $message): void
     {
-        $notifiables = collect([auth()->user(), $file->user])->filter()->unique('id');
+        $owner = $this->authService->getOwnerToSubProcess($file->record->sub_process_id);
+
+        $notifiables = collect([auth()->user(), $file->user, $owner])->filter()->unique('id');
 
         Notification::send($notifiables, new FileStatusUpdated($file, $status, $message));
 
