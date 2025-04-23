@@ -26,31 +26,19 @@ class FileService
     {
         $file = File::findOrFail($id);
         $status = Status::byTitle('pending');
-
         $responses = 'Pending from version '.$file->version;
 
-        $file->update([
-            'status_id' => $status->id,
-            'responses' => $responses,
-        ]);
-
-        $this->notifyStatusChange($file, $status, $responses);
+        $this->updateFileStatus($file, $status, $responses);
     }
 
     public function rejected(int $id): void
     {
         $file = File::findOrFail($id);
         $status = Status::byTitle('rejected');
-
         $responseMessage = 'Rejected from version '.$file->version;
         $responses = Str::limit(strip_tags(request()->query('responses', $responseMessage)), 255);
 
-        $file->update([
-            'status_id' => $status->id,
-            'responses' => $responses,
-        ]);
-
-        $this->notifyStatusChange($file, $status, $responses);
+        $this->updateFileStatus($file, $status, $responses);
     }
 
     public function approved(int $id): void
@@ -63,18 +51,12 @@ class FileService
         ];
 
         $validated = $this->authService->validatedData($data);
-
-        // Solo queremos actualizar estos campos
         $validated = Arr::only($validated, ['status_id', 'version', 'responses']);
 
-        DB::transaction(function () use ($file, $validated) {
-            $file->update($validated);
-        });
+        DB::transaction(fn () => $file->update($validated));
 
         $status = Status::byTitle('approved');
-
         $this->notifyStatusChange($file, $status, $data['responses']);
-
     }
 
     public function restore(int $id): void
@@ -84,38 +66,38 @@ class FileService
         $data = [
             'title' => $file->title,
             'record_id' => $file->record_id,
-            'sub_process_id' => $file->sub_process_id,
+            'sub_process_id' => $file->record->sub_process_id,
             'file_path' => $file->file_path,
             'comments' => Str::limit(strip_tags(request()->query('comment', $file->comments)), 255),
             'responses' => 'Restored from version '.$file->version,
         ];
 
-        $validated = $this->authService->validatedData($data);
+        $validated = $this->authService->validatedData($data, ['status_id', 'version', 'user_id']);
 
-        DB::transaction(function () use ($validated) {
-            File::create($validated);
-        });
+        DB::transaction(fn () => File::create($validated));
 
         $status = Status::findOrFail($validated['status_id']);
-
         $this->notifyStatusChange($file, $status, $data['responses']);
+    }
+
+    private function updateFileStatus(File $file, Status $status, ?string $responses = null, array $extra = []): void
+    {
+        $file->update(array_merge([
+            'status_id' => $status->id,
+            'responses' => $responses,
+        ], $extra));
+
+        $this->notifyStatusChange($file, $status, $responses ?? '');
     }
 
     protected function notifyStatusChange(File $file, Status $status, string $message): void
     {
-
-        $notifiables = collect([
-            auth()->user(),
-            $file->user,
-        ])
-            ->filter()
-            ->unique('id');
+        $notifiables = collect([auth()->user(), $file->user])->filter()->unique('id');
 
         Notification::send($notifiables, new FileStatusUpdated($file, $status, $message));
 
         session()->flash('file_status', [
             'status_title' => $status->title,
         ]);
-
     }
 }
