@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\File;
 use App\Models\Status;
 use App\Notifications\FileStatusUpdated;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
@@ -48,10 +47,10 @@ class FileService
         $data = [
             'record_id' => $file->record_id,
             'responses' => 'Approved from version '.$file->version,
+            'user_id' => $file->user_id,
         ];
 
-        $validated = $this->authService->validatedData($data);
-        $validated = Arr::only($validated, ['status_id', 'version', 'responses']);
+        $validated = $this->authService->validatedData($data, ['user_id']);
 
         DB::transaction(fn () => $file->update($validated));
 
@@ -70,9 +69,10 @@ class FileService
             'file_path' => $file->file_path,
             'comments' => Str::limit(strip_tags(request()->query('comment', $file->comments)), 255),
             'responses' => 'Restored from version '.$file->version,
+            'user_id' => $file->user_id,
         ];
 
-        $validated = $this->authService->validatedData($data, ['status_id', 'version', 'user_id']);
+        $validated = $this->authService->validatedData($data, ['user_id']);
 
         DB::transaction(fn () => File::create($validated));
 
