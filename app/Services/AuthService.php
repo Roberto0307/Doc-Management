@@ -15,7 +15,7 @@ class AuthService
     public function canApprove(User $user, ?int $subProcessId): bool
     {
         return $user->hasRole('super_admin') ||
-               ($user->hasRole('pro') && $user->validSubProcess($subProcessId));
+               $user->isOwnerOfSubProcess($subProcessId);
     }
 
     public function canPending(User $user, File $file): bool

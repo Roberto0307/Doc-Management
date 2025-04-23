@@ -37,6 +37,12 @@ class SubProcessResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required(),
+                Forms\Components\Select::make('user_id')
+                    ->label('Assigned thread leader')
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->required()
+
             ]);
     }
 
@@ -51,6 +57,9 @@ class SubProcessResource extends Resource
                 Tables\Columns\TextColumn::make('process.title')
                     ->searchable()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Thread leader')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
