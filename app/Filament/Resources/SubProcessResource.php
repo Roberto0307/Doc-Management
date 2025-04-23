@@ -41,7 +41,7 @@ class SubProcessResource extends Resource
                     ->label('Assigned thread leader')
                     ->relationship('user', 'name')
                     ->searchable()
-                    ->required()
+                    ->required(),
 
             ]);
     }

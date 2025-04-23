@@ -37,8 +37,22 @@ class CreateFile extends CreateRecord
         $status = $file->status;
         $comments = $file->comments;
 
-        $user = User::role('super_admin')->first();
-        $user->notify(new FileStatusUpdated($file, $status, $comments));
+        $authService = app(AuthService::class);
+
+        // Obtener el usuario dueño del subproceso (si existe)
+        $owner = $authService->getOwnerToSubProcess($file->record->sub_process_id);
+
+        // Si no hay dueño, buscar un super_admin
+        if (! $owner) {
+            $owner = User::role('super_admin')->first(); // Usa Spatie
+        }
+
+        // Si encontramos alguien a quien notificar
+        if ($owner) {
+
+            $owner->notify(new FileStatusUpdated($file, $status, $comments));
+        }
+
     }
 
     protected function getRedirectUrl(): string

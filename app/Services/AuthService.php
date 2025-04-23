@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\File;
 use App\Models\Record;
 use App\Models\Status;
+use App\Models\SubProcess;
 use App\Models\User;
 
 /**
@@ -22,6 +23,13 @@ class AuthService
     {
         return $user->hasRole('super_admin') ||
                $file->user_id === $user->id;
+    }
+
+    public function getOwnerToSubProcess(?int $subProcessId): ?User
+    {
+        return SubProcess::with('user')
+            ->find($subProcessId)
+            ?->user;
     }
 
     public function canAccessSubProcessId(int|string|null $subProcessId): bool
