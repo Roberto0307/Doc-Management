@@ -108,17 +108,11 @@ class FileResource extends Resource
                         ->label(fn ($record) => Status::labelFromTitle('pending') ?? 'Pending')
                         ->icon(fn ($record) => Status::iconFromTitle('pending') ?? 'information-circle')
                         ->color(fn ($record) => Status::colorFromTitle('pending') ?? 'gray')
-                        ->form([
-                            Textarea::make('responses')
-                                ->label('Confirm Pending')
-                                ->required()
-                                ->placeholder('¿Are you sure you want to leave Pending?'),
-                        ])
+                        ->requiresConfirmation()
                         ->action(function ($record, array $data) {
                             redirect(FileResource::getUrl('pending', [
                                 'record' => $record->id,
                                 'record_id' => $record->record_id,
-                                'responses' => $data['responses'],
                             ]));
                         })
                         ->visible(function ($record) {

@@ -27,8 +27,7 @@ class FileService
         $file = File::findOrFail($id);
         $status = Status::byTitle('pending');
 
-        $responseMessage = 'Pending from version '.$file->version;
-        $responses = Str::limit(strip_tags(request()->query('responses', $responseMessage)), 255);
+        $responses = 'Pending from version '.$file->version;
 
         $file->update([
             'status_id' => $status->id,
