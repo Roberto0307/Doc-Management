@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_has_sub_processes');
+        Schema::dropIfExists('user_has_sub_process');
     }
 };

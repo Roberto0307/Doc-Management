@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('file_path');
-            $table->foreignId('status_id');
             $table->string('version');
             $table->string('comments')->nullable();
             $table->string('responses')->nullable();
+
+            // Relaciones
+            $table->foreignId('status_id')->constrained(); // Asume tabla 'statuses'
             $table->foreignId('record_id')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('user_id'); // Asegura que la columna exista
-            $table->foreign('user_id')->references('id')->on('users'); // Clave foránea
+            $table->foreignId('user_id')->constrained(); // Apunta a 'users.id'
+
             $table->timestamps();
         });
     }
