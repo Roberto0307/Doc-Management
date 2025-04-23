@@ -49,14 +49,15 @@ class FileStatusUpdated extends Notification
         $mailMessage = (new MailMessage)
             ->subject('Document status')
             ->greeting('Hi '.$notifiable->name.',')
-            ->line('The status of the document "'.$this->file->title.'" has changed to: '.strtoupper($this->status->label));
+            ->line('The status of the document "'.$this->file->title.'"')
+            ->line('has changed to: '.ucfirst(strtolower($this->status->label)));
 
         // Solo agregar la línea si $this->responses no es null ni vacío
         if (! empty($this->responses)) {
             $mailMessage->line('Important state information: '.$this->responses);
         }
 
-        return $mailMessage->action('View Document', url('/storage/'.$this->file->file_path));
+        return $mailMessage->action('See details', url('/dashboard/files?record_id='.$this->file->record_id));
     }
 
     /**

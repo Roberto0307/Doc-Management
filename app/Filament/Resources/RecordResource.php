@@ -128,23 +128,24 @@ class RecordResource extends Resource
                     ->preload(),
             ])
             ->actions([
-                ActionGroup::make([
 
-                    Action::make('Files')
-                        ->label('Versions')
-                        ->icon('heroicon-o-document')
-                        ->color('info')
-                        ->url(
-                            fn (Record $record): string => FileResource::getUrl('index', ['record_id' => $record->id])
-                        )
-                        ->visible(
-                            fn ($record) => $record->canBeAccessedBy(auth()->user())
-                        ),
+                Action::make('Files')
+                    ->label('Versions')
+                    ->icon('heroicon-o-document')
+                    ->color('info')
+                    ->url(
+                        fn (Record $record): string => FileResource::getUrl('index', ['record_id' => $record->id])
+                    )
+                    ->visible(
+                        fn ($record) => $record->canBeAccessedBy(auth()->user())
+                    ),
+
+                ActionGroup::make([
 
                     Action::make('LastfileApproved')
                         ->label('Download')
                         ->icon('heroicon-o-document-arrow-down')
-                        ->color('gray')
+                        ->color('success')
                         ->url(
                             fn ($record) => $record->approvedVersionUrl()
                         )
