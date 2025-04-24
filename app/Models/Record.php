@@ -73,11 +73,6 @@ class Record extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function getFilesUrl(): string
-    {
-        return route('filament.dashboard.resources.files.index', ['record_id' => $this->id]);
-    }
-
     public function approvedVersionUrl(): ?string
     {
         return $this->latestApprovedFile?->file_path
