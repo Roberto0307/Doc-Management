@@ -20,12 +20,12 @@ class SubProcessSeeder extends Seeder
             'title' => 'Comecio exterior',
             'acronym' => 'CE',
             'process_id' => 1,
-            'user_id' => 1,
+            'user_id' => 2,
         ]);
         SubProcess::factory()->create([
             'title' => 'Servicio al cliente',
             'acronym' => 'SAC',
-            'process_id' => 1,
+            'process_id' => 3,
             'user_id' => 1,
         ]);
         /* Calidad */

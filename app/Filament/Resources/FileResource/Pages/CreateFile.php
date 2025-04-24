@@ -17,6 +17,8 @@ class CreateFile extends CreateRecord
     {
         parent::mount();
 
+        abort_unless(Record::find(request()->query('record_id')), 404);
+
         $this->record_id = request()->query('record_id');
 
         $this->form->fill([

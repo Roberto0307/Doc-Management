@@ -22,6 +22,8 @@ class ListFiles extends ListRecords
 
         parent::mount();
 
+        abort_unless(Record::find(request()->query('record_id')), 404);
+
         $this->recordId = request()->query('record_id');
 
         $sub_processId = Record::findOrFail($this->recordId)->sub_process_id;

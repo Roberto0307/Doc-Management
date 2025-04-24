@@ -27,13 +27,13 @@ class SubProcessResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->maxLength(255)
                     ->unique(ignoreRecord: true)
-                    ->disabled(fn(string $context) => $context === 'edit')
-                    ->required(fn(string $context) => $context === 'create'),
+                    ->disabled(fn (string $context) => $context === 'edit')
+                    ->required(fn (string $context) => $context === 'create'),
                 Forms\Components\TextInput::make('acronym')
                     ->maxLength(255)
                     ->unique(ignoreRecord: true)
-                    ->disabled(fn(string $context) => $context === 'edit')
-                    ->required(fn(string $context) => $context === 'create'),
+                    ->disabled(fn (string $context) => $context === 'edit')
+                    ->required(fn (string $context) => $context === 'create'),
                 Forms\Components\Select::make('process_id')
                     ->relationship('process', 'title')
                     ->searchable()
@@ -44,8 +44,8 @@ class SubProcessResource extends Resource
                     ->options(fn ($record) => $record->users()->pluck('users.name', 'users.id') ?? [])
                     ->searchable()
                     ->preload()
-                    ->required(fn(string $context) => $context === 'edit')
-                    ->visible(fn(string $context) => $context === 'edit'),
+                    ->required(fn (string $context) => $context === 'edit')
+                    ->visible(fn (string $context) => $context === 'edit'),
             ]);
     }
 
