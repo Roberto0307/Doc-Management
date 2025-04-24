@@ -16,7 +16,12 @@ class Status extends Model
         'label',
         'color',
         'icon',
+        'protected',
 
+    ];
+
+    protected $casts = [
+        'protected' => 'boolean',
     ];
 
     /*
