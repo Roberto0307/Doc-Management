@@ -25,8 +25,8 @@ class SubProcessSeeder extends Seeder
         SubProcess::factory()->create([
             'title' => 'Servicio al cliente',
             'acronym' => 'SAC',
-            'process_id' => 3,
-            'user_id' => 1,
+            'process_id' => 1,
+            'user_id' => 3,
         ]);
         /* Calidad */
         SubProcess::factory()->create([
