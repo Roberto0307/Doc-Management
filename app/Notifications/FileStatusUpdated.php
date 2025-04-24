@@ -58,6 +58,8 @@ class FileStatusUpdated extends Notification
         }
 
         return $mailMessage->action('See details', url('/dashboard/files?record_id='.$this->file->record_id));
+
+        // return $mailMessage->action('See details', route('filament.dashboard.resources.files.index', ['record_id' => $this->file->record_id]));
     }
 
     /**

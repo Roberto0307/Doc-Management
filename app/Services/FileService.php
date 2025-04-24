@@ -69,10 +69,9 @@ class FileService
             'file_path' => $file->file_path,
             'comments' => Str::limit(strip_tags(request()->query('comment', $file->comments)), 255),
             'responses' => 'Restored from version '.$file->version,
-            'user_id' => $file->user_id,
         ];
 
-        $validated = $this->authService->validatedData($data, ['user_id']);
+        $validated = $this->authService->validatedData($data);
 
         DB::transaction(fn () => File::create($validated));
 

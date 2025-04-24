@@ -25,13 +25,15 @@ class SubProcessResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
-                    ->required()
                     ->maxLength(255)
-                    ->unique(),
+                    ->unique(ignoreRecord: true)
+                    ->disabled(fn (string $context) => $context === 'edit')
+                    ->required(fn (string $context) => $context === 'create'),
                 Forms\Components\TextInput::make('acronym')
-                    ->required()
                     ->maxLength(255)
-                    ->unique(),
+                    ->unique(ignoreRecord: true)
+                    ->disabled(fn (string $context) => $context === 'edit')
+                    ->required(fn (string $context) => $context === 'create'),
                 Forms\Components\Select::make('process_id')
                     ->relationship('process', 'title')
                     ->searchable()
@@ -41,7 +43,9 @@ class SubProcessResource extends Resource
                     ->label('Assigned thread leader')
                     ->relationship('user', 'name')
                     ->searchable()
-                    ->required(),
+                    ->preload()
+                    ->required(fn (string $context) => $context === 'edit')
+                    ->visible(fn (string $context) => $context === 'edit'),
 
             ]);
     }

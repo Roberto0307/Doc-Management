@@ -4,8 +4,6 @@ namespace App\Filament\Resources\FileResource\Pages;
 
 use App\Filament\Resources\FileResource;
 use App\Models\Record;
-use App\Models\User;
-use App\Notifications\FileStatusUpdated;
 use App\Services\AuthService;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -30,30 +28,6 @@ class CreateFile extends CreateRecord
     {
         return app(AuthService::class)->validatedData($data);
     }
-
-    // protected function afterCreate(): void
-    // {
-    //     $file = $this->record;
-    //     $status = $file->status;
-    //     $comments = $file->comments;
-
-    //     $authService = app(AuthService::class);
-
-    //     // Obtener el usuario dueño del subproceso (si existe)
-    //     $owner = $authService->getOwnerToSubProcess($file->record->sub_process_id);
-
-    //     // Si no hay dueño, buscar un super_admin
-    //     if (! $owner) {
-    //         $owner = User::role('super_admin')->first(); // Usa Spatie
-    //     }
-
-    //     // Si encontramos alguien a quien notificar
-    //     if ($owner) {
-
-    //         $owner->notify(new FileStatusUpdated($file, $status, $comments));
-    //     }
-
-    // }
 
     protected function getRedirectUrl(): string
     {

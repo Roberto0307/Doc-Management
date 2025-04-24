@@ -66,10 +66,6 @@ class FileResource extends Resource
     {
         return $table
             ->columns([
-                /* Tables\Columns\TextColumn::make('file_path')
-                    ->label('File')
-                    ->formatStateUsing(fn ($state, $record) => $record->getDownloadButtonHtml())
-                    ->html(), */
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status.label')
@@ -117,7 +113,8 @@ class FileResource extends Resource
                         })
                         ->visible(function ($record) {
                             return app(AuthService::class)->canPending(auth()->user(), $record)
-                                && $record->status_id === 1;
+                                && $record->status_id === 1
+                                && $record->isLatestVersion();
                         }),
 
                     Action::make('restore')
@@ -142,7 +139,6 @@ class FileResource extends Resource
                             fn ($record) => $record->id !== File::where('record_id', $record->record_id)
                                 ->orderByDesc('version')
                                 ->first()?->id
-                                && $record->status_id === 1
                         ),
 
                     Action::make('approved')

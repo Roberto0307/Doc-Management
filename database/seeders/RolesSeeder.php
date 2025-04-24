@@ -19,7 +19,6 @@ class RolesSeeder extends Seeder
         // User::truncate();
 
         $adminRole = Role::create(['name' => 'super_admin']);
-        /* $proRole = Role::create(['name' => 'pro']); */
         $standardRole = Role::create(['name' => 'standard']);
         $basicRole = Role::create(['name' => 'panel_user']);
 
@@ -31,21 +30,21 @@ class RolesSeeder extends Seeder
 
         $admin->assignRole($adminRole);
 
-        /* $pro = new User;
-        $pro->name = 'Profesional';
-        $pro->email = 'doc@pro.com';
-        $pro->password = bcrypt('doc@pro.com');
-        $pro->save();
+        $standardOne = new User;
+        $standardOne->name = 'Profesional';
+        $standardOne->email = 'doc@pro.com';
+        $standardOne->password = bcrypt('doc@pro.com');
+        $standardOne->save();
 
-        $pro->assignRole($proRole); */
+        $standardOne->assignRole($standardRole);
 
-        $standard = new User;
-        $standard->name = 'General';
-        $standard->email = 'doc@standard.com';
-        $standard->password = bcrypt('doc@standard.com');
-        $standard->save();
+        $standardTwo = new User;
+        $standardTwo->name = 'General';
+        $standardTwo->email = 'doc@standard.com';
+        $standardTwo->password = bcrypt('doc@standard.com');
+        $standardTwo->save();
 
-        $standard->assignRole($standardRole);
+        $standardTwo->assignRole($standardRole);
 
         $basic = new User;
         $basic->name = 'Usuario';

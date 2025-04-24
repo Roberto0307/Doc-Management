@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\RecordResource\Pages;
 
 use App\Filament\Resources\RecordResource;
+use App\Notifications\RecordCreatedNotice;
 use App\Services\AuthService;
 use App\Services\RecordService;
 use Filament\Notifications\Notification;
@@ -29,6 +30,12 @@ class CreateRecord extends BaseCreateRecord
         $data['user_id'] = auth()->id();
 
         return $data;
+    }
+
+    protected function afterCreate(): void
+    {
+
+        auth()->user()->notify(new RecordCreatedNotice($this->record));
     }
 
     protected function getRedirectUrl(): string
