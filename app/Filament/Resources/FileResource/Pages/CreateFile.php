@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\FileResource\Pages;
 
 use App\Filament\Resources\FileResource;
+use App\Filament\Resources\RecordResource;
 use App\Models\Record;
 use App\Services\AuthService;
 use Filament\Resources\Pages\CreateRecord;
@@ -11,32 +12,28 @@ class CreateFile extends CreateRecord
 {
     protected static string $resource = FileResource::class;
 
-    public ?int $record_id = null;
+    public ?string $record_id = null;
 
     public function mount(): void
     {
         parent::mount();
 
-        abort_unless(Record::find(request()->query('record_id')), 404);
+        abort_unless(Record::find(request()->route('record')), 404);
 
-        $this->record_id = request()->query('record_id');
+        $this->record_id = request()->route('record')->id;
 
-        $this->form->fill([
-            'record_id' => $this->record_id,
-        ]);
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
+        $data['record_id'] = $this->record_id;
+
         return app(AuthService::class)->validatedData($data);
     }
 
     protected function getRedirectUrl(): string
     {
-        $recordId = $this->record->record_id;
-
-        return $this->getResource()::getUrl('index', ['record_id' => $recordId]);
-
+        return $this->getResource()::getUrl('index', ['record' => $this->record_id]);
     }
 
     public static function canCreateAnother(): bool
@@ -46,19 +43,14 @@ class CreateFile extends CreateRecord
 
     public function getSubheading(): ?string
     {
-        if (! $this->record_id) {
-            return null;
-        }
-
-        $record = Record::find($this->record_id);
-
-        return $record?->title;
+        return Record::find($this->record_id)?->title;
     }
 
     public function getBreadcrumbs(): array
     {
         return [
-            FileResource::getUrl('index', ['record_id' => $this->record_id]) => 'Files',
+            RecordResource::getUrl('index') => 'Records',
+            FileResource::getUrl('index', ['record' => $this->record_id]) => 'Files',
             false => 'Create',
         ];
     }

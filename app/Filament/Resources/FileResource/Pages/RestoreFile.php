@@ -15,17 +15,15 @@ class RestoreFile extends Page
 
     public function mount(): void
     {
-        $recordId = request()->route('record');
 
-        app(FileService::class)->restore($recordId);
+        abort_unless(File::find(request()->route('file')), 404);
 
-        $file = File::findOrFail($recordId);
+        $file = request()->route('file');
 
-        redirect()->to(
-            FileResource::getUrl('index').'?'.http_build_query([
-                'record_id' => $file->record_id,
-            ])
-        );
+        app(FileService::class)->restore($file);
 
+        redirect()->to(FileResource::getUrl('index', [
+            'record' => $file->record_id,
+        ]));
     }
 }

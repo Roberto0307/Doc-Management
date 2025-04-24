@@ -21,18 +21,16 @@ class FileService
         $this->authService = $authService;
     }
 
-    public function pending(int $id): void
+    public function pending(File $file): void
     {
-        $file = File::findOrFail($id);
         $status = Status::byTitle('pending');
         $responses = 'Pending from version '.$file->version;
 
         $this->updateFileStatus($file, $status, $responses);
     }
 
-    public function rejected(int $id): void
+    public function rejected(File $file): void
     {
-        $file = File::findOrFail($id);
         $status = Status::byTitle('rejected');
         $responseMessage = 'Rejected from version '.$file->version;
         $responses = Str::limit(strip_tags(request()->query('responses', $responseMessage)), 255);
@@ -40,9 +38,8 @@ class FileService
         $this->updateFileStatus($file, $status, $responses);
     }
 
-    public function approved(int $id): void
+    public function approved(File $file): void
     {
-        $file = File::findOrFail($id);
 
         $data = [
             'record_id' => $file->record_id,
@@ -58,9 +55,8 @@ class FileService
         $this->notifyStatusChange($file, $status, $data['responses']);
     }
 
-    public function restore(int $id): void
+    public function restore(File $file): void
     {
-        $file = File::findOrFail($id);
 
         $data = [
             'title' => $file->title,

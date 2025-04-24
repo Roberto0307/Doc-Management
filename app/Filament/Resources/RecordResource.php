@@ -134,7 +134,7 @@ class RecordResource extends Resource
                     ->icon('heroicon-o-document')
                     ->color('info')
                     ->url(
-                        fn (Record $record): string => FileResource::getUrl('index', ['record_id' => $record->id])
+                        fn (Record $record): string => FileResource::getUrl('index', ['record' => $record->id])
                     )
                     ->visible(
                         fn ($record) => $record->canBeAccessedBy(auth()->user())

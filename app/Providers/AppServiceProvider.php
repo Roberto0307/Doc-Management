@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\File;
+use App\Models\Record;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,5 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+        Route::model('record', Record::class);
+        Route::model('file', File::class);
     }
 }

@@ -35,9 +35,6 @@ class FileResource extends Resource
                 Section::make('File Data')
                     ->columns(3)
                     ->schema([
-                        Forms\Components\Hidden::make('record_id')
-                            ->required()
-                            ->dehydrated(),
                         Forms\Components\FileUpload::make('file_path')
                             ->label('File')
                             ->storeFileNamesIn('title')
@@ -107,8 +104,8 @@ class FileResource extends Resource
                         ->requiresConfirmation()
                         ->action(function ($record, array $data) {
                             redirect(FileResource::getUrl('pending', [
-                                'record' => $record->id,
-                                'record_id' => $record->record_id,
+                                'record' => $record->record_id,
+                                'file' => $record->id,
                             ]));
                         })
                         ->visible(function ($record) {
@@ -130,8 +127,8 @@ class FileResource extends Resource
                         ])
                         ->action(function ($record, array $data) {
                             redirect(FileResource::getUrl('restore', [
-                                'record' => $record->id,
-                                'record_id' => $record->record_id,
+                                'record' => $record->record_id,
+                                'file' => $record->id,
                                 'comment' => $data['comment'],
                             ]));
                         })
@@ -148,8 +145,8 @@ class FileResource extends Resource
                         ->requiresConfirmation()
                         ->action(function ($record) {
                             redirect(FileResource::getUrl('approved', [
-                                'record' => $record->id,
-                                'record_id' => $record->record_id,
+                                'record' => $record->record_id,
+                                'file' => $record->id,
                             ]));
                         })
                         ->visible(function ($record) {
@@ -171,8 +168,8 @@ class FileResource extends Resource
                         ])
                         ->action(function ($record, array $data) {
                             redirect(FileResource::getUrl('rejected', [
-                                'record' => $record->id,
-                                'record_id' => $record->record_id,
+                                'record' => $record->record_id,
+                                'file' => $record->id,
                                 'responses' => $data['responses'],
                             ]));
                         })
@@ -224,12 +221,12 @@ class FileResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListFiles::route('/'),
-            'create' => Pages\CreateFile::route('/create'),
-            'pending' => Pages\PendingFile::route('/pending/{record}'),
-            'restore' => Pages\RestoreFile::route('/restore/{record}'),
-            'approved' => Pages\ApprovedFile::route('/approved/{record}'),
-            'rejected' => Pages\RejectedFile::route('/rejected/{record}'),
+            'index' => Pages\ListFiles::route('/records/{record}/files'),
+            'create' => Pages\CreateFile::route('/records/{record}/files/create'),
+            'pending' => Pages\PendingFile::route('/records/{record}/files/pending/{file}'),
+            'restore' => Pages\RestoreFile::route('/records/{record}/files/restore/{file}'),
+            'approved' => Pages\ApprovedFile::route('/records/{record}/files/approved/{file}'),
+            'rejected' => Pages\RejectedFile::route('/records/{record}/files/rejected/{file}'),
         ];
     }
 
