@@ -132,7 +132,7 @@ class RecordResource extends Resource
                 Action::make('Files')
                     ->label('Versions')
                     ->icon('heroicon-o-document')
-                    ->color('info')
+                    ->color('primary')
                     ->url(
                         fn (Record $record): string => RecordResource::getUrl('files.list', ['recordId' => $record->id])
                     )
@@ -145,7 +145,7 @@ class RecordResource extends Resource
                     Action::make('LastfileApproved')
                         ->label('Download')
                         ->icon('heroicon-o-document-arrow-down')
-                        ->color('success')
+                        ->color('primary')
                         ->url(
                             fn ($record) => $record->approvedVersionUrl()
                         )

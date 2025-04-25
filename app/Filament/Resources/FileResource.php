@@ -188,7 +188,7 @@ class FileResource extends Resource
                     Action::make('file')
                         ->label('Download')
                         ->icon('heroicon-o-document-arrow-down')
-                        ->color('gray')
+                        ->color('primary')
                         ->url(
                             fn ($record) => $record->getDownloadUrl()
                         )
