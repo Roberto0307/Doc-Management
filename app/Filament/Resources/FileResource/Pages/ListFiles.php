@@ -69,7 +69,7 @@ class ListFiles extends ListRecords
                 ->label('Upload file')
                 ->button()
                 ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
-                ->url(fn (): string => FileResource::getUrl('create', [
+                ->url(fn (): string => RecordResource::getUrl('files.create', [
                     'recordId' => $this->recordId,
                 ]
                 )),
@@ -83,14 +83,14 @@ class ListFiles extends ListRecords
 
     public function getSubheading(): ?string
     {
-        return $this->recordModel->title;
+        return $this->recordModel?->getContextPath();
     }
 
     public function getBreadcrumbs(): array
     {
         return [
             RecordResource::getUrl('index') => 'Records',
-            FileResource::getUrl('index', ['recordId' => $this->recordId]) => 'Files',
+            RecordResource::getUrl('files.list', ['recordId' => $this->recordId]) => 'Files',
             false => 'List',
         ];
     }

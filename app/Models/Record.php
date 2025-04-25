@@ -89,4 +89,13 @@ class Record extends Model
     {
         return $user->hasRole('super_admin') || $user->validSubProcess($this->sub_process_id);
     }
+
+    public function getContextPath(): string
+    {
+        $processTitle = $this->process?->title ?? null;
+        $subprocessTitle = $this->subProcess?->title ?? null;
+        $fileTitle = $this->title ?? null;
+
+        return "{$processTitle} / {$subprocessTitle} / {$fileTitle}";
+    }
 }

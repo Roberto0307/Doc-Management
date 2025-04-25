@@ -134,7 +134,7 @@ class RecordResource extends Resource
                     ->icon('heroicon-o-document')
                     ->color('info')
                     ->url(
-                        fn (Record $record): string => FileResource::getUrl('index', ['recordId' => $record->id])
+                        fn (Record $record): string => RecordResource::getUrl('files.list', ['recordId' => $record->id])
                     )
                     ->visible(
                         fn ($record) => $record->canBeAccessedBy(auth()->user())
@@ -182,6 +182,12 @@ class RecordResource extends Resource
         return [
             'index' => Pages\ListRecords::route('/'),
             'create' => Pages\CreateRecord::route('/create'),
+            'files.list' => \App\Filament\Resources\FileResource\Pages\ListFiles::route('/{recordId}/files'),
+            'files.create' => \App\Filament\Resources\FileResource\Pages\CreateFile::route('/{recordId}/files/create'),
+            'files.pending' => \App\Filament\Resources\FileResource\Pages\PendingFile::route('/{recordId}/files/pending/{file}'),
+            'files.restore' => \App\Filament\Resources\FileResource\Pages\RestoreFile::route('/{recordId}/files/restore/{file}'),
+            'files.approved' => \App\Filament\Resources\FileResource\Pages\ApprovedFile::route('/{recordId}/files/approved/{file}'),
+            'files.rejected' => \App\Filament\Resources\FileResource\Pages\RejectedFile::route('/{recordId}/files/rejected/{file}'),
         ];
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\FileResource\Pages;
 use App\Models\File;
 use App\Models\Status;
 use App\Services\AuthService;
@@ -103,7 +102,7 @@ class FileResource extends Resource
                         ->color(fn ($record) => Status::colorFromTitle('pending') ?? 'gray')
                         ->requiresConfirmation()
                         ->action(function ($record, array $data) {
-                            redirect(FileResource::getUrl('pending', [
+                            redirect(RecordResource::getUrl('files.pending', [
                                 'recordId' => $record->record_id,
                                 'file' => $record->id,
                             ]));
@@ -126,7 +125,7 @@ class FileResource extends Resource
                                 ->placeholder('¿Reason for restore?'),
                         ])
                         ->action(function ($record, array $data) {
-                            redirect(FileResource::getUrl('restore', [
+                            redirect(RecordResource::getUrl('files.restore', [
                                 'recordId' => $record->record_id,
                                 'file' => $record->id,
                                 'comment' => $data['comment'],
@@ -144,7 +143,7 @@ class FileResource extends Resource
                         ->color(fn ($record) => Status::colorFromTitle('approved') ?? 'gray')
                         ->requiresConfirmation()
                         ->action(function ($record) {
-                            redirect(FileResource::getUrl('approved', [
+                            redirect(RecordResource::getUrl('files.approved', [
                                 'recordId' => $record->record_id,
                                 'file' => $record->id,
                             ]));
@@ -167,7 +166,7 @@ class FileResource extends Resource
                                 ->placeholder('¿Reason for rejected?'),
                         ])
                         ->action(function ($record, array $data) {
-                            redirect(FileResource::getUrl('rejected', [
+                            redirect(RecordResource::getUrl('files.rejected', [
                                 'recordId' => $record->record_id,
                                 'file' => $record->id,
                                 'responses' => $data['responses'],
@@ -221,12 +220,7 @@ class FileResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListFiles::route('/records/{recordId}/files'),
-            'create' => Pages\CreateFile::route('/records/{recordId}/files/create'),
-            'pending' => Pages\PendingFile::route('/records/{recordId}/files/pending/{file}'),
-            'restore' => Pages\RestoreFile::route('/records/{recordId}/files/restore/{file}'),
-            'approved' => Pages\ApprovedFile::route('/records/{recordId}/files/approved/{file}'),
-            'rejected' => Pages\RejectedFile::route('/records/{recordId}/files/rejected/{file}'),
+            //
         ];
     }
 

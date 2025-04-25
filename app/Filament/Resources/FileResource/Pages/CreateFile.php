@@ -39,7 +39,7 @@ class CreateFile extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index', ['recordId' => $this->recordId]);
+        return RecordResource::getUrl('files.list', ['recordId' => $this->recordId]);
     }
 
     public static function canCreateAnother(): bool
@@ -49,14 +49,14 @@ class CreateFile extends CreateRecord
 
     public function getSubheading(): ?string
     {
-        return $this->recordModel->title;
+        return $this->recordModel?->getContextPath();
     }
 
     public function getBreadcrumbs(): array
     {
         return [
             RecordResource::getUrl('index') => 'Records',
-            FileResource::getUrl('index', ['recordId' => $this->recordId]) => 'Files',
+            RecordResource::getUrl('files.list', ['recordId' => $this->recordId]) => 'Files',
             false => 'Create',
         ];
     }

@@ -59,7 +59,7 @@ class FileStatusUpdated extends Notification
 
         return $mailMessage->action(
             'See details',
-            route('filament.dashboard.resources.files.index',
+            route('filament.dashboard.resources.records.files.list',
                 ['recordId' => $this->file->record_id])
         );
     }

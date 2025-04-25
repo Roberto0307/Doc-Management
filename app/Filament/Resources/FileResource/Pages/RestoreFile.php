@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\FileResource\Pages;
 
 use App\Filament\Resources\FileResource;
+use App\Filament\Resources\RecordResource;
 use App\Models\File;
 use App\Services\FileService;
 use Filament\Resources\Pages\Page;
@@ -20,7 +21,7 @@ class RestoreFile extends Page
 
         app(FileService::class)->restore($file);
 
-        redirect()->to(FileResource::getUrl('index', [
+        redirect()->to(RecordResource::getUrl('files.list', [
             'recordId' => $file->record_id,
         ]));
     }

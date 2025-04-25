@@ -44,7 +44,7 @@ class RecordCreatedNotice extends Notification
             ->line('You have successfully created a new record! "'.$this->record->title.'"')
             ->action(
                 'Manage your files',
-                route('filament.dashboard.resources.files.index',
+                route('filament.dashboard.resources.records.files.list',
                     ['recordId' => $this->record->id])
             );
 
