@@ -94,8 +94,7 @@ class Record extends Model
     {
         $processTitle = $this->process?->title ?? null;
         $subprocessTitle = $this->subProcess?->title ?? null;
-        $fileTitle = $this->title ?? null;
 
-        return "{$processTitle} / {$subprocessTitle} / {$fileTitle}";
+        return "{$processTitle} / {$subprocessTitle}";
     }
 }

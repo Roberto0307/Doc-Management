@@ -6,6 +6,7 @@ use App\Filament\Resources\FileResource;
 use App\Filament\Resources\RecordResource;
 use App\Models\Record;
 use App\Services\AuthService;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateFile extends CreateRecord
@@ -47,9 +48,20 @@ class CreateFile extends CreateRecord
         return false;
     }
 
+    public function getHeaderActions(): array
+    {
+        return [
+            Action::make('context')
+                ->label($this->recordModel?->getContextPath())
+                ->icon('heroicon-o-information-circle')
+                ->disabled()
+                ->color('gray'),
+        ];
+    }
+
     public function getSubheading(): ?string
     {
-        return $this->recordModel?->getContextPath();
+        return $this->recordModel?->title;
     }
 
     public function getBreadcrumbs(): array

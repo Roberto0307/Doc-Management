@@ -65,6 +65,13 @@ class ListFiles extends ListRecords
         }
 
         return [
+
+            Action::make('context')
+                ->label($this->recordModel?->getContextPath())
+                ->icon('heroicon-o-information-circle')
+                ->disabled()
+                ->color('gray'),
+
             Action::make('addFile')
                 ->label('Upload file')
                 ->button()
@@ -78,12 +85,13 @@ class ListFiles extends ListRecords
                 ->url(fn (): string => RecordResource::getUrl('index'))
                 ->button()
                 ->color('gray'),
+
         ];
     }
 
     public function getSubheading(): ?string
     {
-        return $this->recordModel?->getContextPath();
+        return $this->recordModel?->title;
     }
 
     public function getBreadcrumbs(): array
