@@ -22,9 +22,9 @@ class ListFiles extends ListRecords
 
         parent::mount();
 
-        abort_unless(Record::find(request()->route('record')), 404);
+        $recordModel = Record::findOrFail(request()->route('record'));
 
-        $this->recordId = request()->route('record')->id;
+        $this->recordId = $recordModel->id;
 
         $sub_processId = Record::findOrFail($this->recordId)->sub_process_id;
 
@@ -70,7 +70,7 @@ class ListFiles extends ListRecords
                 ->button()
                 ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
                 ->url(fn (): string => FileResource::getUrl('create', [
-                    'record' => $this->recordId,
+                    'recordModel' => $this->recordId,
                 ]
                 )),
             Action::make('back')

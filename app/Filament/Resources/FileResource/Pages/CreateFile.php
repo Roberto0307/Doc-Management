@@ -18,9 +18,9 @@ class CreateFile extends CreateRecord
     {
         parent::mount();
 
-        abort_unless(Record::find(request()->route('record')), 404);
+        abort_unless(Record::find(request()->route('recordModel')), 404);
 
-        $this->record_id = request()->route('record')->id;
+        $this->record_id = request()->route('recordModel')->id;
 
     }
 

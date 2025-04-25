@@ -222,7 +222,7 @@ class FileResource extends Resource
     {
         return [
             'index' => Pages\ListFiles::route('/records/{record}/files'),
-            'create' => Pages\CreateFile::route('/records/{record}/files/create'),
+            'create' => Pages\CreateFile::route('/records/{recordModel}/files/create'),
             'pending' => Pages\PendingFile::route('/records/{record}/files/pending/{file}'),
             'restore' => Pages\RestoreFile::route('/records/{record}/files/restore/{file}'),
             'approved' => Pages\ApprovedFile::route('/records/{record}/files/approved/{file}'),

@@ -16,9 +16,7 @@ class ApprovedFile extends Page
     public function mount(): void
     {
 
-        abort_unless(File::find(request()->route('file')), 404);
-
-        $file = request()->route('file');
+        $file = File::findOrFail(request()->route('file'));
 
         app(FileService::class)->approved($file);
 
