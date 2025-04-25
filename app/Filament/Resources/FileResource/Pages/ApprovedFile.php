@@ -21,7 +21,7 @@ class ApprovedFile extends Page
         app(FileService::class)->approved($file);
 
         redirect()->to(FileResource::getUrl('index', [
-            'record' => $file->record_id,
+            'recordId' => $file->record_id,
         ]));
     }
 }

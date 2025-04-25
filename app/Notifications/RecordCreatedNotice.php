@@ -45,7 +45,7 @@ class RecordCreatedNotice extends Notification
             ->action(
                 'Manage your files',
                 route('filament.dashboard.resources.files.index',
-                    ['record' => $this->record->id])
+                    ['recordId' => $this->record->id])
             );
 
     }

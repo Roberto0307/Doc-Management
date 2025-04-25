@@ -21,7 +21,7 @@ class RejectedFile extends Page
         app(FileService::class)->rejected($file);
 
         redirect()->to(FileResource::getUrl('index', [
-            'record' => $file->record_id,
+            'recordId' => $file->record_id,
         ]));
     }
 }

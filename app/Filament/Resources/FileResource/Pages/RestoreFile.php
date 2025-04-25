@@ -21,7 +21,7 @@ class RestoreFile extends Page
         app(FileService::class)->restore($file);
 
         redirect()->to(FileResource::getUrl('index', [
-            'record' => $file->record_id,
+            'recordId' => $file->record_id,
         ]));
     }
 }

@@ -37,7 +37,7 @@ class CreateFile extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index', ['record' => $this->record_id]);
+        return $this->getResource()::getUrl('index', ['recordId' => $this->record_id]);
     }
 
     public static function canCreateAnother(): bool
