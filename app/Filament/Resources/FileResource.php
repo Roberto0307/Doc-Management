@@ -104,7 +104,7 @@ class FileResource extends Resource
                         ->requiresConfirmation()
                         ->action(function ($record, array $data) {
                             redirect(FileResource::getUrl('pending', [
-                                'record' => $record->record_id,
+                                'recordId' => $record->record_id,
                                 'file' => $record->id,
                             ]));
                         })
@@ -127,7 +127,7 @@ class FileResource extends Resource
                         ])
                         ->action(function ($record, array $data) {
                             redirect(FileResource::getUrl('restore', [
-                                'record' => $record->record_id,
+                                'recordId' => $record->record_id,
                                 'file' => $record->id,
                                 'comment' => $data['comment'],
                             ]));
@@ -145,7 +145,7 @@ class FileResource extends Resource
                         ->requiresConfirmation()
                         ->action(function ($record) {
                             redirect(FileResource::getUrl('approved', [
-                                'record' => $record->record_id,
+                                'recordId' => $record->record_id,
                                 'file' => $record->id,
                             ]));
                         })
@@ -168,7 +168,7 @@ class FileResource extends Resource
                         ])
                         ->action(function ($record, array $data) {
                             redirect(FileResource::getUrl('rejected', [
-                                'record' => $record->record_id,
+                                'recordId' => $record->record_id,
                                 'file' => $record->id,
                                 'responses' => $data['responses'],
                             ]));
@@ -223,10 +223,10 @@ class FileResource extends Resource
         return [
             'index' => Pages\ListFiles::route('/records/{recordId}/files'),
             'create' => Pages\CreateFile::route('/records/{recordId}/files/create'),
-            'pending' => Pages\PendingFile::route('/records/{record}/files/pending/{file}'),
-            'restore' => Pages\RestoreFile::route('/records/{record}/files/restore/{file}'),
-            'approved' => Pages\ApprovedFile::route('/records/{record}/files/approved/{file}'),
-            'rejected' => Pages\RejectedFile::route('/records/{record}/files/rejected/{file}'),
+            'pending' => Pages\PendingFile::route('/records/{recordId}/files/pending/{file}'),
+            'restore' => Pages\RestoreFile::route('/records/{recordId}/files/restore/{file}'),
+            'approved' => Pages\ApprovedFile::route('/records/{recordId}/files/approved/{file}'),
+            'rejected' => Pages\RejectedFile::route('/records/{recordId}/files/rejected/{file}'),
         ];
     }
 
