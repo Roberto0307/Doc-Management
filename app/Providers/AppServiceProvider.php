@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Record;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,6 +20,5 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        Route::model('recordId', Record::class);
     }
 }

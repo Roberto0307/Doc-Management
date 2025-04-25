@@ -14,30 +14,32 @@ class CreateFile extends CreateRecord
 
     public $recordModel = null;
 
-    public ?string $record_id = null;
+    public ?string $recordId = null;
 
     public function mount(): void
     {
         parent::mount();
 
-        abort_unless(Record::find(request()->route('recordId')), 404);
+        $this->recordId = request()->route('recordId');
 
-        $this->recordModel = request()->route('recordId');
+        // Asegúrate de obtener el modelo real desde el ID
+        $record = Record::findOrFail($this->recordId);
 
-        $this->record_id = $this->recordModel->id;
+        // Guarda el modelo completo si lo vas a usar para el título o breadcrumbs
+        $this->recordModel = $record;
 
     }
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['record_id'] = $this->record_id;
+        $data['record_id'] = $this->recordId;
 
         return app(AuthService::class)->validatedData($data);
     }
 
     protected function getRedirectUrl(): string
     {
-        return $this->getResource()::getUrl('index', ['recordId' => $this->record_id]);
+        return $this->getResource()::getUrl('index', ['recordId' => $this->recordId]);
     }
 
     public static function canCreateAnother(): bool
@@ -54,7 +56,7 @@ class CreateFile extends CreateRecord
     {
         return [
             RecordResource::getUrl('index') => 'Records',
-            FileResource::getUrl('index', ['recordId' => $this->record_id]) => 'Files',
+            FileResource::getUrl('index', ['recordId' => $this->recordId]) => 'Files',
             false => 'Create',
         ];
     }

@@ -21,24 +21,21 @@ class ListFiles extends ListRecords
 
     public function mount(): void
     {
-
         parent::mount();
 
-        abort_unless(Record::find(request()->route('recordId')), 404);
+        $this->recordId = request()->route('recordId');
 
-        $this->recordModel = request()->route('recordId');
+        // Asegúrate de obtener el modelo real desde el ID
+        $record = Record::findOrFail($this->recordId);
 
-        $this->recordId = $this->recordModel->id;
+        // Guarda el modelo completo si lo vas a usar para el título o breadcrumbs
+        $this->recordModel = $record;
 
-        $sub_processId = Record::findOrFail($this->recordId)->sub_process_id;
-
-        abort_if(! app(AuthService::class)->canAccessSubProcessId($sub_processId), 403);
+        // Verificación de permisos
+        abort_if(! app(AuthService::class)->canAccessSubProcessId($record->sub_process_id), 403);
 
         if (session()->has('file_status')) {
-
             $data = session('file_status');
-
-            // Obtener status usando el 'title'
             $status = Status::byTitle($data['status_title']);
 
             Notification::make()
@@ -48,7 +45,6 @@ class ListFiles extends ListRecords
                 ->status($status->colorName())
                 ->send();
         }
-
     }
 
     public function getTableQuery(): ?\Illuminate\Database\Eloquent\Builder
