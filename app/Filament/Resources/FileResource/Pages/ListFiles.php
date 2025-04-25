@@ -15,6 +15,8 @@ class ListFiles extends ListRecords
 {
     protected static string $resource = FileResource::class;
 
+    public $recordModel = null;
+
     public ?string $recordId = null;
 
     public function mount(): void
@@ -22,9 +24,11 @@ class ListFiles extends ListRecords
 
         parent::mount();
 
-        $recordModel = Record::findOrFail(request()->route('record'));
+        abort_unless(Record::find(request()->route('recordId')), 404);
 
-        $this->recordId = $recordModel->id;
+        $this->recordModel = request()->route('recordId');
+
+        $this->recordId = $this->recordModel->id;
 
         $sub_processId = Record::findOrFail($this->recordId)->sub_process_id;
 
@@ -70,7 +74,7 @@ class ListFiles extends ListRecords
                 ->button()
                 ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
                 ->url(fn (): string => FileResource::getUrl('create', [
-                    'recordModel' => $this->recordId,
+                    'recordId' => $this->recordId,
                 ]
                 )),
             Action::make('back')
@@ -83,14 +87,14 @@ class ListFiles extends ListRecords
 
     public function getSubheading(): ?string
     {
-        return Record::find($this->recordId)?->title;
+        return $this->recordModel->title;
     }
 
     public function getBreadcrumbs(): array
     {
         return [
             RecordResource::getUrl('index') => 'Records',
-            FileResource::getUrl('index', ['record' => $this->recordId]) => 'Files',
+            FileResource::getUrl('index', ['recordId' => $this->recordId]) => 'Files',
             false => 'List',
         ];
     }

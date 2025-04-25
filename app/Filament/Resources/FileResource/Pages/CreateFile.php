@@ -12,15 +12,19 @@ class CreateFile extends CreateRecord
 {
     protected static string $resource = FileResource::class;
 
+    public $recordModel = null;
+
     public ?string $record_id = null;
 
     public function mount(): void
     {
         parent::mount();
 
-        abort_unless(Record::find(request()->route('recordModel')), 404);
+        abort_unless(Record::find(request()->route('recordId')), 404);
 
-        $this->record_id = request()->route('recordModel')->id;
+        $this->recordModel = request()->route('recordId');
+
+        $this->record_id = $this->recordModel->id;
 
     }
 
@@ -43,14 +47,14 @@ class CreateFile extends CreateRecord
 
     public function getSubheading(): ?string
     {
-        return Record::find($this->record_id)?->title;
+        return $this->recordModel->title;
     }
 
     public function getBreadcrumbs(): array
     {
         return [
             RecordResource::getUrl('index') => 'Records',
-            FileResource::getUrl('index', ['record' => $this->record_id]) => 'Files',
+            FileResource::getUrl('index', ['recordId' => $this->record_id]) => 'Files',
             false => 'Create',
         ];
     }

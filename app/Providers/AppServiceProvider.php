@@ -22,6 +22,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        Route::model('recordModel', Record::class);
+        Route::model('recordId', Record::class);
     }
 }
