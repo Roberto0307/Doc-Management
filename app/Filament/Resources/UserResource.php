@@ -56,7 +56,7 @@ class UserResource extends Resource
                             ->relationship('subProcesses', 'title')
                             ->label('Assigned Sub Processes')
                             ->disableOptionWhen(function ($value, $record) {
-                                return $record->isOwnerOfSubProcess($value);
+                                return $record?->isOwnerOfSubProcess($value);
                             })
                             ->helperText(
                                 fn (string $context) => $context === 'edit'
