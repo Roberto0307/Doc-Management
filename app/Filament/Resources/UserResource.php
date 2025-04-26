@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Models\SubProcess;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -57,9 +56,7 @@ class UserResource extends Resource
                             ->relationship('subProcesses', 'title')
                             ->label('Assigned Sub Processes')
                             ->disableOptionWhen(function ($value, $record) {
-                                $subProcess = SubProcess::find($value);
-
-                                return $subProcess->user_id === $record->id;
+                                return $record->isOwnerOfSubProcess($value);
                             })
                             ->helperText(
                                 fn (string $context) => $context === 'edit'
