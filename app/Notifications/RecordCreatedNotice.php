@@ -61,8 +61,8 @@ class RecordCreatedNotice extends Notification
             ->title($this->record->title)
             ->body('Created a new record!')
             ->icon('heroicon-o-clock')
-            ->color('info')
-            ->status('info')
+            ->color('primary')
+            ->status('primary')
             ->getDatabaseMessage();
     }
 }

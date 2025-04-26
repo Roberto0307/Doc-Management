@@ -160,7 +160,7 @@ class RecordResource extends Resource
                     DeleteAction::make()
                         ->visible(fn ($record): bool => auth()->user()?->can('delete', $record)),
 
-                ])->color('info')->link()->label(false)->tooltip('Actions'),
+                ])->color('primary')->link()->label(false)->tooltip('Actions'),
             ])
             /* ->actionsPosition(Tables\Enums\ActionsPosition::BeforeCells) */
             ->bulkActions([

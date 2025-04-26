@@ -207,7 +207,7 @@ class FileResource extends Resource
 
                             return $user && $user->hasRole('super_admin');
                         }),
-                ])->color('info')->link()->label(false)->tooltip('Actions'),
+                ])->color('primary')->link()->label(false)->tooltip('Actions'),
 
             ])
             ->bulkActions([
