@@ -131,16 +131,16 @@ class RecordResource extends Resource
 
                 ActionGroup::make([
 
-                Action::make('Files')
-                    ->label('Versions')
-                    ->icon('heroicon-o-document')
-                    ->color('primary')
-                    ->url(
-                        fn (Record $record): string => RecordResource::getUrl('files.list', ['recordId' => $record->id])
-                    )
-                    ->visible(
-                        fn ($record) => $record->canBeAccessedBy(auth()->user())
-                    ),
+                    Action::make('Files')
+                        ->label('Versions')
+                        ->icon('heroicon-o-document')
+                        ->color('primary')
+                        ->url(
+                            fn (Record $record): string => RecordResource::getUrl('files.list', ['recordId' => $record->id])
+                        )
+                        ->visible(
+                            fn ($record) => $record->canBeAccessedBy(auth()->user())
+                        ),
 
                     Action::make('LastfileApproved')
                         ->label('Download')
