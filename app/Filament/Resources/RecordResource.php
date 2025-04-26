@@ -25,7 +25,7 @@ class RecordResource extends Resource
 
     protected static ?string $navigationGroup = 'Record Management';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-archive-box';
 
     protected static ?int $navigationSort = 1;
 
@@ -129,6 +129,8 @@ class RecordResource extends Resource
             ])
             ->actions([
 
+                ActionGroup::make([
+
                 Action::make('Files')
                     ->label('Versions')
                     ->icon('heroicon-o-document')
@@ -139,8 +141,6 @@ class RecordResource extends Resource
                     ->visible(
                         fn ($record) => $record->canBeAccessedBy(auth()->user())
                     ),
-
-                ActionGroup::make([
 
                     Action::make('LastfileApproved')
                         ->label('Download')

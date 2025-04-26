@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Models\SubProcess;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -17,7 +18,7 @@ class UserResource extends Resource
 
     protected static ?string $navigationGroup = 'Users Management';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
 
     protected static ?int $navigationSort = 7;
 
@@ -42,9 +43,10 @@ class UserResource extends Resource
                             ->nullable()
                             ->dehydrated(fn ($state) => filled($state)) // solo lo manda si tiene valor
                             ->required(fn (string $context) => $context === 'create')
-                            ->helperText(fn (string $context) => $context === 'edit'
-                                ? "Leave it blank if you don't want to change your password."
-                                : null
+                            ->helperText(
+                                fn (string $context) => $context === 'edit'
+                                    ? "Leave it blank if you don't want to change your password."
+                                    : null
                             ),
                         Forms\Components\Select::make('roles')
                             ->relationship('roles', 'name')
@@ -53,7 +55,17 @@ class UserResource extends Resource
                             ->searchable(),
                         Forms\Components\CheckboxList::make('subProcesses')
                             ->relationship('subProcesses', 'title')
-                            ->label('Assigned Sub Processes'),
+                            ->label('Assigned Sub Processes')
+                            ->disableOptionWhen(function ($value, $record) {
+                                $subProcess = SubProcess::find($value);
+
+                                return $subProcess->user_id === $record->id;
+                            })
+                            ->helperText(
+                                fn (string $context) => $context === 'edit'
+                                    ? 'The user cannot be unlinked from the subprocess if he is linked to it as a leader.'
+                                    : null
+                            ),
 
                     ]),
             ]);
