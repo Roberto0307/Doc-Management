@@ -52,7 +52,11 @@ class ListFiles extends ListRecords
         $query = parent::getTableQuery();
 
         if ($this->recordId) {
-            $query->where('record_id', $this->recordId)->orderByDesc('version');
+            $query->where('record_id', $this->recordId);
+
+            if (! $this->tableSortColumn) {
+                $query->orderByDesc('version');
+            }
         }
 
         return $query;
