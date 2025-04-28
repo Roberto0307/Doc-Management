@@ -79,8 +79,6 @@ class FileResource extends Resource
                     ->label('Created by')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('record.title')
-                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->sortable()
                     ->since()
@@ -91,14 +89,7 @@ class FileResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status_id')
-                    ->relationship('status', 'label')
-                    ->label('Status'),
-
-                Tables\Filters\SelectFilter::make('user_id')
-                    ->relationship('user', 'name')
-                    ->label('Created by'),
-
+                //
             ])
             ->actions([
                 ActionGroup::make([
