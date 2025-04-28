@@ -13,7 +13,7 @@ use App\Models\User;
  */
 class AuthService
 {
-    public function canApprove(User $user, ?int $subProcessId): bool
+    public function canApproveAndReject(User $user, ?int $subProcessId): bool
     {
         return $user->hasRole('super_admin') || $user->isOwnerOfSubProcess($subProcessId);
     }
@@ -25,7 +25,7 @@ class AuthService
 
     public function getOwnerToSubProcess(?int $subProcessId): ?User
     {
-        return SubProcess::with('user')->find($subProcessId)?->user;
+        return SubProcess::with('owner')->find($subProcessId)?->user;
     }
 
     public function canAccessSubProcessId(int|string|null $subProcessId): bool
@@ -47,7 +47,7 @@ class AuthService
         $user = auth()->user();
         $record = Record::with('subProcess')->findOrFail($data['record_id']);
 
-        $hasApprovalAccess = $this->canApprove($user, $record->sub_process_id ?? null);
+        $hasApprovalAccess = $this->canApproveAndReject($user, $record->sub_process_id ?? null);
         $statusApproved = Status::byTitle('approved');
         $statusDraft = Status::byTitle('draft');
 

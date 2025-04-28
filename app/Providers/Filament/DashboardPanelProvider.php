@@ -64,26 +64,25 @@ class DashboardPanelProvider extends PanelProvider
                 Authenticate::class,
             ])->databaseNotifications()
             ->userMenuItems([
-                // Proceso
+                // Subproceso
                 UserMenuItem::make()
                     ->label(function () {
                         return auth()->user()?->ownerOfSubProcess()?->title;
                     })
-                    ->icon('heroicon-o-puzzle-piece') // ícono para proceso
+                    ->icon('heroicon-o-puzzle-piece') // ícono para subproceso
                     ->url(null)
                     ->sort(2)
                     ->hidden(fn () => ! auth()->user()?->ownerOfSubProcess() ||
                         auth()->user()?->hasRole('super_admin')
                     ),
-
-                // Subproceso
+                // Proceso
                 UserMenuItem::make()
                     ->label(function () {
                         $subProcess = auth()->user()?->ownerOfSubProcess();
 
                         return $subProcess?->process?->title;
                     })
-                    ->icon('heroicon-o-rectangle-group') // ícono para subproceso
+                    ->icon('heroicon-o-rectangle-group') // ícono para proceso
                     ->url(null)
                     ->sort(1)
                     ->hidden(fn () => ! auth()->user()?->ownerOfSubProcess() ||

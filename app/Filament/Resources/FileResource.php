@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Models\File;
 use App\Models\Status;
 use App\Services\AuthService;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -52,6 +51,7 @@ class FileResource extends Resource
                         TextArea::make('comments')
                             ->required()
                             ->maxLength(255)
+                            ->rule('string')
                             ->columnSpanFull(),
 
                     ]),
@@ -129,6 +129,8 @@ class FileResource extends Resource
                             Textarea::make('comment')
                                 ->label('Confirm the restoration')
                                 ->required()
+                                ->maxLength(255)
+                                ->rule('string')
                                 ->placeholder('¿Reason for restore?'),
                         ])
                         ->action(function ($record, array $data) {
@@ -156,7 +158,7 @@ class FileResource extends Resource
                             ]));
                         })
                         ->visible(function ($record) {
-                            return app(AuthService::class)->canApprove(
+                            return app(AuthService::class)->canApproveAndReject(
                                 auth()->user(),
                                 $record->record->sub_process_id ?? null
                             ) && $record->status_id === 2 && $record->isLatestVersion();
@@ -170,6 +172,8 @@ class FileResource extends Resource
                             Textarea::make('responses')
                                 ->label('Confirm Rejection')
                                 ->required()
+                                ->maxLength(255)
+                                ->rule('string')
                                 ->placeholder('¿Reason for rejected?'),
                         ])
                         ->action(function ($record, array $data) {
@@ -180,7 +184,7 @@ class FileResource extends Resource
                             ]));
                         })
                         ->visible(function ($record) {
-                            return app(AuthService::class)->canApprove(
+                            return app(AuthService::class)->canApproveAndReject(
                                 auth()->user(),
                                 $record->record->sub_process_id ?? null
                             ) && $record->status_id === 2 && $record->isLatestVersion();
@@ -202,8 +206,7 @@ class FileResource extends Resource
 
                     DeleteAction::make()
                         ->visible(function ($record) {
-
-                            $user = Filament::auth()->user();
+                            $user = auth()->user();
 
                             return $user && $user->hasRole('super_admin');
                         }),
