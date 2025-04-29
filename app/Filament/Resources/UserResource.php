@@ -6,6 +6,7 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -47,6 +48,11 @@ class UserResource extends Resource
                                     ? "Leave it blank if you don't want to change your password."
                                     : null
                             ),
+                        Toggle::make('active')
+                            ->label('Active')
+                            ->helperText('Enables or disables user access.')
+                            ->required()
+                            ->default(true),
                         Forms\Components\Select::make('roles')
                             ->relationship('roles', 'name')
                             ->multiple()
