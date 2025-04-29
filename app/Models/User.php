@@ -101,8 +101,13 @@ class User extends Authenticatable implements FilamentUser
             ->first();
     }
 
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
-        return auth()->check();
+        return auth()->check() && auth()->user()->isActive();
     }
 }
