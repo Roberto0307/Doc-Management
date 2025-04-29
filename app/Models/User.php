@@ -25,6 +25,7 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+        'active',
     ];
 
     /**
@@ -103,11 +104,11 @@ class User extends Authenticatable implements FilamentUser
 
     public function isActive(): bool
     {
-        return $this->active;
+        return (bool) $this->active;
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return auth()->check() && auth()->user()->isActive();
+        return $this->isActive();
     }
 }
