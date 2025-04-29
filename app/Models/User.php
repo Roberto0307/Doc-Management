@@ -5,10 +5,12 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use BezhanSalleh\FilamentShield\Traits\HasPanelShield;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Notifications\Notification;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
@@ -109,6 +111,23 @@ class User extends Authenticatable implements FilamentUser
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->isActive();
+        if ($this->hasRole('super_admin')) {
+            return true;
+        }
+
+        if (! $this->isActive()) {
+            Auth::logout();
+
+            Notification::make()
+                ->title('Deactivated accounts')
+                ->body('Your account has been deactivated. Contact the administrator.')
+                ->danger()
+                ->persistent()
+                ->send();
+
+            redirect()->route('filament.dashboard.auth.login')->send();
+        }
+
+        return true;
     }
 }
