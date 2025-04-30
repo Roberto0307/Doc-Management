@@ -5,31 +5,25 @@ namespace App\Services;
 use App\Models\Record;
 use App\Models\SubProcess;
 use App\Models\Type;
+use Illuminate\Support\Facades\DB;
 
 class RecordService
 {
-    // Generar codigo
-    public function generateCode($typeId, $subProcessId)
+    public function generateCode($typeId, $subProcessId): string
     {
-        // Buscar Tipo y Sub Proceso
-        $type = Type::findOrFail($typeId);
-        $subProcess = SubProcess::findOrFail($subProcessId);
+        return DB::transaction(function () use ($typeId, $subProcessId) {
 
-        // Obtener siglas
-        $acronymType = $type->acronym;
-        $acronymSubProcess = $subProcess->acronym;
+            $type = Type::lockForUpdate()->findOrFail($typeId);
+            $subProcess = SubProcess::lockForUpdate()->findOrFail($subProcessId);
 
-        // Contar cuántos registros existen con la misma combinación
-        $count = Record::where('type_id', $typeId)
-            ->where('sub_process_id', $subProcessId)
-            ->count();
+            $count = Record::where('type_id', $typeId)
+                ->where('sub_process_id', $subProcessId)
+                ->lockForUpdate()
+                ->count();
 
-        // Incrementar el consecutivo
-        $consecutive = str_pad((int) $count + 1, 3, '0', STR_PAD_LEFT);
+            $consecutive = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
 
-        // Asignación de valor al codigo
-        $code = "{$acronymType}-{$acronymSubProcess}-{$consecutive}";
-
-        return $code;
+            return "{$type->acronym}-{$subProcess->acronym}-{$consecutive}";
+        });
     }
 }
