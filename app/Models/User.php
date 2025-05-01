@@ -124,8 +124,6 @@ class User extends Authenticatable implements FilamentUser
                 ->danger()
                 ->persistent()
                 ->send();
-
-            redirect()->route('filament.dashboard.auth.login')->send();
         }
 
         return true;
