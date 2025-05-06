@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserResource extends Resource
 {
@@ -57,7 +58,16 @@ class UserResource extends Resource
                             ->relationship('roles', 'name')
                             ->multiple()
                             ->preload()
-                            ->searchable(),
+                            ->searchable()
+                            ->options(function () {
+                                $roles = \Spatie\Permission\Models\Role::pluck('name', 'id');
+
+                                if (! auth()->user()->hasRole('super_admin')) {
+                                    $roles = $roles->reject(fn ($name) => $name === 'super_admin');
+                                }
+
+                                return $roles;
+                            }),
                         Forms\Components\CheckboxList::make('subProcesses')
                             ->relationship('subProcesses', 'title')
                             ->label('Assigned Sub Processes')
@@ -125,5 +135,18 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (! auth()->user()->hasRole('super_admin')) {
+            $query->whereDoesntHave('roles', function ($q) {
+                $q->where('name', 'super_admin');
+            });
+        }
+
+        return $query;
     }
 }
