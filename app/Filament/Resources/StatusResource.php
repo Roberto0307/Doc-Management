@@ -74,12 +74,10 @@ class StatusResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make()
-                        ->action(function ($records) {
-                            $records->reject(fn ($record) => $record->protected)->each->delete();
-                        }),
+                    //
                 ]),
             ]);
+
     }
 
     public static function getRelations(): array

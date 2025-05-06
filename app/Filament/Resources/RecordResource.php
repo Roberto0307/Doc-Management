@@ -166,10 +166,9 @@ class RecordResource extends Resource
 
                 ])->color('primary')->link()->label(false)->tooltip('Actions'),
             ])
-            /* ->actionsPosition(Tables\Enums\ActionsPosition::BeforeCells) */
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    //
                 ]),
             ]);
     }
