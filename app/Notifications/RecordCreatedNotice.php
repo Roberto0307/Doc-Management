@@ -60,7 +60,7 @@ class RecordCreatedNotice extends Notification
         return FilamentNotification::make()
             ->title($this->record->title)
             ->body('Created a new record!')
-            ->icon('heroicon-o-clock')
+            ->icon('heroicon-o-archive-box')
             ->color('primary')
             ->status('primary')
             ->getDatabaseMessage();

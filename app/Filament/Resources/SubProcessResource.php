@@ -60,7 +60,7 @@ class SubProcessResource extends Resource
                 Tables\Columns\TextColumn::make('process.title')
                     ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user.name')
+                Tables\Columns\TextColumn::make('owner.name')
                     ->label('Thread leader')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')

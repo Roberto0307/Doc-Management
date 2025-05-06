@@ -61,6 +61,7 @@ class AuthService
             'status_id' => in_array('status_id', $preserve) ? ($data['status_id'] ?? null) : ($hasApprovalAccess ? $statusApproved->id : $statusDraft->id),
             'version' => in_array('version', $preserve) ? ($data['version'] ?? null) : $newVersion,
             'user_id' => in_array('user_id', $preserve) ? ($data['user_id'] ?? null) : $user->id,
+            'leader_id' => in_array('leader_id', $preserve) ? ($data['leader_id'] ?? null) : ($hasApprovalAccess ? auth()->id() : null),
         ]);
     }
 }

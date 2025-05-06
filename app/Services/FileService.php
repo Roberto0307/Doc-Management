@@ -34,8 +34,9 @@ class FileService
         $status = Status::byTitle('rejected');
         $responseMessage = 'Rejected from version '.$file->version;
         $responses = Str::limit(strip_tags(request()->query('responses', $responseMessage)), 255);
+        $leaderId = ['leader_id' => auth()->id()];
 
-        $this->updateFileStatus($file, $status, $responses);
+        $this->updateFileStatus($file, $status, $responses, $leaderId);
     }
 
     public function approved(File $file): void
@@ -57,6 +58,9 @@ class FileService
 
     public function restore(File $file): void
     {
+        $lastFileId = app(File::class)::latest()->first()->id;
+
+        $digital_signature = $this->generateDigitalSignature($file->file_path.$lastFileId);
 
         $data = [
             'title' => $file->title,
@@ -65,6 +69,7 @@ class FileService
             'file_path' => $file->file_path,
             'comments' => Str::limit(strip_tags(request()->query('comment', $file->comments)), 255),
             'responses' => 'Restored from version '.$file->version,
+            'digital_signature' => $digital_signature,
         ];
 
         $validated = $this->authService->validatedData($data);
@@ -77,6 +82,7 @@ class FileService
 
     private function updateFileStatus(File $file, Status $status, ?string $responses = null, array $extra = []): void
     {
+
         $file->update(array_merge([
             'status_id' => $status->id,
             'responses' => $responses,
@@ -96,5 +102,12 @@ class FileService
         session()->flash('file_status', [
             'status_title' => $status->title,
         ]);
+    }
+
+    public function generateDigitalSignature($file_path)
+    {
+        $hash = hash('sha256', $file_path);
+
+        return $hash;
     }
 }

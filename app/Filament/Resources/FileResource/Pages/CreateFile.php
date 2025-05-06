@@ -6,6 +6,7 @@ use App\Filament\Resources\FileResource;
 use App\Filament\Resources\RecordResource;
 use App\Models\Record;
 use App\Services\AuthService;
+use App\Services\FileService;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -34,6 +35,8 @@ class CreateFile extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['record_id'] = $this->recordId;
+
+        $data['digital_signature'] = app(FileService::class)->generateDigitalSignature($data['file_path']);
 
         return app(AuthService::class)->validatedData($data);
     }

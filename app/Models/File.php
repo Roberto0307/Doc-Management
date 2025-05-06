@@ -18,8 +18,10 @@ class File extends Model
         'version',
         'comments',
         'responses',
+        'digital_signature',
         'record_id',
         'user_id',
+        'leader_id',
     ];
 
     protected $casts = [
@@ -42,6 +44,11 @@ class File extends Model
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id');
+    }
+
+    public function leader()
+    {
+        return $this->belongsTo(User::class, 'leader_id');
     }
 
     public function user()

@@ -129,33 +129,37 @@ class RecordResource extends Resource
             ])
             ->actions([
 
+                Action::make('Files')
+                    ->label('Versions')
+                    ->icon('heroicon-o-document')
+                    ->color('primary')
+                    ->url(
+                        fn (Record $record): string => RecordResource::getUrl('files.list', ['recordId' => $record->id])
+                    )
+                    ->visible(
+                        fn ($record) => $record->canBeAccessedBy(auth()->user())
+                    ),
+
+                Action::make('LastfileApproved')
+                    ->label('Download')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('primary')
+                    ->url(
+                        fn ($record) => $record->approvedVersionUrl()
+                    )
+                    ->openUrlInNewTab(false)
+                    ->extraAttributes(fn ($record) => [
+                        'download' => $record->title,
+                    ])
+                    ->disabled(fn ($record) => ! $record->hasApprovedVersion())
+                    ->extraAttributes(fn ($record) => [
+                        'style' => $record->hasApprovedVersion()
+                            ? ''
+                            : 'opacity: 0.3; cursor: not-allowed;',
+
+                    ]),
+
                 ActionGroup::make([
-
-                    Action::make('Files')
-                        ->label('Versions')
-                        ->icon('heroicon-o-document')
-                        ->color('primary')
-                        ->url(
-                            fn (Record $record): string => RecordResource::getUrl('files.list', ['recordId' => $record->id])
-                        )
-                        ->visible(
-                            fn ($record) => $record->canBeAccessedBy(auth()->user())
-                        ),
-
-                    Action::make('LastfileApproved')
-                        ->label('Download')
-                        ->icon('heroicon-o-document-arrow-down')
-                        ->color('primary')
-                        ->url(
-                            fn ($record) => $record->approvedVersionUrl()
-                        )
-                        ->openUrlInNewTab(false)
-                        ->extraAttributes(fn ($record) => [
-                            'download' => $record->title,
-                        ])
-                        ->visible(
-                            fn ($record) => $record->hasApprovedVersion()
-                        ),
 
                     DeleteAction::make()
                         ->visible(fn ($record): bool => auth()->user()?->can('delete', $record)),
