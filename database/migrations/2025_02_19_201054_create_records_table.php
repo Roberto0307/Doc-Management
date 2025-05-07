@@ -19,6 +19,9 @@ return new class extends Migration
             $table->foreignId('type_id')->constrained();
             $table->string('code')->unique();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('management_time_id')->constrained();
+            $table->foreignId('central_time_id')->constrained();
+            $table->foreignId('final_disposition_id')->constrained();
             $table->timestamps();
         });
     }

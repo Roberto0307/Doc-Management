@@ -17,6 +17,9 @@ class Record extends Model
         'sub_process_id',
         'type_id',
         'user_id',
+        'management_time_id',
+        'central_time_id',
+        'final_disposition_id',
     ];
 
     protected $casts = [
@@ -29,6 +32,21 @@ class Record extends Model
     | Relaciones
     |--------------------------------------------------------------------------
     */
+
+    public function finalDisposition()
+    {
+        return $this->belongsTo(finalDisposition::class, 'final_disposition_id');
+    }
+
+    public function centralTime()
+    {
+        return $this->belongsTo(CentralTime::class, 'central_time_id');
+    }
+
+    public function managementTime()
+    {
+        return $this->belongsTo(ManagementTime::class, 'management_time_id');
+    }
 
     public function type()
     {

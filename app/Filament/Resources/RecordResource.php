@@ -34,7 +34,7 @@ class RecordResource extends Resource
         return $form
             ->schema([
                 Section::make('Record Data')
-                    ->columns(2)
+                    ->columns(6)
                     ->schema([
 
                         Forms\Components\TextInput::make('title')
@@ -54,7 +54,8 @@ class RecordResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->required(),
+                            ->required()
+                            ->columnSpan(3),
                         Forms\Components\Select::make('sub_process_id')
                             ->label('Sub Process')
                             ->options(
@@ -65,8 +66,29 @@ class RecordResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->required(),
-
+                            ->required()
+                            ->columnSpan(3),
+                        Forms\Components\Select::make('management_time_id')
+                            ->relationship('managementtime', 'title')
+                            ->label('Management Time')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->columnSpan(2),
+                        Forms\Components\Select::make('central_time_id')
+                            ->relationship('centraltime', 'title')
+                            ->label('Central Time')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->columnSpan(2),
+                        Forms\Components\Select::make('final_disposition_id')
+                            ->relationship('finaldisposition', 'title')
+                            ->label('Final Disposition')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->columnSpan(2),
                     ]),
             ]);
     }
@@ -97,6 +119,21 @@ class RecordResource extends Resource
                     ->label('Created by')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('managementtime.title')
+                    ->label('Management time')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('centraltime.title')
+                    ->label('Central time')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('finaldisposition.title')
+                    ->label('Final disposition')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->sortable()
                     ->date('l, d \d\e F \d\e Y')
@@ -123,6 +160,24 @@ class RecordResource extends Resource
                 SelectFilter::make('sub_process_id')
                     ->relationship('subprocess', 'title')
                     ->label('Sub Process')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('management_time_id')
+                    ->relationship('managementtime', 'title')
+                    ->label('Management time')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('central_time_id')
+                    ->relationship('centraltime', 'title')
+                    ->label('Central time')
+                    ->multiple()
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('final_disposition_id')
+                    ->relationship('finaldisposition', 'title')
+                    ->label('Final disposition')
                     ->multiple()
                     ->searchable()
                     ->preload(),

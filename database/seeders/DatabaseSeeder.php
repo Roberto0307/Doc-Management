@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             TypeSeeder::class,
             StatusSeeder::class,
             UserHasSubProcessSeeder::class,
+            ManagementTimeSeeder::class,
+            CentralTimeSeeder::class,
+            FinalDispositionSeeder::class,
             /* RolePermissionSeeder::class, */
         ]);
     }
