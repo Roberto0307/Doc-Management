@@ -4,7 +4,6 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\StatusResource\Pages;
 use App\Models\Status;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -29,8 +28,8 @@ class StatusResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->label('Internal title')
                     ->required()
-                    ->disabled(fn () => ! Filament::auth()->user()?->hasRole('super_admin'))
-                    ->dehydrated(fn () => Filament::auth()->user()?->hasRole('super_admin'))
+                    ->disabled(fn () => ! auth()->user()?->hasRole('super_admin'))
+                    ->dehydrated(fn () => auth()->user()?->hasRole('super_admin'))
                     ->helperText('This is the status identifier. Only super admins can edit it.')
                     ->columnSpanFull(),
 
