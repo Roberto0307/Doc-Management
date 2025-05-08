@@ -57,8 +57,9 @@ class StatusResource extends Resource
                 Tables\Columns\TextColumn::make('label')
                     ->label('Name')
                     ->searchable(),
-                Tables\Columns\BadgeColumn::make('title')
+                Tables\Columns\TextColumn::make('title')
                     ->label('Color and Icon')
+                    ->badge()
                     ->color(fn ($record) => $record->color)
                     ->icon(fn ($record) => $record->icon)
                     ->searchable(),
