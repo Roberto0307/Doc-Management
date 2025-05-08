@@ -67,25 +67,25 @@ class DashboardPanelProvider extends PanelProvider
                 // Subproceso
                 UserMenuItem::make()
                     ->label(function () {
-                        return auth()->user()?->ownerOfSubProcess()?->title;
+                        return auth()->user()?->leaderOfSubProcess()?->title;
                     })
                     ->icon('heroicon-o-puzzle-piece') // ícono para subproceso
                     ->url(null)
                     ->sort(2)
-                    ->hidden(fn () => ! auth()->user()?->ownerOfSubProcess() ||
+                    ->hidden(fn () => ! auth()->user()?->leaderOfSubProcess() ||
                         auth()->user()?->hasRole('super_admin')
                     ),
                 // Proceso
                 UserMenuItem::make()
                     ->label(function () {
-                        $subProcess = auth()->user()?->ownerOfSubProcess();
+                        $subProcess = auth()->user()?->leaderOfSubProcess();
 
                         return $subProcess?->process?->title;
                     })
                     ->icon('heroicon-o-rectangle-group') // ícono para proceso
                     ->url(null)
                     ->sort(1)
-                    ->hidden(fn () => ! auth()->user()?->ownerOfSubProcess() ||
+                    ->hidden(fn () => ! auth()->user()?->leaderOfSubProcess() ||
                         auth()->user()?->hasRole('super_admin')
                     ),
             ]);

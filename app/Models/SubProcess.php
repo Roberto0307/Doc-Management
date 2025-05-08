@@ -22,7 +22,7 @@ class SubProcess extends Model
         return $this->belongsTo(Process::class);
     }
 
-    public function owner()
+    public function leader()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

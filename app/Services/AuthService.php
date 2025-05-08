@@ -15,7 +15,7 @@ class AuthService
 {
     public function canApproveAndReject(User $user, ?int $subProcessId): bool
     {
-        return $user->hasRole('super_admin') || $user->isOwnerOfSubProcess($subProcessId);
+        return $user->hasRole('super_admin') || $user->isLeaderOfSubProcess($subProcessId);
     }
 
     public function canPending(User $user, File $file): bool
@@ -23,9 +23,9 @@ class AuthService
         return $user->hasRole('super_admin') || $file->user_id === $user->id;
     }
 
-    public function getOwnerToSubProcess(?int $subProcessId): ?User
+    public function getLeaderToSubProcess(?int $subProcessId): ?User
     {
-        return SubProcess::with('owner')->find($subProcessId)?->user;
+        return SubProcess::with('leader')->find($subProcessId)?->user;
     }
 
     public function canAccessSubProcessId(int|string|null $subProcessId): bool

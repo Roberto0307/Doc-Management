@@ -85,7 +85,7 @@ class User extends Authenticatable implements FilamentUser
     |--------------------------------------------------------------------------
     */
 
-    public function isOwnerOfSubProcess(?int $subProcessId): bool
+    public function isLeaderOfSubProcess(?int $subProcessId): bool
     {
         return SubProcess::where('id', $subProcessId)
             ->where('user_id', $this->id)
@@ -97,7 +97,7 @@ class User extends Authenticatable implements FilamentUser
         return $this->subProcesses()->where('sub_process_id', $subProcessId)->exists();
     }
 
-    public function ownerOfSubProcess(): ?SubProcess
+    public function leaderOfSubProcess(): ?SubProcess
     {
         return SubProcess::with('process')
             ->where('user_id', $this->id)
