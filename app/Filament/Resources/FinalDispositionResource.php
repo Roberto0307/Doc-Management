@@ -25,8 +25,17 @@ class FinalDispositionResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
+                    ->label('Internal title')
                     ->required()
-                    ->maxLength(255),
+                    ->helperText('This is the Final Disposition identifier.')
+                    ->columnSpanFull(),
+
+                Forms\Components\TextInput::make('label')
+                    ->label('Display name')
+                    ->required()
+                    ->maxLength(255)
+                    ->placeholder(fn ($record) => $record?->title ?? 'Final Disposition title')
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -34,7 +43,8 @@ class FinalDispositionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
+                Tables\Columns\TextColumn::make('label')
+                    ->label('Name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

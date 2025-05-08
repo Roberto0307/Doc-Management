@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\RecordResource\Pages;
+use App\Models\CentralTime;
+use App\Models\ManagementTime;
 use App\Models\Record;
 use App\Models\SubProcess;
 use Filament\Forms;
@@ -69,21 +71,21 @@ class RecordResource extends Resource
                             ->required()
                             ->columnSpan(3),
                         Forms\Components\Select::make('management_time_id')
-                            ->relationship('managementtime', 'title')
                             ->label('Management Time')
+                            ->options(ManagementTime::selectOptions())
                             ->searchable()
                             ->preload()
                             ->required()
                             ->columnSpan(2),
                         Forms\Components\Select::make('central_time_id')
-                            ->relationship('centraltime', 'title')
                             ->label('Central Time')
+                            ->options(CentralTime::selectOptions())
                             ->searchable()
                             ->preload()
                             ->required()
                             ->columnSpan(2),
                         Forms\Components\Select::make('final_disposition_id')
-                            ->relationship('finaldisposition', 'title')
+                            ->relationship('finaldisposition', 'label')
                             ->label('Final Disposition')
                             ->searchable()
                             ->preload()
@@ -119,17 +121,17 @@ class RecordResource extends Resource
                     ->label('Created by')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('managementtime.title')
+                Tables\Columns\TextColumn::make('managementtime.year_label')
                     ->label('Management time')
                     ->sortable()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('centraltime.title')
+                Tables\Columns\TextColumn::make('centraltime.year_label')
                     ->label('Central time')
                     ->sortable()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('finaldisposition.title')
+                Tables\Columns\TextColumn::make('finaldisposition.label')
                     ->label('Final disposition')
                     ->sortable()
                     ->searchable()
@@ -164,19 +166,19 @@ class RecordResource extends Resource
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('management_time_id')
-                    ->relationship('managementtime', 'title')
                     ->label('Management time')
+                    ->options(ManagementTime::selectOptions())
                     ->multiple()
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('central_time_id')
-                    ->relationship('centraltime', 'title')
                     ->label('Central time')
+                    ->options(CentralTime::selectOptions())
                     ->multiple()
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('final_disposition_id')
-                    ->relationship('finaldisposition', 'title')
+                    ->relationship('finaldisposition', 'label')
                     ->label('Final disposition')
                     ->multiple()
                     ->searchable()

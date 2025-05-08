@@ -14,13 +14,16 @@ class FinalDispositionSeeder extends Seeder
     {
         //
         FinalDisposition::factory()->create([
-            'title' => 'Conservar',
+            'title' => 'keep',
+            'label' => 'Keep',
         ]);
         FinalDisposition::factory()->create([
-            'title' => 'Eliminar',
+            'title' => 'eliminate',
+            'label' => 'Eliminate',
         ]);
         FinalDisposition::factory()->create([
-            'title' => 'Digitalizar',
+            'title' => 'digitize',
+            'label' => 'Digitize',
         ]);
     }
 }

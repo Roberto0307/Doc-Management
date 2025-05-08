@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('central_times', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->integer('year');
+            $table->integer('year')->unique();
             $table->timestamps();
         });
     }

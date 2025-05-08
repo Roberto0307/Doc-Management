@@ -24,12 +24,12 @@ class ManagementTimeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
                 Forms\Components\TextInput::make('year')
+                    ->label(__('Year'))
                     ->required()
-                    ->numeric(),
+                    ->unique()
+                    ->numeric()
+                    ->minValue(1),
             ]);
     }
 
@@ -37,9 +37,8 @@ class ManagementTimeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('year')
+                Tables\Columns\TextColumn::make('year_label')
+                    ->label(__('Year'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

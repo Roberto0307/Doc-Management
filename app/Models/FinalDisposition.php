@@ -9,4 +9,9 @@ class FinalDisposition extends Model
 {
     /** @use HasFactory<\Database\Factories\FinalDispositionFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'label',
+    ];
 }

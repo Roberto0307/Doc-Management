@@ -57,6 +57,11 @@ class StatusResource extends Resource
                 Tables\Columns\TextColumn::make('label')
                     ->label('Name')
                     ->searchable(),
+                Tables\Columns\BadgeColumn::make('title')
+                    ->label('Color and Icon')
+                    ->color(fn ($record) => $record->color)
+                    ->icon(fn ($record) => $record->icon)
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
