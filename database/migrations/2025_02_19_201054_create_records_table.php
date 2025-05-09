@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('process_id')->constrained();
             $table->foreignId('sub_process_id')->constrained();
             $table->foreignId('type_id')->constrained();
-            $table->string('code')->unique();
+            $table->string('classification_code')->unique();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('management_time_id')->constrained();
             $table->foreignId('central_time_id')->constrained();

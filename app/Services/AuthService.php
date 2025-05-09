@@ -61,7 +61,8 @@ class AuthService
             'status_id' => in_array('status_id', $preserve) ? ($data['status_id'] ?? null) : ($hasApprovalAccess ? $statusApproved->id : $statusDraft->id),
             'version' => in_array('version', $preserve) ? ($data['version'] ?? null) : $newVersion,
             'user_id' => in_array('user_id', $preserve) ? ($data['user_id'] ?? null) : $user->id,
-            'leader_id' => in_array('leader_id', $preserve) ? ($data['leader_id'] ?? null) : ($hasApprovalAccess ? auth()->id() : null),
+            'decided_by_user_id' => in_array('decided_by_user_id', $preserve) ? ($data['decided_by_user_id'] ?? null) : ($hasApprovalAccess ? auth()->id() : null),
+            'decision_at' => in_array('decision_at', $preserve) ? ($data['decision_at'] ?? null) : ($hasApprovalAccess ? now() : null),
         ]);
     }
 }

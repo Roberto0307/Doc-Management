@@ -11,7 +11,7 @@ class Record extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code',
+        'classification_code',
         'title',
         'process_id',
         'sub_process_id',

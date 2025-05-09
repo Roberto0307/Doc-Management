@@ -36,7 +36,7 @@ class CreateFile extends CreateRecord
     {
         $data['record_id'] = $this->recordId;
 
-        $data['digital_signature'] = app(FileService::class)->generateDigitalSignature($data['file_path']);
+        $data['sha256_hash'] = app(FileService::class)->generateDigitalSignature($data['file_path']);
 
         return app(AuthService::class)->validatedData($data);
     }

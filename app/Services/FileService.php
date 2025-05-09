@@ -24,19 +24,22 @@ class FileService
     public function pending(File $file): void
     {
         $status = Status::byTitle('pending');
-        $responses = 'Pending from version '.$file->version;
+        $changeReason = 'Pending from version '.$file->version;
 
-        $this->updateFileStatus($file, $status, $responses);
+        $this->updateFileStatus($file, $status, $changeReason);
     }
 
     public function rejected(File $file): void
     {
         $status = Status::byTitle('rejected');
-        $responseMessage = 'Rejected from version '.$file->version;
-        $responses = Str::limit(strip_tags(request()->query('responses', $responseMessage)), 255);
-        $leaderId = ['leader_id' => auth()->id()];
+        $reasonMessage = 'Rejected from version '.$file->version;
+        $changeReason = Str::limit(strip_tags(request()->query('change_reason', $reasonMessage)), 255);
+        $extra = [
+            'decided_by_user_id' => auth()->id(),
+            'decision_at' => now(),
+        ];
 
-        $this->updateFileStatus($file, $status, $responses, $leaderId);
+        $this->updateFileStatus($file, $status, $changeReason, $extra);
     }
 
     public function approved(File $file): void
@@ -44,7 +47,7 @@ class FileService
 
         $data = [
             'record_id' => $file->record_id,
-            'responses' => 'Approved from version '.$file->version,
+            'change_reason' => 'Approved from version '.$file->version,
             'user_id' => $file->user_id,
         ];
 
@@ -53,14 +56,14 @@ class FileService
         DB::transaction(fn () => $file->update($validated));
 
         $status = Status::byTitle('approved');
-        $this->notifyStatusChange($file, $status, $data['responses']);
+        $this->notifyStatusChange($file, $status, $data['change_reason']);
     }
 
     public function restore(File $file): void
     {
         $lastFileId = app(File::class)::latest()->first()->id;
 
-        $digital_signature = $this->generateDigitalSignature($file->file_path.$lastFileId);
+        $sha256_hash = $this->generateDigitalSignature($file->file_path.$lastFileId);
 
         $data = [
             'title' => $file->title,
@@ -68,8 +71,8 @@ class FileService
             'sub_process_id' => $file->record->sub_process_id,
             'file_path' => $file->file_path,
             'comments' => Str::limit(strip_tags(request()->query('comment', $file->comments)), 255),
-            'responses' => 'Restored from version '.$file->version,
-            'digital_signature' => $digital_signature,
+            'change_reason' => 'Restored from version '.$file->version,
+            'sha256_hash' => $sha256_hash,
         ];
 
         $validated = $this->authService->validatedData($data);
@@ -77,18 +80,18 @@ class FileService
         DB::transaction(fn () => File::create($validated));
 
         $status = Status::findOrFail($validated['status_id']);
-        $this->notifyStatusChange($file, $status, $data['responses']);
+        $this->notifyStatusChange($file, $status, $data['change_reason']);
     }
 
-    private function updateFileStatus(File $file, Status $status, ?string $responses = null, array $extra = []): void
+    private function updateFileStatus(File $file, Status $status, ?string $changeReason = null, array $extra = []): void
     {
 
         $file->update(array_merge([
             'status_id' => $status->id,
-            'responses' => $responses,
+            'change_reason' => $changeReason,
         ], $extra));
 
-        $this->notifyStatusChange($file, $status, $responses ?? '');
+        $this->notifyStatusChange($file, $status, $changeReason ?? '');
     }
 
     protected function notifyStatusChange(File $file, Status $status, string $message): void

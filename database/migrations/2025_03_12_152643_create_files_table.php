@@ -17,14 +17,15 @@ return new class extends Migration
             $table->string('file_path');
             $table->string('version');
             $table->string('comments')->nullable();
-            $table->string('responses')->nullable();
-            $table->string('digital_signature')->unique();
+            $table->string('change_reason')->nullable();
+            $table->string('sha256_hash')->unique();
+            $table->timestamp('decision_at')->nullable();
 
             // Relaciones
             $table->foreignId('status_id')->constrained(); // Asume tabla 'statuses'
             $table->foreignId('record_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete(); // Apunta a 'users.id'
-            $table->foreignId('leader_id')->nullable(); // Apunta a 'users.id'
+            $table->foreignId('decided_by_user_id')->nullable()->constrained('users'); // Apunta a 'users.id'
 
             $table->timestamps();
         });

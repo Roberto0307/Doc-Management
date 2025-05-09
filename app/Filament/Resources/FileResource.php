@@ -71,19 +71,26 @@ class FileResource extends Resource
                 Tables\Columns\TextColumn::make('version')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('comments')
+                    ->wrap()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('responses')
+                Tables\Columns\TextColumn::make('change_reason')
+                    ->label('Reason for change')
                     ->searchable()
+                    ->wrap()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Created by')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('leader.name')
-                    ->label('Leader name')
+                Tables\Columns\TextColumn::make('decidedBy.name')
+                    ->label('Modified by')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('digital_signature')
+                Tables\Columns\TextColumn::make('decision_at')
+                    ->sortable()
+                    ->since()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('sha256_hash')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
@@ -167,7 +174,7 @@ class FileResource extends Resource
                         ->icon(fn ($record) => Status::iconFromTitle('rejected') ?? 'information-circle')
                         ->color(fn ($record) => Status::colorFromTitle('rejected') ?? 'gray')
                         ->form([
-                            Textarea::make('responses')
+                            Textarea::make('change_reason')
                                 ->label('Confirm Rejection')
                                 ->required()
                                 ->maxLength(255)
@@ -178,7 +185,7 @@ class FileResource extends Resource
                             redirect(RecordResource::getUrl('files.rejected', [
                                 'recordId' => $record->record_id,
                                 'file' => $record->id,
-                                'responses' => $data['responses'],
+                                'change_reason' => $data['change_reason'],
                             ]));
                         })
                         ->visible(function ($record) {

@@ -26,7 +26,7 @@ class CreateRecord extends BaseCreateRecord
             $this->halt();
         }
 
-        $data['code'] = app(RecordService::class)->generateCode($data['type_id'], $data['sub_process_id']);
+        $data['classification_code'] = app(RecordService::class)->generateCode($data['type_id'], $data['sub_process_id']);
         $data['user_id'] = auth()->id();
 
         return $data;

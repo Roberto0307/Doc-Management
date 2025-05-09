@@ -99,7 +99,7 @@ class RecordResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('code')
+                Tables\Columns\TextColumn::make('classification_code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),

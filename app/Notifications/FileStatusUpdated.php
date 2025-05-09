@@ -18,17 +18,17 @@ class FileStatusUpdated extends Notification
 
     private $status;
 
-    private $responses;
+    private $changeReason;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(File $file, Status $status, $responses = null)
+    public function __construct(File $file, Status $status, $changeReason = null)
     {
         //
         $this->file = $file;
         $this->status = $status;
-        $this->responses = $responses;
+        $this->changeReason = $changeReason;
     }
 
     /**
@@ -52,9 +52,9 @@ class FileStatusUpdated extends Notification
             ->line('The status of the document "'.$this->file->title.'"')
             ->line('has changed to: '.ucfirst(strtolower($this->status->label)));
 
-        // Solo agregar la línea si $this->responses no es null ni vacío
-        if (! empty($this->responses)) {
-            $mailMessage->line('Important state information: '.$this->responses);
+        // Solo agregar la línea si $this->changeReason no es null ni vacío
+        if (! empty($this->changeReason)) {
+            $mailMessage->line('Important state information: '.$this->changeReason);
         }
 
         return $mailMessage->action(

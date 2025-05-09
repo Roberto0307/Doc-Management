@@ -17,17 +17,19 @@ class File extends Model
         'status_id',
         'version',
         'comments',
-        'responses',
-        'digital_signature',
+        'change_reason',
+        'sha256_hash',
         'record_id',
         'user_id',
-        'leader_id',
+        'decided_by_user_id',
+        'decision_at',
     ];
 
     protected $casts = [
         'version' => 'string',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'decision_at' => 'datetime',
     ];
 
     /*
@@ -46,9 +48,9 @@ class File extends Model
         return $this->belongsTo(Status::class, 'status_id');
     }
 
-    public function leader()
+    public function decidedBy()
     {
-        return $this->belongsTo(User::class, 'leader_id');
+        return $this->belongsTo(User::class, 'decided_by_user_id');
     }
 
     public function user()
