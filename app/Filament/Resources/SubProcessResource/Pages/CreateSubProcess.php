@@ -17,6 +17,15 @@ class CreateSubProcess extends CreateRecord
         return $data;
     }
 
+    protected function afterCreate(): void
+    {
+        $superAdmin = User::role('super_admin')->first();
+
+        if ($superAdmin && $this->record) {
+            $this->record->users()->syncWithoutDetaching([$superAdmin->id]);
+        }
+    }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
