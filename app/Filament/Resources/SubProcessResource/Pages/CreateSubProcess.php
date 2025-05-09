@@ -10,16 +10,16 @@ class CreateSubProcess extends CreateRecord
 {
     protected static string $resource = SubProcessResource::class;
 
-    protected function getRedirectUrl(): string
-    {
-        return $this->getResource()::getUrl('index');
-    }
-
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = User::role('super_admin')->first()->id;
 
         return $data;
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 
     public static function canCreateAnother(): bool

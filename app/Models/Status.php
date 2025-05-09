@@ -74,6 +74,6 @@ class Status extends Model
 
     public function iconName(): string
     {
-        return $this->icon ?? 'information-circle';
+        return $this->icon ?? 'heroicon-o-information-circle';
     }
 }

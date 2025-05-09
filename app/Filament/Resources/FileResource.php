@@ -83,7 +83,7 @@ class FileResource extends Resource
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('decidedBy.name')
-                    ->label('Modified by')
+                    ->label('Decided By')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('decision_at')
@@ -110,7 +110,7 @@ class FileResource extends Resource
 
                     Action::make('pending')
                         ->label(fn ($record) => Status::labelFromTitle('pending') ?? 'Pending')
-                        ->icon(fn ($record) => Status::iconFromTitle('pending') ?? 'information-circle')
+                        ->icon(fn ($record) => Status::iconFromTitle('pending') ?? 'heroicon-o-information-circle')
                         ->color(fn ($record) => Status::colorFromTitle('pending') ?? 'gray')
                         ->requiresConfirmation()
                         ->action(function ($record, array $data) {
@@ -127,7 +127,7 @@ class FileResource extends Resource
 
                     Action::make('restore')
                         ->label(fn ($record) => Status::labelFromTitle('restore') ?? 'Restore')
-                        ->icon(fn ($record) => Status::iconFromTitle('restore') ?? 'information-circle')
+                        ->icon(fn ($record) => Status::iconFromTitle('restore') ?? 'heroicon-o-information-circle')
                         ->color(fn ($record) => Status::colorFromTitle('restore') ?? 'gray')
                         ->authorize(fn ($record) => auth()->user()->can('create_file', $record))
                         ->form([
@@ -153,7 +153,7 @@ class FileResource extends Resource
 
                     Action::make('approved')
                         ->label(fn ($record) => Status::labelFromTitle('approved') ?? 'Approved')
-                        ->icon(fn ($record) => Status::iconFromTitle('approved') ?? 'information-circle')
+                        ->icon(fn ($record) => Status::iconFromTitle('approved') ?? 'heroicon-o-information-circle')
                         ->color(fn ($record) => Status::colorFromTitle('approved') ?? 'gray')
                         ->requiresConfirmation()
                         ->action(function ($record) {
@@ -171,7 +171,7 @@ class FileResource extends Resource
 
                     Action::make('rejected')
                         ->label(fn ($record) => Status::labelFromTitle('rejected') ?? 'Rejected')
-                        ->icon(fn ($record) => Status::iconFromTitle('rejected') ?? 'information-circle')
+                        ->icon(fn ($record) => Status::iconFromTitle('rejected') ?? 'heroicon-o-information-circle')
                         ->color(fn ($record) => Status::colorFromTitle('rejected') ?? 'gray')
                         ->form([
                             Textarea::make('change_reason')

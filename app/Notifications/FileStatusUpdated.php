@@ -71,7 +71,7 @@ class FileStatusUpdated extends Notification
     {
         return FilamentNotification::make()
             ->title($this->file->title)
-            ->body('Document status: '.strtoupper($this->status->label))
+            ->body('Document status: '.ucfirst(strtolower($this->status->label)))
             ->icon($this->status->iconName())
             ->color($this->status->colorName())
             ->status($this->status->colorName())
