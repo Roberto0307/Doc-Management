@@ -25,7 +25,7 @@ class RecordResource extends Resource
 {
     protected static ?string $model = Record::class;
 
-    protected static ?string $navigationGroup = 'Record Management';
+    protected static ?string $navigationGroup = 'Records';
 
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
 

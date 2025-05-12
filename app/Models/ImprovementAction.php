@@ -25,6 +25,11 @@ class ImprovementAction extends Model
         'actual_closing_date',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function process()
     {
         return $this->belongsTo(Process::class, 'process_id');
@@ -58,5 +63,10 @@ class ImprovementAction extends Model
     public function improvementActionTasks()
     {
         return $this->hasMany(ImprovementActionTask::class);
+    }
+
+    public function canBeAccessedBy(User $user): bool
+    {
+        return $user->hasRole('super_admin') || $user->validSubProcess($this->sub_process_id);
     }
 }

@@ -14,7 +14,7 @@ class SubProcessResource extends Resource
 {
     protected static ?string $model = SubProcess::class;
 
-    protected static ?string $navigationGroup = 'System Management';
+    protected static ?string $navigationGroup = 'Records Management';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

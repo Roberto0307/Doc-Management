@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ImprovementActionOrigin;
 use Illuminate\Database\Seeder;
 
 class ImprovementActionOriginSeeder extends Seeder
@@ -12,5 +13,14 @@ class ImprovementActionOriginSeeder extends Seeder
     public function run(): void
     {
         //
+        ImprovementActionOrigin::factory()->create([
+            'title' => 'Sugerencia',
+        ]);
+        ImprovementActionOrigin::factory()->create([
+            'title' => 'Auditoría',
+        ]);
+        ImprovementActionOrigin::factory()->create([
+            'title' => 'Indicadores',
+        ]);
     }
 }

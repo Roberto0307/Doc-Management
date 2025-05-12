@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             ManagementTimeSeeder::class,
             CentralTimeSeeder::class,
             FinalDispositionSeeder::class,
+            ImprovementActionOriginSeeder::class,
+            ImprovementActionStatusSeeder::class,
             /* RolePermissionSeeder::class, */
         ]);
     }
