@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\File;
+use App\Models\ImprovementActionStatus;
 use App\Models\Record;
 use App\Models\Status;
 use App\Models\SubProcess;
@@ -64,5 +65,33 @@ class AuthService
             'decided_by_user_id' => in_array('decided_by_user_id', $preserve) ? ($data['decided_by_user_id'] ?? null) : ($hasApprovalAccess ? auth()->id() : null),
             'decision_at' => in_array('decision_at', $preserve) ? ($data['decision_at'] ?? null) : ($hasApprovalAccess ? now() : null),
         ]);
+    }
+
+    /* Acciones */
+    public function canFinishAction(int $responsibleId, int $statusId, string $module): bool
+    {
+        if ($module === 'improvement') {
+            $expectedStatusId = ImprovementActionStatus::where('title', 'in execution')->value('id');
+
+            if ($statusId !== $expectedStatusId) {
+                return false;
+            }
+
+            return auth()->id() === $responsibleId;
+        }
+
+        if ($module === 'corrective/preventive') {
+            // lógica futura para otros módulos
+            return false;
+        }
+
+        return false;
+    }
+
+    public function canViewActionCompletion(int $statusId)
+    {
+        $expectedStatusId = ImprovementActionStatus::where('title', 'finished')->value('id');
+
+        return $statusId === $expectedStatusId;
     }
 }

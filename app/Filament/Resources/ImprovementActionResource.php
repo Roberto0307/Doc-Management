@@ -42,9 +42,9 @@ class ImprovementActionResource extends Resource
                             ->columnSpanFull(),
                         Forms\Components\Select::make('process_id')
                             ->relationship('process', 'title')
-                            ->afterStateUpdated(function(Set $set) {
-                              $set('sub_process_id', null);
-                              $set('responsible_id', null);  
+                            ->afterStateUpdated(function (Set $set) {
+                                $set('sub_process_id', null);
+                                $set('responsible_id', null);
                             })
                             ->searchable()
                             ->preload()
@@ -53,11 +53,11 @@ class ImprovementActionResource extends Resource
                         Forms\Components\Select::make('sub_process_id')
                             ->label('Sub Process')
                             ->options(
-                                fn(Get $get): Collection => SubProcess::query()
+                                fn (Get $get): Collection => SubProcess::query()
                                     ->where('process_id', $get('process_id'))
                                     ->pluck('title', 'id')
                             )
-                            ->afterStateUpdated(fn(Set $set) => $set('responsible_id', null))
+                            ->afterStateUpdated(fn (Set $set) => $set('responsible_id', null))
                             ->searchable()
                             ->preload()
                             ->live()
@@ -69,16 +69,16 @@ class ImprovementActionResource extends Resource
                             ->required(),
                         Forms\Components\Select::make('responsible_id')
                             ->options(
-                                fn(Get $get): array => User::whereHas('subProcesses',
-                                fn($query) => $query->where('sub_process_id', $get('sub_process_id')))
-                                ->pluck('name', 'id')
-                                ->toArray())
+                                fn (Get $get): array => User::whereHas('subProcesses',
+                                    fn ($query) => $query->where('sub_process_id', $get('sub_process_id')))
+                                    ->pluck('name', 'id')
+                                    ->toArray())
                             /* ->options(function (Get $get) {
-                                $subProcessId = $get('sub_process_id');
+                                    $subProcessId = $get('sub_process_id');
 
-                                return User::whereHas('subProcesses', function ($query) use ($subProcessId) {
-                                    $query->where('sub_process_id', $subProcessId);
-                                })->pluck('name', 'id')->toArray();
+                                    return User::whereHas('subProcesses', function ($query) use ($subProcessId) {
+                                        $query->where('sub_process_id', $subProcessId);
+                                    })->pluck('name', 'id')->toArray();
                             }) */ // Otra opcion
                             ->searchable()
                             ->preload()
@@ -118,7 +118,7 @@ class ImprovementActionResource extends Resource
                     ->label('Status')
                     ->searchable()
                     ->badge()
-                    ->color(fn($record) => $record->improvementActionStatus->colorName()),
+                    ->color(fn ($record) => $record->improvementActionStatus->colorName()),
                 Tables\Columns\TextColumn::make('deadline')
                     ->date()
                     ->sortable(),
@@ -135,10 +135,13 @@ class ImprovementActionResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('id', 'desc')
+            ->recordUrl(null)
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -160,6 +163,7 @@ class ImprovementActionResource extends Resource
         return [
             'index' => Pages\ListImprovementActions::route('/'),
             'create' => Pages\CreateImprovementAction::route('/create'),
+            'view' => Pages\ViewImprovementAction::route('/{record}'),
             'edit' => Pages\EditImprovementAction::route('/{record}/edit'),
         ];
     }

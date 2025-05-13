@@ -24,22 +24,22 @@ class ImprovementActionStatusSeeder extends Seeder
             [
                 'title' => 'approved',
                 'label' => 'Approved',
-                'color' => 'success',
-                'icon' => 'heroicon-o-check-circle',
+                'color' => 'indigo',
+                'icon' => 'heroicon-o-hand-thumb-up',
                 'protected' => true,
             ],
             [
                 'title' => 'in execution',
                 'label' => 'In Execution',
-                'color' => 'indigo',
+                'color' => 'warning',
                 'icon' => 'heroicon-o-clock',
                 'protected' => true,
             ],
             [
                 'title' => 'finished',
                 'label' => 'Finished',
-                'color' => 'danger',
-                'icon' => 'heroicon-o-arrow-path',
+                'color' => 'success',
+                'icon' => 'heroicon-o-check-circle',
                 'protected' => true,
             ],
             [

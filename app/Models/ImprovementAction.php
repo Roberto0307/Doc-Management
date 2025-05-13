@@ -65,8 +65,14 @@ class ImprovementAction extends Model
         return $this->hasMany(ImprovementActionTask::class);
     }
 
-    public function canBeAccessedBy(User $user): bool
+    /*
+    |--------------------------------------------------------------------------
+    | Accesores / Métodos útiles
+    |--------------------------------------------------------------------------
+    */
+
+    /* public function canFinishAction(): bool
     {
-        return $user->hasRole('super_admin') || $user->validSubProcess($this->sub_process_id);
-    }
+        return auth()->id() === $this->responsible_id;
+    } */
 }
