@@ -5,6 +5,7 @@ namespace App\Filament\Resources\ImprovementActionCompletionResource\Pages;
 use App\Filament\Resources\ImprovementActionCompletionResource;
 use App\Filament\Resources\ImprovementActionResource;
 use App\Models\ImprovementAction;
+use App\Models\ImprovementActionCompletionFile;
 use App\Models\ImprovementActionStatus;
 use App\Services\ImprovementActionService;
 use Filament\Actions;
@@ -32,18 +33,26 @@ class CreateImprovementActionCompletion extends CreateRecord
         $this->improvementActionModel = $improvementAction;
     }
 
-    protected function mutateFormDataBeforeCreate(array $data): array
-    {
-        $data['improvement_action_id'] = $this->improvementActionId;
-        return $data;
-    }
-
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
         $data['improvement_action_id'] = $this->improvementActionId;
 
-        $completion = static::getModel()::create($data);
-
+        $completion = static::getModel()::create([
+            'real_impact' => $data['real_impact'],
+            'result' => $data['result'],
+            'improvement_action_id' => $data['improvement_action_id'],
+        ]);
+    
+        // 3. Guardamos los archivos (si los hay)
+        if (!empty($data['attachments']) && is_array($data['attachments'])) {
+            foreach ($data['attachments'] as $path) {
+                ImprovementActionCompletionFile::create([
+                    'improvement_action_completion_id' => $completion->id,
+                    'file_path' => $path,
+                    'file_name' => $data['title'][$path] ?? 'Sin nombre',
+                ]);
+            }
+        }
         $updateStatusImprovementAction = app(ImprovementActionService::class)->markAsFinished($this->improvementActionModel);
 
         if (! $updateStatusImprovementAction) {

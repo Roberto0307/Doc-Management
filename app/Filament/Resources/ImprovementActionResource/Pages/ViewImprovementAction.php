@@ -20,7 +20,10 @@ class ViewImprovementAction extends ViewRecord
                 ->button()
                 ->color('primary')
                 ->authorize(fn ($record) => app(AuthService::class)->canViewActionCompletion($record->improvement_action_status_id))
-                ->url(fn (): string => ImprovementActionResource::getUrl('index')),
+                ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_completions.view', [
+                    'improvementactionId' => $record->id,
+                    'completionId' => $record->improvementActionCompletion->id,
+                ])),
 
             Action::make('finish')
                 ->label('End action')
@@ -31,11 +34,9 @@ class ViewImprovementAction extends ViewRecord
                     $record->improvement_action_status_id,
                     'improvement'
                 ))
-                ->action(function ($record, array $data) {
-                    redirect(ImprovementActionResource::getUrl('improvement_action_completions.create', [
-                        'improvementactionId' => $record->id,
-                    ]));
-                }),
+                ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_completions.create', [
+                    'improvementactionId' => $record->id,
+                ])),
                 /* ->url(fn ($record): string => ImprovementActionResource::getUrl('improvement_action_completions.create', $record->id)), */
             Action::make('back')
                 ->label('Return')

@@ -65,6 +65,10 @@ class ImprovementAction extends Model
         return $this->hasMany(ImprovementActionTask::class);
     }
 
+    public function improvementActionCompletion() {
+        return $this->hasOne(ImprovementActionCompletion::class);
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Accesores / Métodos útiles
