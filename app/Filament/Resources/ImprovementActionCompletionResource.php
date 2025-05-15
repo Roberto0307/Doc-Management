@@ -49,7 +49,8 @@ class ImprovementActionCompletionResource extends Resource
                             ->helperText('Allowed types: PDF, DOC, DOCX, XLS, XLSX (max. 10MB)')
                             ->multiple()
                             ->maxParallelUploads(1)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->visible(fn (string $context) => $context === 'create'),
                     ])
                     ->columns(2),
             ]);
