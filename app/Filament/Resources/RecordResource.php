@@ -193,9 +193,13 @@ class RecordResource extends Resource
                     ->url(
                         fn (Record $record): string => RecordResource::getUrl('files.list', ['recordId' => $record->id])
                     )
-                    ->visible(
-                        fn ($record) => $record->canBeAccessedBy(auth()->user())
-                    ),
+                    ->disabled(fn ($record) => ! $record->canBeAccessedBy(auth()->user()))
+                    ->extraAttributes(fn ($record) => [
+                        'style' => $record->canBeAccessedBy(auth()->user())
+                            ? ''
+                            : 'opacity: 0.3; cursor: not-allowed;',
+
+                    ]),
 
                 Action::make('LastfileApproved')
                     ->label('Download')
