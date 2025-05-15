@@ -31,7 +31,12 @@ class ViewImprovementAction extends ViewRecord
                     $record->improvement_action_status_id,
                     'improvement'
                 ))
-                ->url(fn (): string => ImprovementActionResource::getUrl('index')),
+                ->action(function ($record, array $data) {
+                    redirect(ImprovementActionResource::getUrl('improvement_action_completions.create', [
+                        'improvementactionId' => $record->id,
+                    ]));
+                }),
+                /* ->url(fn ($record): string => ImprovementActionResource::getUrl('improvement_action_completions.create', $record->id)), */
             Action::make('back')
                 ->label('Return')
                 ->url(fn (): string => ImprovementActionResource::getUrl('index'))

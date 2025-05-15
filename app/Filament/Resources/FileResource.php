@@ -31,7 +31,6 @@ class FileResource extends Resource
         return $form
             ->schema([
                 Section::make('File Data')
-                    ->columns(3)
                     ->schema([
                         Forms\Components\FileUpload::make('file_path')
                             ->label('File')
@@ -53,7 +52,6 @@ class FileResource extends Resource
                             ->maxLength(255)
                             ->rule('string')
                             ->columnSpanFull(),
-
                     ]),
             ]);
     }
