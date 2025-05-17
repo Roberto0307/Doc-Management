@@ -21,7 +21,8 @@ class ViewImprovementAction extends ViewRecord
                 ->color('primary')
                 ->authorize(fn ($record) => app(AuthService::class)->canViewActionCompletion($record->improvement_action_status_id))
                 ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_completions.view', [
-                    'record' => $record->improvementActionCompletion->id,
+                    'record' => $record->id,
+                    'completionId' => $record->improvementActionCompletion->id,
                 ])),
 
             Action::make('finish')
@@ -34,9 +35,9 @@ class ViewImprovementAction extends ViewRecord
                     'improvement'
                 ))
                 ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_completions.create', [
-                    'record' => $record->id,
+                    'improvementactionId' => $record->id,
                 ])),
-                /* ->url(fn ($record): string => ImprovementActionResource::getUrl('improvement_action_completions.create', $record->id)), */
+
             Action::make('back')
                 ->label('Return')
                 ->url(fn (): string => ImprovementActionResource::getUrl('index'))

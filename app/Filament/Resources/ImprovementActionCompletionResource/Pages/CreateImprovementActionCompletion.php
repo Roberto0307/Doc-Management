@@ -6,9 +6,7 @@ use App\Filament\Resources\ImprovementActionCompletionResource;
 use App\Filament\Resources\ImprovementActionResource;
 use App\Models\ImprovementAction;
 use App\Models\ImprovementActionCompletionFile;
-use App\Models\ImprovementActionStatus;
 use App\Services\ImprovementActionService;
-use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -42,9 +40,9 @@ class CreateImprovementActionCompletion extends CreateRecord
             'result' => $data['result'],
             'improvement_action_id' => $data['improvement_action_id'],
         ]);
-    
-        // 3. Guardamos los archivos (si los hay)
-        if (!empty($data['attachments']) && is_array($data['attachments'])) {
+
+        // Guardamos los archivos (si los hay)
+        if (! empty($data['attachments']) && is_array($data['attachments'])) {
             foreach ($data['attachments'] as $path) {
                 ImprovementActionCompletionFile::create([
                     'improvement_action_completion_id' => $completion->id,
@@ -64,8 +62,6 @@ class CreateImprovementActionCompletion extends CreateRecord
 
         return $completion;
     }
-
-
 
     /* *********** */
 

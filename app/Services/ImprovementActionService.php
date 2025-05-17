@@ -18,7 +18,7 @@ class ImprovementActionService
     {
         $statusFinishedId = ImprovementActionStatus::where('title', 'finished')->value('id');
 
-        if (!$statusFinishedId) {
+        if (! $statusFinishedId) {
             return false;
         }
 
