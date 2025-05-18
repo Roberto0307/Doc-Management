@@ -21,8 +21,8 @@ class ViewImprovementAction extends ViewRecord
                 ->color('primary')
                 ->authorize(fn ($record) => app(AuthService::class)->canViewActionCompletion($record->improvement_action_status_id))
                 ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_completions.view', [
-                    'record' => $record->id,
-                    'completionId' => $record->improvementActionCompletion->id,
+                    'improvementactionId' => $record->id,
+                    'record' => $record->improvementActionCompletion->id,
                 ])),
 
             Action::make('finish')
