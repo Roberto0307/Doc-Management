@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ImprovementActionCompletionResource\Pages;
+use App\Filament\Resources\ImprovementActionCompletionResource\RelationManagers\ImprovementActionCompletionFilesRelationManager;
 use App\Models\ImprovementActionCompletion;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
@@ -86,6 +87,7 @@ class ImprovementActionCompletionResource extends Resource
     {
         return [
             //
+            ImprovementActionCompletionFilesRelationManager::class,
         ];
     }
 

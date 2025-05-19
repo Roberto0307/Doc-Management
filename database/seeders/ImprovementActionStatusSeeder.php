@@ -21,17 +21,17 @@ class ImprovementActionStatusSeeder extends Seeder
                 'icon' => 'heroicon-o-pencil-square',
                 'protected' => true,
             ],
-            [
+            /* [
                 'title' => 'approved',
                 'label' => 'Approved',
                 'color' => 'indigo',
                 'icon' => 'heroicon-o-hand-thumb-up',
                 'protected' => true,
-            ],
+            ], */
             [
                 'title' => 'in execution',
                 'label' => 'In Execution',
-                'color' => 'warning',
+                'color' => 'indigo',
                 'icon' => 'heroicon-o-clock',
                 'protected' => true,
             ],

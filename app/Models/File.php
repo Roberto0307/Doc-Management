@@ -70,9 +70,4 @@ class File extends Model
             ->orderByDesc('version')
             ->first()?->id;
     }
-
-    public function getDownloadUrl(): string
-    {
-        return Storage::url($this->file_path);
-    }
 }
