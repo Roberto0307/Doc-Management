@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\ImprovementActionCompletionResource\RelationManagers;
 
 use App\Services\ComplementService;
-use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -22,22 +21,22 @@ class ImprovementActionCompletionFilesRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255), */
                 Forms\Components\FileUpload::make('attachments')
-                            ->label('Support files')
-                            ->storeFileNamesIn('title')
-                            ->disk('public')
-                            ->directory('improvement_action_completion/files')
-                            ->required()
-                            ->acceptedFileTypes([
-                                'application/pdf',
-                                'application/msword',
-                                'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
-                                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',       // .xlsx
-                            ])
-                            ->maxSize(10240) // en KB, 10MB ejemplo
-                            ->helperText('Allowed types: PDF, DOC, DOCX, XLS, XLSX (max. 10MB)')
-                            ->multiple()
-                            ->maxParallelUploads(1)
-                            ->columnSpanFull(),
+                    ->label('Support files')
+                    ->storeFileNamesIn('title')
+                    ->disk('public')
+                    ->directory('improvement_action_completion/files')
+                    ->required()
+                    ->acceptedFileTypes([
+                        'application/pdf',
+                        'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',       // .xlsx
+                    ])
+                    ->maxSize(10240) // en KB, 10MB ejemplo
+                    ->helperText('Allowed types: PDF, DOC, DOCX, XLS, XLSX (max. 10MB)')
+                    ->multiple()
+                    ->maxParallelUploads(1)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -70,10 +69,10 @@ class ImprovementActionCompletionFilesRelationManager extends RelationManager
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('primary')
                     ->url(
-                        fn($record) => app(ComplementService::class)->getDownloadUrl($record),
+                        fn ($record) => app(ComplementService::class)->getDownloadUrl($record),
                     )
                     ->openUrlInNewTab(false)
-                    ->extraAttributes(fn($record) => [
+                    ->extraAttributes(fn ($record) => [
                         'download' => $record->file_name,
                     ]),
             ])
