@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('improvement_action_tasks', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('improvement_action_id')->constrained();
+            $table->string('title');
+            $table->text('detail');
+            $table->foreignId('responsible_id')->constrained();
+            $table->date('start_date');
+            $table->date('deadline');
+            $table->date('actual_start_date');
+            $table->date('actual_closing_date');
+            $table->foreignId('improvement_action_task_status_id')->constrained();
             $table->timestamps();
         });
     }

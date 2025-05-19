@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('improvement_action_task_files', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('improvement_action_task_id')->constrained();
+            $table->string('file_name');
+            $table->string('file_path');
             $table->timestamps();
         });
     }
