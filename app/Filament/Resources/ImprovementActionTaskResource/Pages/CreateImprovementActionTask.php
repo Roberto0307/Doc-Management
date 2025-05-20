@@ -30,13 +30,13 @@ class CreateImprovementActionTask extends CreateRecord
         $this->improvementActionModel = $improvementAction;
     }
 
-    protected function mutateFormDataBeforeCreate(array $data): array
+    /* protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['improvement_action_id'] = $this->improvementActionId;
         $data['improvement_action_task_status_id'] = 1;
 
         return $data;
-    }
+    } */
 
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {

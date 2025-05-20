@@ -176,7 +176,7 @@ class ImprovementActionResource extends Resource
             'view' => Pages\ViewImprovementAction::route('/{record}'),
             'edit' => Pages\EditImprovementAction::route('/{record}/edit'),
             'improvement_action_completions.create' => \App\Filament\Resources\ImprovementActionCompletionResource\Pages\CreateImprovementActionCompletion::route('/{improvementactionId}/completions/create'),
-            'improvement_action_completions.view' => \App\Filament\Resources\ImprovementActionCompletionResource\Pages\ViewImprovementActionCompletion::route('/{improvementactionId}/completions/{record}/view'),
+            'improvement_action_completions.view' => \App\Filament\Resources\ImprovementActionCompletionResource\Pages\ViewImprovementActionCompletion::route('/{improvementactionId}/completions/{record}'),
             'improvement_action_tasks.create' => \App\Filament\Resources\ImprovementActionTaskResource\Pages\CreateImprovementActionTask::route('/{improvementactionId}/tasks/create'),
         ];
     }
