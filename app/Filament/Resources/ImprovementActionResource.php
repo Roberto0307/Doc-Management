@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ImprovementActionResource\Pages;
+use App\Filament\Resources\ImprovementActionResource\RelationManagers\ImprovementActionTasksRelationManager;
 use App\Models\ImprovementAction;
 use App\Models\SubProcess;
 use App\Models\User;
@@ -36,10 +37,12 @@ class ImprovementActionResource extends Resource
                         Forms\Components\TextInput::make('title')
                             ->required()
                             ->maxLength(255)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Textarea::make('description')
                             ->required()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Select::make('process_id')
                             ->relationship('process', 'title')
                             ->afterStateUpdated(function (Set $set) {
@@ -49,7 +52,8 @@ class ImprovementActionResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->required(),
+                            ->required()
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Select::make('sub_process_id')
                             ->label('Sub Process')
                             ->options(
@@ -61,12 +65,14 @@ class ImprovementActionResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->required(),
+                            ->required()
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Select::make('improvement_action_origin_id')
                             ->relationship('improvementActionOrigin', 'title')
                             ->searchable()
                             ->preload()
-                            ->required(),
+                            ->required()
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Select::make('responsible_id')
                             ->options(
                                 fn (Get $get): array => User::whereHas('subProcesses',
@@ -83,13 +89,16 @@ class ImprovementActionResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->required(),
+                            ->required()
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Textarea::make('expected_impact')
                             ->required()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\DatePicker::make('deadline')
                             ->minDate(now())
-                            ->required(),
+                            ->required()
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         /* Forms\Components\DatePicker::make('actual_closing_date'), */
                     ]),
             ]);
@@ -142,7 +151,7 @@ class ImprovementActionResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                /* Tables\Actions\EditAction::make(), */
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -155,6 +164,7 @@ class ImprovementActionResource extends Resource
     {
         return [
             //
+            ImprovementActionTasksRelationManager::class,
         ];
     }
 
@@ -167,7 +177,7 @@ class ImprovementActionResource extends Resource
             'edit' => Pages\EditImprovementAction::route('/{record}/edit'),
             'improvement_action_completions.create' => \App\Filament\Resources\ImprovementActionCompletionResource\Pages\CreateImprovementActionCompletion::route('/{improvementactionId}/completions/create'),
             'improvement_action_completions.view' => \App\Filament\Resources\ImprovementActionCompletionResource\Pages\ViewImprovementActionCompletion::route('/{improvementactionId}/completions/{record}/view'),
-
+            'improvement_action_tasks.create' => \App\Filament\Resources\ImprovementActionTaskResource\Pages\CreateImprovementActionTask::route('/{improvementactionId}/tasks/create'),
         ];
     }
 }

@@ -36,7 +36,6 @@ class ImprovementActionCompletionResource extends Resource
                             ->storeFileNamesIn('title')
                             ->disk('public')
                             ->directory('improvement_action_completion/files')
-                            ->required()
                             ->acceptedFileTypes([
                                 'application/pdf',
                                 'application/msword',

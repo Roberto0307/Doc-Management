@@ -14,7 +14,7 @@ class ImprovementActionService
         return $improvementActionStatus;
     }
 
-    public function markAsFinished(ImprovementAction $improvementActionModel): bool
+    /* public function markAsFinished(ImprovementAction $improvementActionModel): bool
     {
         $statusFinishedId = ImprovementActionStatus::where('title', 'finished')->value('id');
 
@@ -24,6 +24,27 @@ class ImprovementActionService
 
         return $improvementActionModel->update([
             'improvement_action_status_id' => $statusFinishedId,
+        ]);
+    } */ // Se reemplaza por el de abajo que es mas general y reutilizable
+
+    public function statusChangesInImprovementActions(ImprovementAction $improvementActionModel, string $status): bool
+    {
+        $statusProposalId = ImprovementActionStatus::where('title', 'proposal')->value('id');
+
+        if ($status === 'finished') {
+            $statusChangeId = ImprovementActionStatus::where('title', 'finished')->value('id');
+        } elseif ($status === 'in execution') {
+            if ($improvementActionModel->improvement_action_status_id === $statusProposalId) {
+                $statusChangeId = ImprovementActionStatus::where('title', 'in execution')->value('id');
+            }
+        }
+
+        if (! $statusChangeId) {
+            return false;
+        }
+
+        return $improvementActionModel->update([
+            'improvement_action_status_id' => $statusChangeId,
         ]);
     }
 }

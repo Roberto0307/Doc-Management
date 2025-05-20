@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             FinalDispositionSeeder::class,
             ImprovementActionOriginSeeder::class,
             ImprovementActionStatusSeeder::class,
+            ImprovementActionTaskStatusSeeder::class,
             /* RolePermissionSeeder::class, */
         ]);
     }

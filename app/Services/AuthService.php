@@ -94,4 +94,16 @@ class AuthService
 
         return $statusId === $expectedStatusId;
     }
+
+    public function canCreateTask(int $responsibleId, int $statusId): bool
+    {
+        $statusProposal = ImprovementActionStatus::where('title', 'proposal')->value('id');
+        $statusInExecution = ImprovementActionStatus::where('title', 'in execution')->value('id');
+
+        if (auth()->id() === $responsibleId && ($statusId === $statusProposal || $statusId === $statusInExecution)) {
+            return true;
+        }
+
+        return false;
+    }
 }

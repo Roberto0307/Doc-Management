@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Filament\Resources\ImprovementActionCompletionResource\Pages;
+namespace App\Filament\Resources\ImprovementActionTaskResource\Pages;
 
-use App\Filament\Resources\ImprovementActionCompletionResource;
 use App\Filament\Resources\ImprovementActionResource;
+use App\Filament\Resources\ImprovementActionTaskResource;
 use App\Models\ImprovementAction;
-use App\Models\ImprovementActionCompletionFile;
 use App\Services\ImprovementActionService;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateImprovementActionCompletion extends CreateRecord
+class CreateImprovementActionTask extends CreateRecord
 {
-    protected static string $resource = ImprovementActionCompletionResource::class;
+    protected static string $resource = ImprovementActionTaskResource::class;
 
     public ?ImprovementAction $improvementActionModel = null;
 
@@ -31,26 +30,28 @@ class CreateImprovementActionCompletion extends CreateRecord
         $this->improvementActionModel = $improvementAction;
     }
 
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['improvement_action_id'] = $this->improvementActionId;
+        $data['improvement_action_task_status_id'] = 1;
+
+        return $data;
+    }
+
     protected function handleRecordCreation(array $data): \Illuminate\Database\Eloquent\Model
     {
 
-        $completion = static::getModel()::create([
-            'real_impact' => $data['real_impact'],
-            'result' => $data['result'],
+        $task = static::getModel()::create([
             'improvement_action_id' => $this->improvementActionId,
+            'title' => $data['title'],
+            'detail' => $data['detail'],
+            'responsible_id' => $data['responsible_id'],
+            'start_date' => $data['start_date'],
+            'deadline' => $data['deadline'],
+            'improvement_action_task_status_id' => 1,
         ]);
 
-        // Guardamos los archivos (si los hay)
-        if (! empty($data['attachments']) && is_array($data['attachments'])) {
-            foreach ($data['attachments'] as $path) {
-                ImprovementActionCompletionFile::create([
-                    'improvement_action_completion_id' => $completion->id,
-                    'file_path' => $path,
-                    'file_name' => $data['title'][$path] ?? 'Sin nombre',
-                ]);
-            }
-        }
-        $updateStatusImprovementAction = app(ImprovementActionService::class)->statusChangesInImprovementActions($this->improvementActionModel, 'finished');
+        $updateStatusImprovementAction = app(ImprovementActionService::class)->statusChangesInImprovementActions($this->improvementActionModel, 'in execution');
 
         if (! $updateStatusImprovementAction) {
             Notification::make()
@@ -59,10 +60,10 @@ class CreateImprovementActionCompletion extends CreateRecord
                 ->send();
         }
 
-        return $completion;
+        return $task;
     }
 
-    /* *********** */
+    /* ******************* */
 
     protected function getRedirectUrl(): string
     {
@@ -83,7 +84,7 @@ class CreateImprovementActionCompletion extends CreateRecord
     {
         return [
             ImprovementActionResource::getUrl('view', ['record' => $this->improvementActionId]) => 'Improvement Action',
-            false => 'Completion',
+            false => 'Task',
         ];
     }
 }

@@ -19,8 +19,8 @@ return new class extends Migration
             $table->foreignId('responsible_id')->constrained('users');
             $table->date('start_date');
             $table->date('deadline');
-            $table->date('actual_start_date');
-            $table->date('actual_closing_date');
+            $table->date('actual_start_date')->nullable();
+            $table->date('actual_closing_date')->nullable();
             /* $table->foreignId('improvement_action_task_status_id')->constrained(); */ // Tambien largo
             $table->unsignedBigInteger('improvement_action_task_status_id');
             $table->foreign('improvement_action_task_status_id', 'iats_id')
