@@ -38,11 +38,11 @@ class ImprovementActionResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->columnSpanFull()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Textarea::make('description')
                             ->required()
                             ->columnSpanFull()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Select::make('process_id')
                             ->relationship('process', 'title')
                             ->afterStateUpdated(function (Set $set) {
@@ -53,31 +53,31 @@ class ImprovementActionResource extends Resource
                             ->preload()
                             ->live()
                             ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Select::make('sub_process_id')
                             ->label('Sub Process')
                             ->options(
-                                fn(Get $get): Collection => SubProcess::query()
+                                fn (Get $get): Collection => SubProcess::query()
                                     ->where('process_id', $get('process_id'))
                                     ->pluck('title', 'id')
                             )
-                            ->afterStateUpdated(fn(Set $set) => $set('responsible_id', null))
+                            ->afterStateUpdated(fn (Set $set) => $set('responsible_id', null))
                             ->searchable()
                             ->preload()
                             ->live()
                             ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Select::make('improvement_action_origin_id')
                             ->relationship('improvementActionOrigin', 'title')
                             ->searchable()
                             ->preload()
                             ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Select::make('responsible_id')
                             ->options(
-                                fn(Get $get): array => User::whereHas(
+                                fn (Get $get): array => User::whereHas(
                                     'subProcesses',
-                                    fn($query) => $query->where('sub_process_id', $get('sub_process_id'))
+                                    fn ($query) => $query->where('sub_process_id', $get('sub_process_id'))
                                 )
                                     ->pluck('name', 'id')
                                     ->toArray()
@@ -93,15 +93,15 @@ class ImprovementActionResource extends Resource
                             ->preload()
                             ->live()
                             ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\Textarea::make('expected_impact')
                             ->required()
                             ->columnSpanFull()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         Forms\Components\DatePicker::make('deadline')
                             ->minDate(now())
                             ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->disabled(fn (string $context) => $context === 'edit'),
                         /* Forms\Components\DatePicker::make('actual_closing_date'), */
                     ]),
             ]);
@@ -130,7 +130,7 @@ class ImprovementActionResource extends Resource
                     ->label('Status')
                     ->searchable()
                     ->badge()
-                    ->color(fn($record) => $record->improvementActionStatus->colorName()),
+                    ->color(fn ($record) => $record->improvementActionStatus->colorName()),
                 Tables\Columns\TextColumn::make('deadline')
                     ->date()
                     ->sortable(),

@@ -69,4 +69,13 @@ class File extends Model
             ->orderByDesc('version')
             ->first()?->id;
     }
+
+    public function isCompliant(): bool
+    {
+        return $this->isLatestVersion()
+            && ! empty($this->sha256_hash)
+            && optional($this->status)->title === 'approved'
+            && optional($this->record)->classification_code
+            && optional($this->record)->final_disposition_id;
+    }
 }

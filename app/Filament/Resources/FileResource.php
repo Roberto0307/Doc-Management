@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\FileExportLatestVersion;
 use App\Models\File;
 use App\Models\Status;
 use App\Services\AuthService;
@@ -16,6 +17,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Table;
+use Maatwebsite\Excel\Facades\Excel;
 
 class FileResource extends Resource
 {
@@ -208,6 +210,16 @@ class FileResource extends Resource
                             fn ($record) => $record->record->canBeAccessedBy(auth()->user())
                         ),
 
+                    Action::make('export_latest')
+                        ->label('Export latest version')
+                        ->icon('heroicon-m-arrow-down-tray')
+                        ->color('primary')
+                        ->visible(
+                            fn ($record) => $record->isLatestVersion()
+                        )
+                        ->action(function () {
+                            return Excel::download(new FileExportLatestVersion, 'latest-version.xlsx');
+                        }),
                     DeleteAction::make()
                         ->visible(function ($record) {
                             $user = auth()->user();
@@ -221,6 +233,7 @@ class FileResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     //
                 ]),
+
             ]);
     }
 
