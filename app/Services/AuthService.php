@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\File;
 use App\Models\ImprovementActionStatus;
+use App\Models\ImprovementActionTask;
+use App\Models\ImprovementActionTaskStatus;
 use App\Models\Record;
 use App\Models\Status;
 use App\Models\SubProcess;
@@ -105,5 +107,28 @@ class AuthService
         }
 
         return false;
+    }
+
+    public function canCloseTask(ImprovementActionTask $taskModel)
+    {
+        $responsibleTaskId = $taskModel->responsible_id;
+        $statusInExecutionId = ImprovementActionStatus::where('title', 'in execution')->value('id');
+        if (auth()->id() === $responsibleTaskId && $taskModel->improvement_action_task_status_id === $statusInExecutionId) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function canTaskUploadFollowUp(ImprovementActionTask $taskModel)
+    {
+        $responsibleTaskId = $taskModel->responsible_id;
+        $statusCompletedId = ImprovementActionTaskStatus::where('title', 'completed')->value('id');
+        $statusExtemporaneousId = ImprovementActionTaskStatus::where('title', 'extemporaneous')->value('id');
+        if (auth()->id() === $responsibleTaskId && ($taskModel->improvement_action_task_status_id === $statusCompletedId || $taskModel->improvement_action_task_status_id === $statusExtemporaneousId)) {
+            return false;
+        }
+
+        return true;
     }
 }

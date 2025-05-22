@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ImprovementActionTaskResource\RelationManagers;
 
 use App\Filament\Resources\ImprovementActionResource;
+use App\Services\AuthService;
 use App\Services\TaskService;
 use Filament\Forms;
 use Filament\Forms\Components\Textarea;
@@ -50,9 +51,9 @@ class ImprovementActionTaskCommentsRelationManager extends RelationManager
                             ->rule('string')
                             ->placeholder('Follow up comment'),
                     ])
-                    /* ->authorize(
-                        fn () => app(AuthService::class)->canCreateTask($this->getOwnerRecord()->responsible_id, $this->getOwnerRecord()->improvement_action_status_id)
-                    ) */
+                    ->authorize(
+                        fn () => app(AuthService::class)->canTaskUploadFollowUp($this->getOwnerRecord())
+                    )
                     ->action(function (array $data) {
                         app(TaskService::class)->createComment($this->getOwnerRecord(), $data);
                         redirect(ImprovementActionResource::getUrl('improvement_action_tasks.view', [

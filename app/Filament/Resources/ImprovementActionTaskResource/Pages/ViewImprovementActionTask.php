@@ -4,6 +4,8 @@ namespace App\Filament\Resources\ImprovementActionTaskResource\Pages;
 
 use App\Filament\Resources\ImprovementActionResource;
 use App\Filament\Resources\ImprovementActionTaskResource;
+use App\Services\AuthService;
+use App\Services\TaskService;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
 
@@ -19,14 +21,13 @@ class ViewImprovementActionTask extends ViewRecord
                 ->label('End task')
                 ->button()
                 ->color('success')
-                /* ->authorize(fn($record) => app(AuthService::class)->canFinishAction(
-                    $record->responsible_id,
-                    $record->improvement_action_status_id,
-                    'improvement'
-                )) */
-                ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_completions.create', [
-                    'improvementactionId' => $record->id,
-                ])),
+                ->authorize(fn ($record) => app(AuthService::class)->canCloseTask($record))
+                ->action(function ($record) {
+                    app(TaskService::class)->closeTask($record);
+                    redirect(ImprovementActionResource::getUrl('view', [
+                        'record' => $record->improvement_action_id,
+                    ]));
+                }),
 
             Action::make('back')
                 ->label('Return')

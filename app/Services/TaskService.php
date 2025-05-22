@@ -44,12 +44,32 @@ class TaskService
             ->send();
     }
 
+    public function closeTask(ImprovementActionTask $taskModel)
+    {
+
+        $statusChangeId = null;
+        if ($taskModel->deadline >= now()) {
+            $statusChangeId = ImprovementActionTaskStatus::where('title', 'completed')->value('id');
+        } elseif ($taskModel->deadline < now()) {
+            $statusChangeId = ImprovementActionTaskStatus::where('title', 'extemporaneous')->value('id');
+        }
+
+        if ($statusChangeId === null) {
+            return false;
+        }
+
+        return $taskModel->update([
+            'improvement_action_task_status_id' => $statusChangeId,
+        ]);
+    }
+
     public function updateTaskStatus(ImprovementActionTask $taskModel)
     {
         $statusPending = ImprovementActionTaskStatus::where('title', 'pending')->value('id');
+        $statusInExecution = ImprovementActionTaskStatus::where('title', 'in execution')->value('id');
         $statusChangeId = null;
         if ($taskModel->improvement_action_task_status_id === $statusPending) {
-            $statusChangeId = ImprovementActionTaskStatus::where('title', 'in execution')->value('id');
+            $statusChangeId = $statusInExecution;
         }
 
         if ($statusChangeId === null) {
