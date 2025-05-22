@@ -26,6 +26,7 @@ class FileExportLatestVersion implements FromCollection, WithHeadings, WithMappi
             optional($file->record)->classification_code,
             $file->isLatestVersion() ? 'Sí' : 'No',
             $file->isCompliant() ? 'Sí' : 'No',
+            $file->change_reason ?? '—',
             $file->created_at,
             $file->updated_at,
         ];
@@ -41,6 +42,7 @@ class FileExportLatestVersion implements FromCollection, WithHeadings, WithMappi
             'Classification',
             'Latest Version',
             'Meets Requirements',
+            'Reason for change',
             'Created',
             'Updated',
         ];
