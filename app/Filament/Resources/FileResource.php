@@ -6,7 +6,6 @@ use App\Exports\FileExportLatestVersion;
 use App\Models\File;
 use App\Models\Status;
 use App\Services\AuthService;
-use App\Services\ComplementService;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -200,7 +199,7 @@ class FileResource extends Resource
                         ->icon('heroicon-o-document-arrow-down')
                         ->color('primary')
                         ->url(
-                            fn ($record) => app(ComplementService::class)->getDownloadUrl($record)
+                            fn ($record) => $record->getDownloadUrl()
                         )
                         ->openUrlInNewTab(false)
                         ->extraAttributes(fn ($record) => [

@@ -26,4 +26,29 @@ class RecordService
             return "{$type->acronym}-{$subProcess->acronym}-{$consecutive}";
         });
     }
+
+    public function isExpired(Record $record): bool
+    {
+        if (! $record->centralTime?->year || ! $record->created_at) {
+            return false;
+        }
+
+        return $record->created_at->addYears($record->centralTime->year)->isPast();
+    }
+
+    public function expirationYearsRemaining(Record $record): ?int
+    {
+        if (! $record->centralTime?->year || ! $record->created_at) {
+            return null;
+        }
+
+        $vencimiento = $record->created_at->copy()->addYears($record->centralTime->year);
+        $hoy = now();
+
+        if ($vencimiento->isPast()) {
+            return 0;
+        }
+
+        return $hoy->diffInYears($vencimiento, false);
+    }
 }

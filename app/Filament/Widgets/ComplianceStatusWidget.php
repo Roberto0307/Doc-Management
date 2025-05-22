@@ -2,12 +2,10 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\File;
 use App\Models\Record;
+use App\Services\RecordService;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Card;
-use Illuminate\Support\Carbon;
-
 
 class ComplianceStatusWidget extends BaseWidget
 {
@@ -18,10 +16,8 @@ class ComplianceStatusWidget extends BaseWidget
 
         $recordsExpired = Record::with('centralTime')
             ->get()
-            ->filter(function ($record) {
-                if (!$record->centralTime?->year) return false;
-                return $record->created_at->addYears($record->centralTime->year)->isPast();
-            })->count();
+            ->filter(fn ($record) => app(RecordService::class)->isExpired($record))
+            ->count();
 
         return [
             Card::make('Total Records', $totalRecords),
@@ -32,4 +28,3 @@ class ComplianceStatusWidget extends BaseWidget
         ];
     }
 }
-

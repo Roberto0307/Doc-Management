@@ -7,6 +7,7 @@ use App\Models\CentralTime;
 use App\Models\ManagementTime;
 use App\Models\Record;
 use App\Models\SubProcess;
+use App\Services\RecordService;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
@@ -136,6 +137,16 @@ class RecordResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('Expiration')
+                    ->label('Expiration state')
+                    ->badge()
+                    ->getStateUsing(function ($record) {
+                        return app(RecordService::class)->isExpired($record) ? 'Expired' : 'Current';
+                    })
+                    ->colors([
+                        'danger' => 'Expired',
+                        'success' => 'Current',
+                    ]),
                 Tables\Columns\TextColumn::make('created_at')
                     ->sortable()
                     ->date('l, d \d\e F \d\e Y')
