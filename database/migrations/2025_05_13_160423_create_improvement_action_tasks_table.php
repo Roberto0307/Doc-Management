@@ -21,11 +21,7 @@ return new class extends Migration
             $table->date('deadline');
             $table->date('actual_start_date')->nullable();
             $table->date('actual_closing_date')->nullable();
-            /* $table->foreignId('improvement_action_task_status_id')->constrained(); */ // Tambien largo
-            $table->unsignedBigInteger('improvement_action_task_status_id');
-            $table->foreign('improvement_action_task_status_id', 'iats_id')
-                ->references('id')
-                ->on('improvement_action_task_statuses');
+            $table->foreignId('improvement_action_task_status_id')->constrained()->name('iats_fk');
             $table->timestamps();
         });
     }
