@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ImprovementActionTaskResource\RelationManagers;
 
 use App\Filament\Resources\ImprovementActionResource;
+use App\Services\AuthService;
 use App\Services\ComplementService;
 use App\Services\TaskService;
 use Filament\Forms;
@@ -72,9 +73,9 @@ class ImprovementActionTaskFilesRelationManager extends RelationManager
                             ->maxParallelUploads(1)
                             ->columnSpanFull(),
                     ])
-                    /* ->authorize(
-                        fn () => app(AuthService::class)->canCreateTask($this->getOwnerRecord()->responsible_id, $this->getOwnerRecord()->improvement_action_status_id)
-                    ) */
+                    ->authorize(
+                        fn () => app(AuthService::class)->canTaskUploadFollowUp($this->getOwnerRecord())
+                    )
                     ->action(function (array $data) {
                         app(TaskService::class)->createFiles($this->getOwnerRecord(), $data);
                         redirect(ImprovementActionResource::getUrl('improvement_action_tasks.view', [
