@@ -62,6 +62,12 @@ class StatusResource extends Resource
                     ->color(fn ($record) => $record->color)
                     ->icon(fn ($record) => $record->icon)
                     ->searchable(),
+                Tables\Columns\TextColumn::make('color')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('icon')
+                    ->searchable(),
+                Tables\Columns\IconColumn::make('protected')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

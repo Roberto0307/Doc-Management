@@ -9,12 +9,12 @@ class ImprovementActionService
 {
     public function initialStateAssignment()
     {
-        //$improvementActionStatus = ImprovementActionStatus::where('title', 'proposal')->value('id');
+        // $improvementActionStatus = ImprovementActionStatus::where('title', 'proposal')->value('id');
         $improvementActionStatus = ImprovementActionStatus::byTitle('proposal')?->id;
+
         return $improvementActionStatus;
     }
 
-    
     /* public function markAsFinished(ImprovementAction $improvementActionModel): bool
     {
         $statusFinishedId = ImprovementActionStatus::where('title', 'finished')->value('id');
@@ -54,7 +54,7 @@ class ImprovementActionService
         $statusChangeId = ImprovementActionStatus::byTitle($status)?->id;
         $proposalId = ImprovementActionStatus::byTitle('proposal')?->id;
 
-        if (!$statusChangeId) {
+        if (! $statusChangeId) {
             return false;
         }
 
@@ -65,6 +65,4 @@ class ImprovementActionService
 
         return $improvementActionModel->update(['improvement_action_status_id' => $statusChangeId]);
     }
-
-
 }
