@@ -30,7 +30,7 @@ class ImprovementActionService
     public function statusChangesInImprovementActions(ImprovementAction $improvementActionModel, string $status): bool
     {
         $statusProposalId = ImprovementActionStatus::where('title', 'proposal')->value('id');
-
+        $statusChangeId = null;
         if ($status === 'finished') {
             $statusChangeId = ImprovementActionStatus::where('title', 'finished')->value('id');
         } elseif ($status === 'in execution') {
@@ -39,7 +39,7 @@ class ImprovementActionService
             }
         }
 
-        if (! $statusChangeId) {
+        if ($statusChangeId === null) {
             return false;
         }
 

@@ -37,12 +37,10 @@ class ImprovementActionResource extends Resource
                         Forms\Components\TextInput::make('title')
                             ->required()
                             ->maxLength(255)
-                            ->columnSpanFull()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->columnSpanFull(),
                         Forms\Components\Textarea::make('description')
                             ->required()
-                            ->columnSpanFull()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->columnSpanFull(),
                         Forms\Components\Select::make('process_id')
                             ->relationship('process', 'title')
                             ->afterStateUpdated(function (Set $set) {
@@ -52,32 +50,29 @@ class ImprovementActionResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->required(),
                         Forms\Components\Select::make('sub_process_id')
                             ->label('Sub Process')
                             ->options(
-                                fn(Get $get): Collection => SubProcess::query()
+                                fn (Get $get): Collection => SubProcess::query()
                                     ->where('process_id', $get('process_id'))
                                     ->pluck('title', 'id')
                             )
-                            ->afterStateUpdated(fn(Set $set) => $set('responsible_id', null))
+                            ->afterStateUpdated(fn (Set $set) => $set('responsible_id', null))
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->required(),
                         Forms\Components\Select::make('improvement_action_origin_id')
                             ->relationship('improvementActionOrigin', 'title')
                             ->searchable()
                             ->preload()
-                            ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->required(),
                         Forms\Components\Select::make('responsible_id')
                             ->options(
-                                fn(Get $get): array => User::whereHas(
+                                fn (Get $get): array => User::whereHas(
                                     'subProcesses',
-                                    fn($query) => $query->where('sub_process_id', $get('sub_process_id'))
+                                    fn ($query) => $query->where('sub_process_id', $get('sub_process_id'))
                                 )
                                     ->pluck('name', 'id')
                                     ->toArray()
@@ -92,16 +87,13 @@ class ImprovementActionResource extends Resource
                             ->searchable()
                             ->preload()
                             ->live()
-                            ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->required(),
                         Forms\Components\Textarea::make('expected_impact')
                             ->required()
-                            ->columnSpanFull()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->columnSpanFull(),
                         Forms\Components\DatePicker::make('deadline')
                             ->minDate(now())
-                            ->required()
-                            ->disabled(fn(string $context) => $context === 'edit'),
+                            ->required(),
                         /* Forms\Components\DatePicker::make('actual_closing_date'), */
                     ]),
             ]);
@@ -130,7 +122,7 @@ class ImprovementActionResource extends Resource
                     ->label('Status')
                     ->searchable()
                     ->badge()
-                    ->color(fn($record) => $record->improvementActionStatus->colorName()),
+                    ->color(fn ($record) => $record->improvementActionStatus->colorName()),
                 Tables\Columns\TextColumn::make('deadline')
                     ->date()
                     ->sortable(),
@@ -148,7 +140,7 @@ class ImprovementActionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('id', 'desc')
-            ->recordUrl(null)
+            /* ->recordUrl(null) */
             ->filters([
                 //
             ])
@@ -181,7 +173,7 @@ class ImprovementActionResource extends Resource
             'improvement_action_completions.create' => \App\Filament\Resources\ImprovementActionCompletionResource\Pages\CreateImprovementActionCompletion::route('/{improvementactionId}/completions/create'),
             'improvement_action_completions.view' => \App\Filament\Resources\ImprovementActionCompletionResource\Pages\ViewImprovementActionCompletion::route('/{improvementactionId}/completions/{record}'),
             'improvement_action_tasks.create' => \App\Filament\Resources\ImprovementActionTaskResource\Pages\CreateImprovementActionTask::route('/{improvementactionId}/tasks/create'),
-            'improvement_action_tasks.edit' => \App\Filament\Resources\ImprovementActionTaskResource\Pages\EditImprovementActionTask::route('/{improvementactionId}/tasks/{record}/edit'),
+            'improvement_action_tasks.view' => \App\Filament\Resources\ImprovementActionTaskResource\Pages\ViewImprovementActionTask::route('/{improvementactionId}/tasks/{record}'),
         ];
     }
 }
