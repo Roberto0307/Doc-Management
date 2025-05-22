@@ -220,11 +220,9 @@ class RecordResource extends Resource
                         fn ($record) => $record->approvedVersionUrl()
                     )
                     ->openUrlInNewTab(false)
-                    ->extraAttributes(fn ($record) => [
-                        'download' => $record->title,
-                    ])
                     ->disabled(fn ($record) => ! $record->hasApprovedVersion())
                     ->extraAttributes(fn ($record) => [
+                        'download' => $record->title,
                         'style' => $record->hasApprovedVersion()
                             ? ''
                             : 'opacity: 0.3; cursor: not-allowed;',
