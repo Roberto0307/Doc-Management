@@ -3,6 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ImprovementActionTaskResource\Pages;
+use App\Filament\Resources\ImprovementActionTaskResource\RelationManagers\ImprovementActionTaskCommentsRelationManager;
+use App\Filament\Resources\ImprovementActionTaskResource\RelationManagers\ImprovementActionTaskFilesRelationManager;
 use App\Models\ImprovementAction;
 use App\Models\ImprovementActionTask;
 use App\Models\User;
@@ -70,9 +72,10 @@ class ImprovementActionTaskResource extends Resource
                             ->required(),
                         Forms\Components\DatePicker::make('actual_closing_date')
                             ->required(), */
-                        /* Forms\Components\TextInput::make('improvement_action_task_status_id')
-                            ->required()
-                            ->numeric(), */
+                        Forms\Components\Placeholder::make('status')
+                            ->label('Status')
+                            ->content(fn ($record) => $record?->improvementActionTaskStatus?->label ?? 'Sin estado')
+                            ->visible(fn (string $context) => $context === 'view'),
                     ]),
             ]);
     }
@@ -126,6 +129,8 @@ class ImprovementActionTaskResource extends Resource
     {
         return [
             //
+            ImprovementActionTaskCommentsRelationManager::class,
+            ImprovementActionTaskFilesRelationManager::class,
         ];
     }
 
@@ -134,7 +139,13 @@ class ImprovementActionTaskResource extends Resource
         return [
             'index' => Pages\ListImprovementActionTasks::route('/'),
             'create' => Pages\CreateImprovementActionTask::route('/create'),
+            'view' => Pages\ViewImprovementActionTask::route('/{record}'),
             'edit' => Pages\EditImprovementActionTask::route('/{record}/edit'),
         ];
+    }
+
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
     }
 }

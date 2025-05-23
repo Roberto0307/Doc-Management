@@ -54,7 +54,7 @@ class ImprovementActionService
         $statusChangeId = ImprovementActionStatus::byTitle($status)?->id;
         $proposalId = ImprovementActionStatus::byTitle('proposal')?->id;
 
-        if (! $statusChangeId) {
+        if ($statusChangeId === null) {
             return false;
         }
 

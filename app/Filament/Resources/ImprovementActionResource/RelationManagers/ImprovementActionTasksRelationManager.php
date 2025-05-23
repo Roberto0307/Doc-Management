@@ -130,7 +130,7 @@ class ImprovementActionTasksRelationManager extends RelationManager
                     ->authorize(
                         fn () => app(AuthService::class)->canCreateTask($this->getOwnerRecord()->responsible_id, $this->getOwnerRecord()->improvement_action_status_id)
                     )
-                    ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_tasks.edit', [
+                    ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_tasks.view', [
                         'improvementactionId' => $this->getOwnerRecord()->id,
                         'record' => $record->id,
                     ])),

@@ -51,14 +51,14 @@ class CreateImprovementActionTask extends CreateRecord
             'improvement_action_task_status_id' => 1,
         ]);
 
-        $updateStatusImprovementAction = app(ImprovementActionService::class)->statusChangesInImprovementActions($this->improvementActionModel, 'in execution');
+        app(ImprovementActionService::class)->statusChangesInImprovementActions($this->improvementActionModel, 'in execution');
 
-        if (! $updateStatusImprovementAction) {
+        /* if (! $updateStatusImprovementAction) {
             Notification::make()
                 ->title('The status of the improvement action could not be updated')
                 ->danger()
                 ->send();
-        }
+        } */
 
         return $task;
     }
