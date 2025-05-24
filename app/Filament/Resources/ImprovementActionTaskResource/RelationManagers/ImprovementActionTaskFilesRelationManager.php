@@ -4,7 +4,6 @@ namespace App\Filament\Resources\ImprovementActionTaskResource\RelationManagers;
 
 use App\Filament\Resources\ImprovementActionResource;
 use App\Services\AuthService;
-use App\Services\ComplementService;
 use App\Services\TaskService;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -91,7 +90,7 @@ class ImprovementActionTaskFilesRelationManager extends RelationManager
                     ->icon('heroicon-o-document-arrow-down')
                     ->color('primary')
                     ->url(
-                        fn ($record) => app(ComplementService::class)->getDownloadUrl($record),
+                        fn ($record) => $record->getDownloadUrl(),
                     )
                     ->openUrlInNewTab(false)
                     ->extraAttributes(fn ($record) => [
