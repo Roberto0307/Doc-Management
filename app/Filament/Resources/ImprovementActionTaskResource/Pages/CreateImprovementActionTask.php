@@ -51,7 +51,7 @@ class CreateImprovementActionTask extends CreateRecord
             'improvement_action_task_status_id' => 1,
         ]);
 
-        app(ImprovementActionService::class)->statusChangesInImprovementActions($this->improvementActionModel, 'in execution');
+        app(ImprovementActionService::class)->statusChangesInImprovementActions($this->improvementActionModel, 'in_execution');
 
         /* if (! $updateStatusImprovementAction) {
             Notification::make()

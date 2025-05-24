@@ -29,7 +29,7 @@ class ImprovementActionTaskStatusSeeder extends Seeder
                 'protected' => true,
             ], */
             [
-                'title' => 'in execution',
+                'title' => 'in_execution',
                 'label' => 'En ejecución',
                 'color' => 'indigo',
                 'icon' => 'heroicon-o-clock',

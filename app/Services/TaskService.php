@@ -66,7 +66,7 @@ class TaskService
     public function updateTaskStatus(ImprovementActionTask $taskModel)
     {
         $statusPending = ImprovementActionTaskStatus::where('title', 'pending')->value('id');
-        $statusInExecution = ImprovementActionTaskStatus::where('title', 'in execution')->value('id');
+        $statusInExecution = ImprovementActionTaskStatus::where('title', 'in_execution')->value('id');
         $statusChangeId = null;
         if ($taskModel->improvement_action_task_status_id === $statusPending) {
             $statusChangeId = $statusInExecution;

@@ -73,7 +73,7 @@ class AuthService
     public function canFinishAction(int $responsibleId, int $statusId, string $module): bool
     {
         if ($module === 'improvement') {
-            $expectedStatusId = ImprovementActionStatus::where('title', 'in execution')->value('id');
+            $expectedStatusId = ImprovementActionStatus::where('title', 'in_execution')->value('id');
 
             if ($statusId !== $expectedStatusId) {
                 return false;
@@ -100,7 +100,7 @@ class AuthService
     public function canCreateTask(int $responsibleId, int $statusId): bool
     {
         $statusProposal = ImprovementActionStatus::where('title', 'proposal')->value('id');
-        $statusInExecution = ImprovementActionStatus::where('title', 'in execution')->value('id');
+        $statusInExecution = ImprovementActionStatus::where('title', 'in_execution')->value('id');
 
         if (auth()->id() === $responsibleId && ($statusId === $statusProposal || $statusId === $statusInExecution)) {
             return true;
@@ -112,7 +112,7 @@ class AuthService
     public function canCloseTask(ImprovementActionTask $taskModel)
     {
         $responsibleTaskId = $taskModel->responsible_id;
-        $statusInExecutionId = ImprovementActionStatus::where('title', 'in execution')->value('id');
+        $statusInExecutionId = ImprovementActionStatus::where('title', 'in_execution')->value('id');
         if (auth()->id() === $responsibleTaskId && $taskModel->improvement_action_task_status_id === $statusInExecutionId) {
             return true;
         }
