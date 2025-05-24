@@ -10,12 +10,15 @@ use App\Models\Record;
 use App\Models\Status;
 use App\Models\SubProcess;
 use App\Models\User;
+use App\Traits\HasVersioning;
 
 /**
  * Servicio de Autentificación
  */
 class AuthService
 {
+    use HasVersioning;
+
     public function canApproveAndReject(User $user, ?int $subProcessId): bool
     {
         return $user->hasRole('super_admin') || $user->isLeaderOfSubProcess($subProcessId);
@@ -56,9 +59,11 @@ class AuthService
 
         $lastVersion = File::where('record_id', $data['record_id'])->orderByDesc('version')->first();
 
-        $newVersion = $lastVersion
-            ? ($hasApprovalAccess ? ((int) $lastVersion->version + 1).'.00' : bcadd($lastVersion->version, '0.01', 2))
-            : ($hasApprovalAccess ? '1.00' : '0.01');
+        // $newVersion = $lastVersion
+        //     ? ($hasApprovalAccess ? ((int) $lastVersion->version + 1).'.00' : bcadd($lastVersion->version, '0.01', 2))
+        //     : ($hasApprovalAccess ? '1.00' : '0.01');
+
+        $newVersion = $this->calculateNewVersion($lastVersion, $hasApprovalAccess);
 
         return array_merge($data, [
             'status_id' => in_array('status_id', $preserve) ? ($data['status_id'] ?? null) : ($hasApprovalAccess ? $statusApproved->id : $statusDraft->id),
