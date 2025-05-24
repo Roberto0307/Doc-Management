@@ -61,7 +61,7 @@ class FileService
 
     public function restore(File $file): void
     {
-        $lastFileId = app(File::class)::latest()->first()->id;
+        $lastFileId = File::latest()->first()->id;
 
         $sha256_hash = $this->generateDigitalSignature($file->file_path.$lastFileId);
 

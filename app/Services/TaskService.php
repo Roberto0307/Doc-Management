@@ -7,22 +7,21 @@ use App\Models\ImprovementActionTaskComment;
 use App\Models\ImprovementActionTaskFile;
 use App\Models\ImprovementActionTaskStatus;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Str;
 
 class TaskService
 {
-    public function createComment(ImprovementActionTask $taskModel, array $data)
+    public function createComment(ImprovementActionTask $taskModel, array $data): void
     {
         ImprovementActionTaskComment::create([
             'improvement_action_task_id' => $taskModel->id,
-            'comment' => $data['comment'],
+            'comment' => Str::limit(strip_tags($data['comment']), 255),
+
         ]);
 
         $this->updateTaskStatus($taskModel);
 
-        Notification::make()
-            ->title('Comment saved successfully')
-            ->success()
-            ->send();
+        $this->taskNotification('Comment saved successfully');
     }
 
     public function createFiles(ImprovementActionTask $taskModel, array $data): void
@@ -38,46 +37,36 @@ class TaskService
         }
 
         $this->updateTaskStatus($taskModel);
+
+        $this->taskNotification('Support files uploaded successfully');
+    }
+
+    public function closeTask(ImprovementActionTask $taskModel): bool
+    {
+        $statusTitle = now()->lessThanOrEqualTo($taskModel->deadline) ? 'completed' : 'extemporaneous';
+        $statusId = ImprovementActionTaskStatus::byTitle($statusTitle)?->id;
+
+        return $statusId ? $taskModel->update(['improvement_action_task_status_id' => $statusId]) : false;
+    }
+
+    private function updateTaskStatus(ImprovementActionTask $taskModel): bool
+    {
+        $currentStatusId = $taskModel->improvement_action_task_status_id;
+        $pendingStatusId = ImprovementActionTaskStatus::byTitle('pending')?->id;
+        $inExecutionStatusId = ImprovementActionTaskStatus::byTitle('in_execution')?->id;
+
+        if ($currentStatusId === $pendingStatusId && $inExecutionStatusId !== null) {
+            return $taskModel->update(['improvement_action_task_status_id' => $inExecutionStatusId]);
+        }
+
+        return false;
+    }
+
+    private function taskNotification(string $message): void
+    {
         Notification::make()
-            ->title('Support files uploaded successfully')
+            ->title($message)
             ->success()
             ->send();
-    }
-
-    public function closeTask(ImprovementActionTask $taskModel)
-    {
-
-        $statusChangeId = null;
-        if ($taskModel->deadline >= now()) {
-            $statusChangeId = ImprovementActionTaskStatus::where('title', 'completed')->value('id');
-        } elseif ($taskModel->deadline < now()) {
-            $statusChangeId = ImprovementActionTaskStatus::where('title', 'extemporaneous')->value('id');
-        }
-
-        if ($statusChangeId === null) {
-            return false;
-        }
-
-        return $taskModel->update([
-            'improvement_action_task_status_id' => $statusChangeId,
-        ]);
-    }
-
-    public function updateTaskStatus(ImprovementActionTask $taskModel)
-    {
-        $statusPending = ImprovementActionTaskStatus::where('title', 'pending')->value('id');
-        $statusInExecution = ImprovementActionTaskStatus::where('title', 'in_execution')->value('id');
-        $statusChangeId = null;
-        if ($taskModel->improvement_action_task_status_id === $statusPending) {
-            $statusChangeId = $statusInExecution;
-        }
-
-        if ($statusChangeId === null) {
-            return false;
-        }
-
-        return $taskModel->update([
-            'improvement_action_task_status_id' => $statusChangeId,
-        ]);
     }
 }

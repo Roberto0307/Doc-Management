@@ -73,7 +73,8 @@ class AuthService
     public function canFinishAction(int $responsibleId, int $statusId, string $module): bool
     {
         if ($module === 'improvement') {
-            $expectedStatusId = ImprovementActionStatus::where('title', 'in_execution')->value('id');
+
+            $expectedStatusId = ImprovementActionStatus::byTitle('in_execution')?->id;
 
             if ($statusId !== $expectedStatusId) {
                 return false;
@@ -82,25 +83,25 @@ class AuthService
             return auth()->id() === $responsibleId;
         }
 
-        if ($module === 'corrective/preventive') {
-            // lógica futura para otros módulos
-            return false;
-        }
+        // if ($module === 'corrective/preventive') {
+        //     // lógica futura para otros módulos
+        //     return false;
+        // }
 
         return false;
     }
 
     public function canViewActionCompletion(int $statusId)
     {
-        $expectedStatusId = ImprovementActionStatus::where('title', 'finished')->value('id');
+        $expectedStatusId = ImprovementActionStatus::byTitle('finished')?->id;
 
         return $statusId === $expectedStatusId;
     }
 
     public function canCreateTask(int $responsibleId, int $statusId): bool
     {
-        $statusProposal = ImprovementActionStatus::where('title', 'proposal')->value('id');
-        $statusInExecution = ImprovementActionStatus::where('title', 'in_execution')->value('id');
+        $statusProposal = ImprovementActionStatus::byTitle('proposal')?->id;
+        $statusInExecution = ImprovementActionStatus::byTitle('in_execution')?->id;
 
         if (auth()->id() === $responsibleId && ($statusId === $statusProposal || $statusId === $statusInExecution)) {
             return true;
@@ -112,7 +113,7 @@ class AuthService
     public function canCloseTask(ImprovementActionTask $taskModel)
     {
         $responsibleTaskId = $taskModel->responsible_id;
-        $statusInExecutionId = ImprovementActionStatus::where('title', 'in_execution')->value('id');
+        $statusInExecutionId = ImprovementActionStatus::byTitle('in_execution')?->id;
         if (auth()->id() === $responsibleTaskId && $taskModel->improvement_action_task_status_id === $statusInExecutionId) {
             return true;
         }
@@ -123,8 +124,8 @@ class AuthService
     public function canTaskUploadFollowUp(ImprovementActionTask $taskModel)
     {
         $responsibleTaskId = $taskModel->responsible_id;
-        $statusCompletedId = ImprovementActionTaskStatus::where('title', 'completed')->value('id');
-        $statusExtemporaneousId = ImprovementActionTaskStatus::where('title', 'extemporaneous')->value('id');
+        $statusCompletedId = ImprovementActionTaskStatus::byTitle('completed')?->id;
+        $statusExtemporaneousId = ImprovementActionTaskStatus::byTitle('extemporaneous')?->id;
         if (auth()->id() === $responsibleTaskId && ($taskModel->improvement_action_task_status_id === $statusCompletedId || $taskModel->improvement_action_task_status_id === $statusExtemporaneousId)) {
             return false;
         }
