@@ -3,17 +3,25 @@
 namespace App\Exports;
 
 use App\Models\File;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class FileExportLatestVersion implements FromCollection, WithHeadings, WithMapping
+class FileExport implements FromCollection, WithHeadings, WithMapping
 {
-    public function collection()
+    protected array $fileIds;
+
+    public function __construct(array $fileIds)
+    {
+        $this->fileIds = $fileIds;
+    }
+
+    public function collection(): Collection
     {
         return File::with(['status', 'record'])
-            ->get()
-            ->filter(fn ($file) => $file->isLatestVersion());
+            ->whereIn('id', $this->fileIds)
+            ->get();
     }
 
     public function map($file): array
@@ -22,10 +30,10 @@ class FileExportLatestVersion implements FromCollection, WithHeadings, WithMappi
             $file->title,
             $file->version,
             optional($file->status)->title,
-            $file->sha256_hash ? 'Sí' : 'No',
+            $file->sha256_hash ? 'Yes' : 'No',
             optional($file->record)->classification_code,
-            $file->isLatestVersion() ? 'Sí' : 'No',
-            $file->isCompliant() ? 'Sí' : 'No',
+            $file->isLatestVersion() ? 'Yes' : 'No',
+            $file->isCompliant() ? 'Yes' : 'No',
             $file->change_reason ?? '—',
             $file->created_at,
             $file->updated_at,

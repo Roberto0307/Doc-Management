@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\RecordExport;
 use App\Filament\Resources\RecordResource\Pages;
 use App\Models\CentralTime;
 use App\Models\ManagementTime;
@@ -17,10 +18,12 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RecordResource extends Resource
 {
@@ -239,7 +242,13 @@ class RecordResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     //
-                    /* Tables\Actions\DeleteBulkAction::make(), */
+                    BulkAction::make('export')
+                        ->label('Exportar seleccionados')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->action(fn ($records) => Excel::download(
+                            new RecordExport($records->pluck('id')->toArray()),
+                            'registros_'.now()->format('Y_m_d_His').'.xlsx'
+                        )),
                 ]),
             ]);
     }
