@@ -13,7 +13,7 @@ class StatusSeeder extends Seeder
             [
                 'title' => 'draft',
                 'label' => 'Draft',
-                'color' => 'gray',
+                'color' => 'warning',
                 'icon' => 'heroicon-o-pencil-square',
                 'protected' => true,
             ],

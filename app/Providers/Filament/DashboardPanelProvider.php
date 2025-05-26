@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\RecordResource\Widgets\RecordStatusChart;
+use App\Filament\Resources\RecordResource\Widgets\StatsRecordOverview;
 use App\Filament\Widgets\ComplianceStatusWidget;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -46,7 +48,8 @@ class DashboardPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                ComplianceStatusWidget::class,
+                StatsRecordOverview::class,
+                RecordStatusChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
