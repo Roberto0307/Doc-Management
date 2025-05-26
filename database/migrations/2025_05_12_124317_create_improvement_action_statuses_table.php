@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('improvement_action_statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->unique()->index(); // clave técnica
-            $table->string('label');           // nombre visible al usuario (antes: display_name)
+            $table->string('title')->unique()->index();
+            $table->string('label');
             $table->string('color')->nullable();
             $table->string('icon')->nullable();
             $table->boolean('protected')->default(false);

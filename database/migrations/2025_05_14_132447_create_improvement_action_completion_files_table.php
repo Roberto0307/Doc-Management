@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('improvement_action_completion_files', function (Blueprint $table) {
             $table->id();
-            /* $table->foreignId('improvement_action_completion_id')->constrained(); */ // Tambien es largo
             $table->unsignedBigInteger('improvement_action_completion_id');
             $table->foreign('improvement_action_completion_id', 'iac_id')
                 ->references('id')

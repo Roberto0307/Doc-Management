@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('improvement_action_task_comments', function (Blueprint $table) {
             $table->id();
-            /* $table->foreignId('improvement_action_task_id')->constrained(); */ // Al parecer la referencia es muy larga
             $table->unsignedBigInteger('improvement_action_task_id');
             $table->foreign('improvement_action_task_id', 'iat_id')
                 ->references('id')

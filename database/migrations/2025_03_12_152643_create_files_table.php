@@ -20,13 +20,10 @@ return new class extends Migration
             $table->string('change_reason')->nullable();
             $table->string('sha256_hash')->unique();
             $table->timestamp('decision_at')->nullable();
-
-            // Relaciones
-            $table->foreignId('status_id')->constrained(); // Asume tabla 'statuses'
+            $table->foreignId('status_id')->constrained();
             $table->foreignId('record_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete(); // Apunta a 'users.id'
-            $table->foreignId('decided_by_user_id')->nullable()->constrained('users'); // Apunta a 'users.id'
-
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('decided_by_user_id')->nullable()->constrained('users');
             $table->timestamps();
         });
     }
