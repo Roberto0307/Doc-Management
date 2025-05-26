@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasDownloadableFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ImprovementActionTaskFile extends Model
 {
     /** @use HasFactory<\Database\Factories\ImprovementActionTaskFileFactory> */
-    use HasFactory;
+    use HasDownloadableFile, HasFactory;
 
     protected $fillable = [
         'improvement_action_task_id',

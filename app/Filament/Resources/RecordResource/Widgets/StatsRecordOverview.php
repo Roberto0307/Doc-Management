@@ -17,7 +17,7 @@ class StatsRecordOverview extends BaseWidget
 
         $recordsExpired = Record::with('centralTime')
             ->get()
-            ->filter(fn($record) => app(RecordService::class)->isExpired($record))
+            ->filter(fn ($record) => app(RecordService::class)->isExpired($record))
             ->count();
 
         return [

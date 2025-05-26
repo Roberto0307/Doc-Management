@@ -16,35 +16,28 @@ class ImprovementActionStatusSeeder extends Seeder
         $statuses = [
             [
                 'title' => 'proposal',
-                'label' => 'Proposal',
+                'label' => 'Propuesto',
                 'color' => 'gray',
                 'icon' => 'heroicon-o-pencil-square',
                 'protected' => true,
             ],
-            /* [
-                'title' => 'approved',
-                'label' => 'Approved',
-                'color' => 'indigo',
-                'icon' => 'heroicon-o-hand-thumb-up',
-                'protected' => true,
-            ], */
             [
                 'title' => 'in_execution',
-                'label' => 'In Execution',
+                'label' => 'En ejecución',
                 'color' => 'indigo',
                 'icon' => 'heroicon-o-clock',
                 'protected' => true,
             ],
             [
                 'title' => 'finished',
-                'label' => 'Finished',
+                'label' => 'Finalizado',
                 'color' => 'success',
                 'icon' => 'heroicon-o-check-circle',
                 'protected' => true,
             ],
             [
                 'title' => 'canceled',
-                'label' => 'Canceled',
+                'label' => 'Cancelado',
                 'color' => 'danger',
                 'icon' => 'heroicon-o-x-circle',
                 'protected' => true,

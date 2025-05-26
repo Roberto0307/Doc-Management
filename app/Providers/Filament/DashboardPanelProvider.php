@@ -4,7 +4,6 @@ namespace App\Providers\Filament;
 
 use App\Filament\Resources\RecordResource\Widgets\RecordStatusChart;
 use App\Filament\Resources\RecordResource\Widgets\StatsRecordOverview;
-use App\Filament\Widgets\ComplianceStatusWidget;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;

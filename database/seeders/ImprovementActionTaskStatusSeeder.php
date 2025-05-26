@@ -51,7 +51,7 @@ class ImprovementActionTaskStatusSeeder extends Seeder
             ],
             [
                 'title' => 'extemporaneous',
-                'label' => 'Extemporanea',
+                'label' => 'Extemporaneo',
                 'color' => 'warning',
                 'icon' => 'heroicon-o-exclamation-triangle',
                 'protected' => true,
