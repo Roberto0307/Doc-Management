@@ -20,6 +20,7 @@ class TaskService
         ]);
 
         $this->updateTaskStatus($taskModel);
+        $this->assignActualStartDate($taskModel);
 
         $this->taskNotification('Comment saved successfully');
     }
@@ -37,6 +38,7 @@ class TaskService
         }
 
         $this->updateTaskStatus($taskModel);
+        $this->assignActualStartDate($taskModel);
 
         $this->taskNotification('Support files uploaded successfully');
     }
@@ -46,7 +48,7 @@ class TaskService
         $statusTitle = now()->lessThanOrEqualTo($taskModel->deadline) ? 'completed' : 'extemporaneous';
         $statusId = ImprovementActionTaskStatus::byTitle($statusTitle)?->id;
 
-        return $statusId ? $taskModel->update(['improvement_action_task_status_id' => $statusId]) : false;
+        return $statusId ? $taskModel->update(['improvement_action_task_status_id' => $statusId, 'actual_closing_date' => now()->format('Y-m-d')]) : false;
     }
 
     private function updateTaskStatus(ImprovementActionTask $taskModel): bool
@@ -68,5 +70,15 @@ class TaskService
             ->title($message)
             ->success()
             ->send();
+    }
+
+    private function assignActualStartDate(ImprovementActionTask $taskModel)
+    {
+        $actualStartDate = $taskModel->actual_start_date;
+        if ($actualStartDate === null) {
+            return $taskModel->update(['actual_start_date' => now()->format('Y-m-d')]);
+        }
+
+        return false;
     }
 }

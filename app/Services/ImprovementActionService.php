@@ -30,4 +30,9 @@ class ImprovementActionService
 
         return $model->update(['improvement_action_status_id' => $statusChangeId]);
     }
+
+    public function clothingDateInImprovementActions(ImprovementAction $model)
+    {
+        return $model->update(['actual_closing_date' => now()->format('Y-m-d')]);
+    }
 }

@@ -7,7 +7,6 @@ use App\Filament\Resources\ImprovementActionResource;
 use App\Models\ImprovementAction;
 use App\Models\ImprovementActionCompletionFile;
 use App\Services\ImprovementActionService;
-use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateImprovementActionCompletion extends CreateRecord
@@ -50,14 +49,8 @@ class CreateImprovementActionCompletion extends CreateRecord
                 ]);
             }
         }
-        $updateStatusImprovementAction = app(ImprovementActionService::class)->statusChangesInImprovementActions($this->improvementActionModel, 'finished');
-
-        if (! $updateStatusImprovementAction) {
-            Notification::make()
-                ->title('The status of the improvement action could not be updated')
-                ->danger()
-                ->send();
-        }
+        app(ImprovementActionService::class)->statusChangesInImprovementActions($this->improvementActionModel, 'finished');
+        app(ImprovementActionService::class)->clothingDateInImprovementActions($this->improvementActionModel);
 
         return $completion;
     }

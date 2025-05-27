@@ -57,7 +57,8 @@ class ImprovementActionTaskResource extends Resource
                             ->searchable()
                             ->required(),
                         Forms\Components\DatePicker::make('start_date')
-                            ->minDate(now())
+                            ->minDate(now()->format('Y-m-d'))
+                            ->maxDate(fn (Forms\Get $get) => ImprovementAction::find($get('improvement_action_id'))?->deadline)
                             ->afterStateUpdated(function (Forms\Set $set) {
                                 $set('deadline', null);
                             })
@@ -65,13 +66,10 @@ class ImprovementActionTaskResource extends Resource
                             ->required(),
                         Forms\Components\DatePicker::make('deadline')
                             ->minDate(fn (Forms\Get $get) => $get('start_date'))
+                            ->maxDate(fn (Forms\Get $get) => ImprovementAction::find($get('improvement_action_id'))?->deadline)
                             ->live()
                             ->required()
                             ->disabled(fn (Forms\Get $get) => $get('start_date') === null),
-                        /* Forms\Components\DatePicker::make('actual_start_date')
-                            ->required(),
-                        Forms\Components\DatePicker::make('actual_closing_date')
-                            ->required(), */
                         Forms\Components\Placeholder::make('status')
                             ->label('Status')
                             ->content(fn ($record) => $record?->improvementActionTaskStatus?->label ?? 'Sin estado')
