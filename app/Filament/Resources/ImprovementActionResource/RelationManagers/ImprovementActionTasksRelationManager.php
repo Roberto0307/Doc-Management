@@ -108,7 +108,6 @@ class ImprovementActionTasksRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                /* Tables\Actions\CreateAction::make(), */
                 Tables\Actions\Action::make('create')
                     ->label('New improvement action task')
                     ->button()
@@ -121,23 +120,16 @@ class ImprovementActionTasksRelationManager extends RelationManager
                     ])),
             ])
             ->actions([
-                /* Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(), */
                 Tables\Actions\Action::make('follow-up')
                     ->label('Follow-up')
                     ->color('primary')
                     ->icon('heroicon-o-eye')
-                    ->authorize(
-                        fn () => app(AuthService::class)->canCreateTask($this->getOwnerRecord()->responsible_id, $this->getOwnerRecord()->improvement_action_status_id)
-                    )
                     ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_tasks.view', [
                         'improvementactionId' => $this->getOwnerRecord()->id,
                         'record' => $record->id,
                     ])),
             ])
             ->bulkActions([
-            /* Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]), */]);
+            ]);
     }
 }

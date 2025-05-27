@@ -106,7 +106,11 @@ class RecordResource extends Resource
                 Tables\Columns\TextColumn::make('classification_code')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
+                    ->searchable()
+                    ->extraAttributes([
+                        'style' => 'max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
+                    ])
+                    ->tooltip(fn ($record) => $record->title),
                 Tables\Columns\TextColumn::make('type.title')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('process.title')

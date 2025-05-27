@@ -11,6 +11,7 @@ use App\Models\Status;
 use App\Models\SubProcess;
 use App\Models\User;
 use App\Traits\HasVersioning;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Servicio de Autentificación
@@ -75,17 +76,28 @@ class AuthService
     }
 
     /* Acciones */
-    public function canFinishAction(int $responsibleId, int $statusId, string $module): bool
+    public function canFinishAction(Model $model, string $module): bool
     {
         if ($module === 'improvement') {
 
             $expectedStatusId = ImprovementActionStatus::byTitle('in_execution')?->id;
+            $currentStatusId = $model->improvement_action_status_id;
 
-            if ($statusId !== $expectedStatusId) {
+            if ($currentStatusId !== $expectedStatusId) {
                 return false;
             }
 
-            return auth()->id() === $responsibleId;
+            if (auth()->id() !== $model->responsible_id) {
+                return false;
+            }
+
+            $completedStatusId = ImprovementActionTaskStatus::byTitle('completed')?->id;
+
+            $hasUncompletedTasks = $model->improvementActionTasks()
+                ->where('improvement_action_task_status_id', '!=', $completedStatusId)
+                ->exists();
+
+            return ! $hasUncompletedTasks;
         }
 
         // if ($module === 'corrective/preventive') {

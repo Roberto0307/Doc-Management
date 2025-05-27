@@ -92,9 +92,11 @@ class ImprovementActionResource extends Resource
                             ->required()
                             ->columnSpanFull(),
                         Forms\Components\DatePicker::make('deadline')
-                            ->minDate(now())
+                            ->minDate(now()->format('Y-m-d'))
                             ->required(),
-                        /* Forms\Components\DatePicker::make('actual_closing_date'), */
+                        Forms\Components\Select::make('improvement_action_status_id')
+                            ->relationship('improvementActionStatus', 'label')
+                            ->visible(fn ($context) => $context === 'view'),
                     ]),
             ]);
     }
