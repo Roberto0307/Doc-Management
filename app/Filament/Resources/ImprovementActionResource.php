@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Exports\ImprovementActionExport;
 use App\Filament\Resources\ImprovementActionResource\Pages;
 use App\Filament\Resources\ImprovementActionResource\RelationManagers\ImprovementActionTasksRelationManager;
 use App\Models\ImprovementAction;
@@ -16,6 +17,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ImprovementActionResource extends Resource
 {
@@ -106,7 +108,11 @@ class ImprovementActionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
+                    ->searchable()
+                    ->extraAttributes([
+                        'style' => 'max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
+                    ])
+                    ->tooltip(fn ($record) => $record->title),
                 Tables\Columns\TextColumn::make('process.title')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('subProcess.title')
@@ -152,7 +158,14 @@ class ImprovementActionResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    // Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\BulkAction::make('export')
+                        ->label('Exportar seleccionados')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->action(fn ($records) => Excel::download(
+                            new ImprovementActionExport($records->pluck('id')->toArray()),
+                            'registros_accion_de_mejora'.now()->format('Y_m_d_His').'.xlsx'
+                        )),
                 ]),
             ]);
     }

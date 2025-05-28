@@ -4,7 +4,9 @@ namespace App\Filament\Resources\ImprovementActionResource\Pages;
 
 use App\Filament\Resources\ImprovementActionResource;
 use App\Services\AuthService;
+use App\Services\ImprovementActionService;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewImprovementAction extends ViewRecord
@@ -36,6 +38,27 @@ class ViewImprovementAction extends ViewRecord
                 ->url(fn ($record) => ImprovementActionResource::getUrl('improvement_action_completions.create', [
                     'improvementactionId' => $record->id,
                 ])),
+
+            Action::make('cancel')
+                ->label('Cancel')
+                ->button()
+                ->color('danger')
+                ->authorize(fn ($record) => app(AuthService::class)->canCancelAction(
+                    $record,
+                    'improvement'
+                ))
+                ->form([
+                    Textarea::make('reason_for_cancellation')
+                        ->label('Reason for cancellation')
+                        ->required()
+                        ->rule('string')
+                        ->placeholder('Write the reason for cancellation'),
+                ])
+                ->action(function ($record, array $data) {
+                    app(ImprovementActionService::class)->canceledStateAssignment($record, $data);
+                    redirect(ImprovementActionResource::getUrl('index'));
+                }),
+            // ->action(fn($record) => app(ImprovementActionService::class)->canceledStateAssignment($record)),
 
             Action::make('back')
                 ->label('Return')

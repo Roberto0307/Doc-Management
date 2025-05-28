@@ -76,6 +76,22 @@ class AuthService
     }
 
     /* Acciones */
+    public function canCancelAction(Model $model, string $module)
+    {
+        if ($module === 'improvement') {
+
+            $finishedStatusId = ImprovementActionStatus::byTitle('finished')?->id;
+            $canceledStatusId = ImprovementActionStatus::byTitle('canceled')?->id;
+            $currentStatusId = $model->improvement_action_status_id;
+
+            if ($currentStatusId === $finishedStatusId || $currentStatusId === $canceledStatusId) {
+                return false;
+            }
+
+            return auth()->id() === $model->registered_by_id;
+        }
+    }
+
     public function canFinishAction(Model $model, string $module): bool
     {
         if ($module === 'improvement') {
@@ -131,11 +147,16 @@ class AuthService
     {
         $responsibleTaskId = $taskModel->responsible_id;
         $statusInExecutionId = ImprovementActionStatus::byTitle('in_execution')?->id;
-        if (auth()->id() === $responsibleTaskId && $taskModel->improvement_action_task_status_id === $statusInExecutionId) {
-            return true;
+        $statusCanceledId = ImprovementActionStatus::byTitle('canceled')?->id;
+        $currentImprovementActionStatusId = $taskModel->improvementAction->improvement_action_status_id;
+        if (auth()->id() !== $responsibleTaskId) {
+            return false;
+        }
+        if ($taskModel->improvement_action_task_status_id !== $statusInExecutionId) {
+            return false;
         }
 
-        return false;
+        return $currentImprovementActionStatusId !== $statusCanceledId;
     }
 
     public function canTaskUploadFollowUp(ImprovementActionTask $taskModel)
@@ -143,10 +164,15 @@ class AuthService
         $responsibleTaskId = $taskModel->responsible_id;
         $statusCompletedId = ImprovementActionTaskStatus::byTitle('completed')?->id;
         $statusExtemporaneousId = ImprovementActionTaskStatus::byTitle('extemporaneous')?->id;
-        if (auth()->id() === $responsibleTaskId && ($taskModel->improvement_action_task_status_id === $statusCompletedId || $taskModel->improvement_action_task_status_id === $statusExtemporaneousId)) {
+        $statusCanceledId = ImprovementActionStatus::byTitle('canceled')?->id;
+        $currentImprovementActionStatusId = $taskModel->improvementAction->improvement_action_status_id;
+        if (auth()->id() !== $responsibleTaskId) {
+            return false;
+        }
+        if (($taskModel->improvement_action_task_status_id === $statusCompletedId || $taskModel->improvement_action_task_status_id === $statusExtemporaneousId)) {
             return false;
         }
 
-        return true;
+        return $currentImprovementActionStatusId !== $statusCanceledId;
     }
 }

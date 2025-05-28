@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Resources\ImprovementActionResource\Widgets\ImprovementActionStatusChart;
 use App\Filament\Resources\RecordResource\Widgets\RecordStatusChart;
 use App\Filament\Resources\RecordResource\Widgets\StatsRecordOverview;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -49,6 +50,7 @@ class DashboardPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 StatsRecordOverview::class,
                 RecordStatusChart::class,
+                ImprovementActionStatusChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,
