@@ -35,7 +35,6 @@ class ImprovementActionExport implements FromCollection, WithHeadings, WithMappi
     public function map($record): array
     {
         return [
-            $record->id,
             $record->title,
             $record->description,
             $record->process?->title,
@@ -50,6 +49,7 @@ class ImprovementActionExport implements FromCollection, WithHeadings, WithMappi
             $record->actual_closing_date ?? __('Unclosed'),
             $record->improvementActionCompletion?->real_impact ?? __('Unclosed'),
             $record->improvementActionCompletion?->result ?? __('Unclosed'),
+            $record->reason_for_cancellation ?? __('Empty'),
             $record->created_at?->format('Y-m-d H:i'),
             $record->updated_at?->format('Y-m-d H:i'),
         ];
@@ -58,7 +58,6 @@ class ImprovementActionExport implements FromCollection, WithHeadings, WithMappi
     public function headings(): array
     {
         return [
-            __('ID'),
             __('Title'),
             __('Description'),
             __('Process'),
@@ -73,6 +72,7 @@ class ImprovementActionExport implements FromCollection, WithHeadings, WithMappi
             __('Actual closing date'),
             __('Real impact'),
             __('Result'),
+            __('reason_for_cancellation'),
             __('Created at'),
             __('Updated at'),
         ];

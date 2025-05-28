@@ -29,7 +29,7 @@ class FileExport implements FromCollection, WithHeadings, WithMapping
         return [
             $file->title,
             $file->version,
-            optional($file->status)->title,
+            optional($file->status)->label,
             $file->sha256_hash ? 'Yes' : 'No',
             optional($file->record)->classification_code,
             $file->isLatestVersion() ? 'Yes' : 'No',

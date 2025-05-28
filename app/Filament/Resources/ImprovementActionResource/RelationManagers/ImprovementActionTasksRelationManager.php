@@ -53,7 +53,7 @@ class ImprovementActionTasksRelationManager extends RelationManager
                     ->live()
                     ->required(),
                 Forms\Components\DatePicker::make('start_date')
-                    ->minDate(now())
+                    ->minDate(now()->format('Y-m-d'))
                     ->afterStateUpdated(function (Set $set) {
                         $set('deadline', null);
                     })
