@@ -25,6 +25,7 @@ return new class extends Migration
             $table->text('expected_impact');
             $table->date('deadline');
             $table->date('actual_closing_date')->nullable();
+            $table->text('reason_for_cancellation')->nullable();
             $table->timestamps();
         });
     }

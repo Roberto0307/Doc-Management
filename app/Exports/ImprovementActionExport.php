@@ -35,6 +35,7 @@ class ImprovementActionExport implements FromCollection, WithHeadings, WithMappi
     public function map($record): array
     {
         return [
+            $record->id,
             $record->title,
             $record->description,
             $record->process?->title,
@@ -57,6 +58,7 @@ class ImprovementActionExport implements FromCollection, WithHeadings, WithMappi
     public function headings(): array
     {
         return [
+            __('ID'),
             __('Title'),
             __('Description'),
             __('Process'),

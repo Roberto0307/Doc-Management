@@ -36,6 +36,7 @@ class RecordExport implements FromCollection, WithHeadings, WithMapping
     public function map($record): array
     {
         return [
+            $record->id,
             $record->classification_code,
             $record->title,
             $record->type?->title,

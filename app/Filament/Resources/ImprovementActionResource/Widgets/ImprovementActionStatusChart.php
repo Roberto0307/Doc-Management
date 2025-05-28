@@ -1,30 +1,31 @@
 <?php
 
-namespace App\Filament\Resources\RecordResource\Widgets;
+namespace App\Filament\Resources\ImprovementActionResource\Widgets;
 
-use App\Models\Record;
+use App\Models\ImprovementAction;
 use Filament\Widgets\ChartWidget;
 
-class RecordStatusChart extends ChartWidget
+class ImprovementActionStatusChart extends ChartWidget
 {
-    protected static ?string $heading = 'Record Status Chart';
+    protected static ?string $heading = 'Improvement Action Status Chart';
 
     protected function getData(): array
     {
         $statusColors = [
-            'approved' => 'rgba(22, 163, 74, 1)', // verde
-            'rejected' => 'rgba(220, 38, 38, 1)', // rojo
-            'pending' => 'rgba(79, 70, 229, 1)', // azul
-            'draft' => 'rgba(251, 191, 36, 1)', // amarillo
+            'finished' => 'rgba(22, 163, 74, 1)', // verde
+            'canceled' => 'rgba(220, 38, 38, 1)', // rojo
+            'in_execution' => 'rgba(79, 70, 229, 1)', // azul
+            'proposal' => 'rgba(161, 161, 170, 1)', // amarillo
             'Sin estado' => 'rgba(203, 213, 225, 1)', // gris para registros sin estado
         ];
 
         // Obtener todos los registros con su último archivo y estado
-        $records = Record::with('latestFile.status')->get();
+        $records = ImprovementAction::with('improvementActionStatus')->get();
+        // dd($records);
 
         // Agrupar por el campo "title" del status
         $grouped = $records->groupBy(function ($record) {
-            return $record->latestFile?->status?->title ?? 'Sin estado';
+            return $record->improvementActionStatus?->title ?? 'Sin estado';
         });
 
         // Contar registros por grupo
@@ -32,7 +33,7 @@ class RecordStatusChart extends ChartWidget
 
         // Obtener los labels visibles para el gráfico (status->label o default capitalizado)
         $labels = $grouped->map(function ($group, $title) {
-            return $group->first()->latestFile?->status?->label ?? ucfirst($title);
+            return $group->first()->improvementActionStatus?->label ?? ucfirst($title);
         });
 
         // Obtener colores desde el array manual
@@ -43,7 +44,7 @@ class RecordStatusChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Document Statuses',
+                    'label' => 'Improvement Action Statuses',
                     'data' => $counts->values()->toArray(),
                     'backgroundColor' => $colors->values()->toArray(),
                 ],
@@ -54,6 +55,6 @@ class RecordStatusChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'pie';
+        return 'doughnut';
     }
 }

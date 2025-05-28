@@ -23,6 +23,7 @@ class ImprovementAction extends Model
         'expected_impact',
         'deadline',
         'actual_closing_date',
+        'reason_for_cancellation',
     ];
 
     protected $casts = [
