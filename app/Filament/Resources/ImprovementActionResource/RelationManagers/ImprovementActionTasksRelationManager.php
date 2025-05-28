@@ -73,7 +73,11 @@ class ImprovementActionTasksRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
+                    ->searchable()
+                    ->extraAttributes([
+                        'style' => 'max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
+                    ])
+                    ->tooltip(fn ($record) => $record->title),
                 Tables\Columns\TextColumn::make('responsible.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('improvementActionTaskStatus.label')

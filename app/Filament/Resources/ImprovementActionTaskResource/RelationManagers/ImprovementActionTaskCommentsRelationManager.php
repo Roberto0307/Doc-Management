@@ -29,9 +29,13 @@ class ImprovementActionTaskCommentsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('comment')
+            // ->recordTitleAttribute('comment')
             ->columns([
-                Tables\Columns\TextColumn::make('comment'),
+                Tables\Columns\TextColumn::make('comment')
+                    ->extraAttributes([
+                        'style' => 'max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
+                    ])
+                    ->tooltip(fn ($record) => $record->comment),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime(),
             ])
