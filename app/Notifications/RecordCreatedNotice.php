@@ -40,13 +40,17 @@ class RecordCreatedNotice extends Notification
     {
         return (new MailMessage)
             ->subject('Create new record')
-            ->greeting('Hi '.$notifiable->name.',')
-            ->line('You have successfully created a new record! "'.$this->record->title.'"')
-            ->action(
-                'Manage your files',
-                route('filament.dashboard.resources.records.files.list',
-                    ['recordId' => $this->record->id])
-            );
+            // ->greeting('Hi '.$notifiable->name.',')
+            // ->line('You have successfully created a new record! "'.$this->record->title.'"')
+            // ->action(
+            //     'Manage your files',
+            //     route('filament.dashboard.resources.records.files.list',
+            //         ['recordId' => $this->record->id])
+            // )
+            ->view('emails.record-created', [
+                'user' => $notifiable,
+                'record' => $this->record,
+            ]);
 
     }
 
