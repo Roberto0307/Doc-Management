@@ -47,6 +47,7 @@ class RecordExport implements FromCollection, WithHeadings, WithMapping
             optional($record->managementtime)->year_label,
             optional($record->centraltime)->year_label,
             optional($record->finaldisposition)->label,
+            $record->expiration ? 'Current' : 'Expired',
             $record->created_at?->format('Y-m-d H:i'),
             $record->updated_at?->format('Y-m-d H:i'),
         ];
@@ -66,6 +67,7 @@ class RecordExport implements FromCollection, WithHeadings, WithMapping
             'Management time',
             'Central time',
             'Final disposition',
+            'expiration',
             'Created at',
             'Updated at',
         ];

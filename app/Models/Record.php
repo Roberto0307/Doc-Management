@@ -20,11 +20,13 @@ class Record extends Model
         'management_time_id',
         'central_time_id',
         'final_disposition_id',
+        'expiration',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'expiration' => 'boolean',
     ];
 
     /*

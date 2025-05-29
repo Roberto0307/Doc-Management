@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreignId('management_time_id')->constrained();
             $table->foreignId('central_time_id')->constrained();
             $table->foreignId('final_disposition_id')->constrained();
+            $table->boolean('expiration')->default(true);
             $table->timestamps();
         });
     }

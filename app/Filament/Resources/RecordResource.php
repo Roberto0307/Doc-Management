@@ -8,7 +8,6 @@ use App\Models\CentralTime;
 use App\Models\ManagementTime;
 use App\Models\Record;
 use App\Models\SubProcess;
-use App\Services\RecordService;
 use Filament\Forms;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
@@ -130,28 +129,21 @@ class RecordResource extends Resource
                 Tables\Columns\TextColumn::make('managementtime.year_label')
                     ->label('Management time')
                     ->sortable()
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('centraltime.year_label')
                     ->label('Central time')
                     ->sortable()
-                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('finaldisposition.label')
                     ->label('Final disposition')
                     ->sortable()
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('Expiration')
+                Tables\Columns\TextColumn::make('expiration')
                     ->label('Expiration state')
                     ->badge()
-                    ->getStateUsing(function ($record) {
-                        return app(RecordService::class)->isExpired($record) ? 'Expired' : 'Current';
-                    })
-                    ->colors([
-                        'danger' => 'Expired',
-                        'success' => 'Current',
-                    ]),
+                    ->formatStateUsing(fn ($state) => (bool) $state ? 'Current' : 'Expired')
+                    ->color(fn ($state) => (bool) $state ? 'success' : 'danger'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->sortable()
                     ->date('l, d \d\e F \d\e Y')
@@ -199,6 +191,12 @@ class RecordResource extends Resource
                     ->multiple()
                     ->searchable()
                     ->preload(),
+                SelectFilter::make('expiration')
+                    ->label('Expiration state')
+                    ->options([
+                        1 => 'Current',
+                        0 => 'Expired',
+                    ]),
             ])
             ->actions([
 
