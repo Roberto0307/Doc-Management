@@ -107,9 +107,7 @@ class RecordResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable()
-                    ->extraAttributes([
-                        'style' => 'max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;',
-                    ])
+                    ->limit(30)
                     ->tooltip(fn ($record) => $record->title),
                 Tables\Columns\TextColumn::make('type.title')
                     ->sortable(),
@@ -247,11 +245,11 @@ class RecordResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     //
                     BulkAction::make('export')
-                        ->label('Exportar seleccionados')
+                        ->label('Export selected')
                         ->icon('heroicon-o-arrow-down-tray')
                         ->action(fn ($records) => Excel::download(
                             new RecordExport($records->pluck('id')->toArray()),
-                            'registros_'.now()->format('Y_m_d_His').'.xlsx'
+                            'records_'.now()->format('Y_m_d_His').'.xlsx'
                         )),
                 ]),
             ]);

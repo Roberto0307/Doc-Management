@@ -2,25 +2,25 @@
 
 namespace App\Notifications;
 
-use App\Models\Record;
+use App\Models\ImprovementAction;
 use App\Models\User;
 use Filament\Notifications\Notification as FilamentNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class RecordCreatedNotice extends Notification
+class ImprovementActionCreatedNotice extends Notification
 {
     use Queueable;
 
-    private $record;
+    private $improvementAction;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Record $record)
+    public function __construct(ImprovementAction $improvementAction)
     {
-        $this->record = $record;
+        $this->improvementAction = $improvementAction;
     }
 
     /**
@@ -39,15 +39,11 @@ class RecordCreatedNotice extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Create new record')
+            ->subject('Create new Improvement Action')
             ->greeting('Hi '.$notifiable->name.',')
-            ->line('You have successfully created a new record! "'.$this->record->title.'"')
-            ->action(
-                'Manage your files',
-                route('filament.dashboard.resources.records.files.list',
-                    ['recordId' => $this->record->id])
-            );
-
+            ->line('The introduction to the notification. '.$this->improvementAction->title)
+            ->line('Segundo parrafal  '.$this->improvementAction->description)
+            ->action('Notification Action', url('/'));
     }
 
     /**
@@ -55,12 +51,12 @@ class RecordCreatedNotice extends Notification
      *
      * @return array<string, mixed>
      */
-    public function toDatabase(User $notifiable)
+    public function toDatabase(User $notifiable): array
     {
         return FilamentNotification::make()
-            ->title($this->record->title)
-            ->body('Created a new record!')
-            ->icon('heroicon-o-archive-box')
+            ->title($this->improvementAction->title)
+            ->body('Created a new Improvement Action!')
+            ->icon('heroicon-o-rectangle-stack')
             ->color('primary')
             ->status('primary')
             ->getDatabaseMessage();

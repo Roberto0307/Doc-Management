@@ -72,12 +72,14 @@ class FileResource extends Resource
                 Tables\Columns\TextColumn::make('version')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('comments')
-                    ->wrap()
+                    ->limit(30)
+                    ->tooltip(fn ($record) => $record->comments)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('change_reason')
                     ->label('Reason for change')
+                    ->limit(30)
+                    ->tooltip(fn ($record) => $record->change_reason)
                     ->searchable()
-                    ->wrap()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Created by')
